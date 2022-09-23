@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,27 +18,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import com.example.kast.KastApp
 import com.example.kast.android.theme.KastTheme
-import com.example.kast.android.theme.background
-import com.example.kast.android.theme.shapes
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.example.kast.android.utils.SetSystemBarColors
+import com.example.kast.android.utils.addEmptyLines
+import com.example.kast.android.utils.getImageLoader
 
 class MainActivity : ComponentActivity() {
 
@@ -54,7 +46,25 @@ class MainActivity : ComponentActivity() {
             }
             KastTheme {
                 SetSystemBarColors()
-                MovieCategoriesScreen(state.categories)
+
+                val scaffoldState = rememberScaffoldState()
+                val coroutineScope = rememberCoroutineScope()
+                Scaffold(
+                    backgroundColor = Color.DarkGray,
+                    bottomBar = {
+
+                    },
+                    topBar = {
+
+                    },
+                    scaffoldState = scaffoldState,
+                    snackbarHost = {
+
+                    }
+                ) {
+                    it
+                    MovieCategoriesScreen(state.categories, scaffoldState)
+                }
             }
         }
     }
@@ -64,24 +74,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     KastTheme {
-        MovieCategoriesScreen(FakeData.categories)
+        val scaffoldState = rememberScaffoldState()
+
+        MovieCategoriesScreen(FakeData.categories, scaffoldState)
     }
 }
 
 @Composable
-fun MovieCategoriesScreen(categories: List<Category>) {
-    if (categories.isEmpty())
+fun MovieCategoriesScreen(categories: List<Category>, scaffoldState: ScaffoldState) {
+    if (categories.isEmpty()) {
         CircularProgressIndicator()
+    }
     else
         LazyColumn() {
             items(categories) { category ->
-                MovieListWithHeader(category)
+                MovieListWithHeader(category, scaffoldState)
             }
         }
 }
 
 @Composable
-fun MovieListWithHeader(category: Category) {
+fun MovieListWithHeader(category: Category, scaffoldState: ScaffoldState) {
     Row(
         verticalAlignment = Alignment.Bottom,
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
@@ -175,11 +188,11 @@ fun MovieCard(movie: Movie) {
             )
             Icon(
                 Icons.Default.MoreVert,
-                "more",
+                stringResource(id = R.string.more),
                 tint = Color.White,
                 modifier = Modifier
                     .clickable {
-                        //todo
+
                     }
             )
         }

@@ -1,4 +1,4 @@
-package com.example.kast.android
+package com.example.kast.android.utils
 
 import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
