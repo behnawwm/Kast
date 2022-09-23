@@ -35,6 +35,7 @@ dependencies {
     val composeUiVersion = "1.2.1"
     val coilVersion = "2.2.1"
     val coroutinesVersion = "1.6.4"
+    val systemUiControllerVersion = "0.25.1"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -49,4 +50,8 @@ dependencies {
 
     //Coil
     implementation("io.coil-kt:coil-compose:$coilVersion")
+
+    // Accompanist SystemUiController
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$systemUiControllerVersion")
+
 }

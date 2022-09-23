@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
@@ -37,6 +39,7 @@ import com.example.kast.KastApp
 import com.example.kast.android.theme.KastTheme
 import com.example.kast.android.theme.background
 import com.example.kast.android.theme.shapes
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
 
@@ -50,6 +53,7 @@ class MainActivity : ComponentActivity() {
                 viewModel.state
             }
             KastTheme {
+                SetSystemBarColors()
                 MovieCategoriesScreen(state.categories)
             }
         }
@@ -71,32 +75,35 @@ fun MovieCategoriesScreen(categories: List<Category>) {
     else
         LazyColumn() {
             items(categories) { category ->
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
-                    ) {
-                        Text(
-                            text = category.title,
-                            style = MaterialTheme.typography.h5,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
-                        )
-                        Text(
-                            text = category.subtitle,
-                            style = MaterialTheme.typography.subtitle2,
-                            color = Color.LightGray,
-                            modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
-                        )
-                    }
-                    MovieList(
-                        movies = category.movies,
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
-                    )
-                }
+                MovieListWithHeader(category)
             }
         }
+}
+
+@Composable
+fun MovieListWithHeader(category: Category) {
+    Row(
+        verticalAlignment = Alignment.Bottom,
+        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
+    ) {
+        Text(
+            text = category.title,
+            style = MaterialTheme.typography.h5,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
+        )
+        Text(
+            text = category.subtitle,
+            style = MaterialTheme.typography.subtitle2,
+            color = Color.LightGray,
+            modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
+        )
+    }
+    MovieList(
+        movies = category.movies,
+        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
+    )
 }
 
 @Composable
@@ -116,7 +123,10 @@ fun MovieList(movies: List<Movie>, modifier: Modifier) {
 fun MovieCard(movie: Movie) {
     Column(
         modifier = Modifier
-            .width(100.dp)
+            .width(140.dp)
+            .clickable {
+
+            }
     ) {
 
         Card(shape = RoundedCornerShape(8.dp)) {
@@ -137,7 +147,7 @@ fun MovieCard(movie: Movie) {
                     fontSize = 12.sp,
                     modifier = Modifier
                         .padding(4.dp, 2.dp, 4.dp, 2.dp)
-                        .alpha(0.6f)
+                        .alpha(0.7f)
                         .background(
                             Color.Black,
                             shape = RoundedCornerShape(8.dp)
@@ -154,7 +164,7 @@ fun MovieCard(movie: Movie) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = movie.title,
+                text = movie.title.addEmptyLines(1),
                 style = TextStyle(
                     color = Color.White,
                     fontWeight = FontWeight.Light
@@ -167,9 +177,10 @@ fun MovieCard(movie: Movie) {
                 Icons.Default.MoreVert,
                 "more",
                 tint = Color.White,
-                modifier = Modifier.clickable {
-
-                }
+                modifier = Modifier
+                    .clickable {
+                        //todo
+                    }
             )
         }
 
