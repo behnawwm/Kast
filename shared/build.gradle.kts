@@ -34,7 +34,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
             }
         }
         val commonTest by getting {
@@ -46,7 +45,6 @@ kotlin {
             dependencies {
                 //ktor
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
-
             }
         }
         val androidTest by getting

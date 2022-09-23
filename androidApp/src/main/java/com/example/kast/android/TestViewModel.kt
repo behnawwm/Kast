@@ -25,7 +25,7 @@ class TestViewModel : ViewModel() {
 
     private fun getCategories() {
         viewModelScope.launch {
-            delay(3000)
+            delay(1000)
             state.value = state.value.copy(categories = FakeData.categories)
         }
     }

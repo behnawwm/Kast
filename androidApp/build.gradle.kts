@@ -32,14 +32,21 @@ android {
 }
 
 dependencies {
+    val composeUiVersion = "1.2.1"
+    val coilVersion = "2.2.1"
+    val coroutinesVersion = "1.6.4"
+
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")
-    implementation("androidx.compose.foundation:foundation:1.2.1")
-    implementation("androidx.compose.material:material:1.2.1")
+    implementation("androidx.compose.ui:ui:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
+    implementation("androidx.compose.foundation:foundation:$composeUiVersion")
+    implementation("androidx.compose.material:material:$composeUiVersion")
     implementation("androidx.activity:activity-compose:1.5.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:$coilVersion")
 }
