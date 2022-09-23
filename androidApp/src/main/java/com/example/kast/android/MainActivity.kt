@@ -1,5 +1,6 @@
 package com.example.kast.android
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,15 +30,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import com.example.kast.android.components.BottomNavigationBar
 import com.example.kast.android.theme.KastTheme
 import com.example.kast.android.utils.SetSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
 import com.example.kast.android.utils.getImageLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: TestViewModel by viewModels()
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,71 +50,73 @@ class MainActivity : ComponentActivity() {
             val state by remember {
                 viewModel.state
             }
-            KastTheme {
+            KastTheme(darkTheme = true) {
                 SetSystemBarColors()
 
-                val scaffoldState = rememberScaffoldState()
                 val coroutineScope = rememberCoroutineScope()
                 Scaffold(
-                    backgroundColor = Color.DarkGray,
                     bottomBar = {
-
+                        BottomNavigationBar(
+                            selectedDestination = KastRoutes.Home.route,
+                            navigateToTopLevelDestination = { route ->
+                                //todo
+                            }
+                        )
                     },
                     topBar = {
 
                     },
-                    scaffoldState = scaffoldState,
-                    snackbarHost = {
 
-                    }
-                ) {
-                    it
-                    MovieCategoriesScreen(state.categories, scaffoldState)
+                    ) {
+                    it //todo
+                    MovieCategoriesScreen(state.categories, coroutineScope)
                 }
             }
         }
     }
 }
 
-@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DefaultPreview() {
     KastTheme {
-        val scaffoldState = rememberScaffoldState()
+        val coroutineScope = rememberCoroutineScope()
 
-        MovieCategoriesScreen(FakeData.categories, scaffoldState)
+        MovieCategoriesScreen(FakeData.categories, coroutineScope)
     }
 }
 
 @Composable
-fun MovieCategoriesScreen(categories: List<Category>, scaffoldState: ScaffoldState) {
+fun MovieCategoriesScreen(
+    categories: List<Category>,
+    coroutineScope: CoroutineScope
+) {
     if (categories.isEmpty()) {
         CircularProgressIndicator()
-    }
-    else
+    } else
         LazyColumn() {
             items(categories) { category ->
-                MovieListWithHeader(category, scaffoldState)
+                MovieListWithHeader(category)
             }
         }
 }
 
 @Composable
-fun MovieListWithHeader(category: Category, scaffoldState: ScaffoldState) {
+fun MovieListWithHeader(category: Category) {
     Row(
         verticalAlignment = Alignment.Bottom,
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
     ) {
         Text(
             text = category.title,
-            style = MaterialTheme.typography.h5,
+//            style = MaterialTheme.typography.h5,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
         )
         Text(
             text = category.subtitle,
-            style = MaterialTheme.typography.subtitle2,
+//            style = MaterialTheme.typography.subtitle2,
             color = Color.LightGray,
             modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
         )

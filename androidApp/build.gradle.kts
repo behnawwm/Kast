@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace = "com.example.kast.android"
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "com.example.kast.android"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -33,25 +33,34 @@ android {
 
 dependencies {
     val composeUiVersion = "1.2.1"
+    val composeActivityVersion = "1.6.0"
+    val composeMaterial3Version = "1.0.0-beta03"
     val coilVersion = "2.2.1"
     val coroutinesVersion = "1.6.4"
-    val systemUiControllerVersion = "0.25.1"
+    val accompanistSystemUiControllerVersion = "0.25.1"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.foundation:foundation:$composeUiVersion")
-    implementation("androidx.compose.material:material:$composeUiVersion")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    //disabled due to prevent conflicts with material3
+//    implementation("androidx.compose.material:material:$composeUiVersion")
+    implementation("androidx.activity:activity-compose:$composeActivityVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
+
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    //Coil
+    // Coil
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     // Accompanist SystemUiController
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$systemUiControllerVersion")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistSystemUiControllerVersion")
+
+    // Material 3 Compose
+    implementation("androidx.compose.material3:material3:$composeMaterial3Version")
+    implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
 
 }
