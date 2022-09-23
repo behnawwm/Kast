@@ -1,12 +1,14 @@
 package com.example.kast.android
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -18,81 +20,65 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.kast.Greeting
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-
-@Composable
-fun MyApplicationTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val colors = if (darkTheme) {
-        darkColors(
-            primary = Color(0xFFBB86FC),
-            primaryVariant = Color(0xFF3700B3),
-            secondary = Color(0xFF03DAC5)
-        )
-    } else {
-        lightColors(
-            primary = Color(0xFF6200EE),
-            primaryVariant = Color(0xFF3700B3),
-            secondary = Color(0xFF03DAC5)
-        )
-    }
-    val typography = Typography(
-        body1 = TextStyle(
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp
-        )
-    )
-    val shapes = Shapes(
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(4.dp),
-        large = RoundedCornerShape(0.dp)
-    )
-
-    MaterialTheme(
-        colors = colors,
-        typography = typography,
-        shapes = shapes,
-        content = content
-    )
-}
+import com.example.kast.android.theme.KastTheme
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel: TestViewModel by viewModels()
+    private val viewModel: TestViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            MyApplicationTheme {
-                val coroutineScope = rememberCoroutineScope()
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    val message = viewModel.message.collectAsState()
-                    message.value?.let {
-                        Greeting(it)
-                    }
-                }
+            val state by remember {
+                viewModel.state
+            }
+            KastTheme {
+                MovieCategoriesScreen(state.categories)
             }
         }
     }
 }
 
-@Composable
-fun Greeting(text: String) {
-    Text(text = text)
-}
-
 @Preview
 @Composable
 fun DefaultPreview() {
-    MyApplicationTheme {
-        Greeting("Hello, Android!")
+    KastTheme {
+        MovieCategoriesScreen(FakeData.categories)
+    }
+}
+
+@Composable
+fun MovieCategoriesScreen(categories: List<Category>) {
+    if (categories.isEmpty())
+        CircularProgressIndicator()
+    else
+        LazyColumn() {
+            items(categories) { category ->
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = category.title,
+                        style = MaterialTheme.typography.h5,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    MovieList(movies = category.movies)
+                }
+            }
+        }
+}
+
+@Composable
+fun MovieList(movies: List<Movie>) {
+    LazyRow() {
+        items(movies) { movie ->
+            MovieCard(movie = movie)
+        }
+    }
+}
+
+@Composable
+fun MovieCard(movie: Movie) {
+    Card(modifier = Modifier.width(100.dp)) {
+        Text(text = movie.title)
     }
 }

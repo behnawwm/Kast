@@ -41,5 +41,5 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.5.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }
