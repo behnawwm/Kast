@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +17,10 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -23,12 +28,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.example.kast.KastApp
 import com.example.kast.android.theme.KastTheme
+import com.example.kast.android.theme.background
+import com.example.kast.android.theme.shapes
 
 class MainActivity : ComponentActivity() {
 
@@ -112,31 +120,32 @@ fun MovieCard(movie: Movie) {
     ) {
 
         Card(shape = RoundedCornerShape(8.dp)) {
-            val context = LocalContext.current
-            val imageLoader = ImageLoader.Builder(context)
-                .memoryCache {
-                    MemoryCache.Builder(context)
-                        .maxSizePercent(0.25)
-                        .build()
-                }
-                .diskCache {
-                    DiskCache.Builder()
-                        .directory(context.cacheDir.resolve("image_cache"))
-                        .maxSizePercent(0.02)
-                        .build()
-                }
-                .build()
-            SubcomposeAsyncImage(
-                imageLoader = imageLoader,
-                model = movie.imageUrl,
-                loading = {
-                    CircularProgressIndicator()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                contentDescription = movie.title,
-            )
+            Box(contentAlignment = Alignment.TopEnd) {
+                SubcomposeAsyncImage(
+                    imageLoader = LocalContext.current.getImageLoader(),
+                    model = movie.imageUrl,
+                    loading = {
+                        CircularProgressIndicator()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentDescription = movie.title
+                )
+                Text(
+                    text = movie.rating.toString(),
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(4.dp, 2.dp, 4.dp, 2.dp)
+                        .alpha(0.6f)
+                        .background(
+                            Color.Black,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(4.dp, 2.dp, 4.dp, 2.dp),
+                )
+
+            }
         }
         Row(
             modifier = Modifier
