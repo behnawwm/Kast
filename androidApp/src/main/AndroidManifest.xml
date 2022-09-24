@@ -5,8 +5,10 @@
 
     <application
         android:name="com.example.kast.Kast"
+        android:label="Kast"
         android:allowBackup="false"
         android:supportsRtl="true"
+        android:icon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.MainActivity"

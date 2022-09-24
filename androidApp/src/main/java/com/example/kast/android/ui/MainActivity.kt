@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -90,12 +91,11 @@ fun KastApp(viewModel: TestViewModel) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = "Kast",
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(orange)
-                            .padding(8.dp, 2.dp, 8.dp, 2.dp)
+                    Icon(
+                        painterResource(id = R.drawable.kast),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(56.dp)
                     )
                 }, navigationIcon = {
                     IconButton(onClick = {
@@ -117,7 +117,7 @@ fun KastApp(viewModel: TestViewModel) {
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                   containerColor = background,
+                    containerColor = background,
                 )
             )
         },
