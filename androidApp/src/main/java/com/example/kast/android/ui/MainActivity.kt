@@ -1,10 +1,11 @@
-package com.example.kast.android
+package com.example.kast.android.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,14 +30,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import coil.compose.SubcomposeAsyncImage
-import com.example.kast.android.components.BottomNavigationBar
+import com.example.kast.android.R
+import com.example.kast.android.ui.components.BottomNavigationBar
+import com.example.kast.android.data.Category
+import com.example.kast.android.data.FakeData
+import com.example.kast.android.data.Movie
 import com.example.kast.android.theme.KastTheme
-import com.example.kast.android.utils.SetSystemBarColors
+import com.example.kast.android.utils.SetDarkSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
 import com.example.kast.android.utils.getImageLoader
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -51,15 +59,20 @@ class MainActivity : ComponentActivity() {
                 viewModel.state
             }
             KastTheme(darkTheme = true) {
-                SetSystemBarColors()
+                SetDarkSystemBarColors()
 
                 val coroutineScope = rememberCoroutineScope()
+                val navController = rememberNavController()
                 Scaffold(
                     bottomBar = {
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentDestination = navBackStackEntry?.destination
                         BottomNavigationBar(
-                            selectedDestination = KastRoutes.Home.route,
+                            currentDestination = currentDestination,
                             navigateToTopLevelDestination = { route ->
-                                //todo
+                                navController.navigate(route.route) {
+                                    restoreState = true
+                                }
                             }
                         )
                     },
@@ -68,8 +81,21 @@ class MainActivity : ComponentActivity() {
                     },
 
                     ) {
-                    it //todo
-                    MovieCategoriesScreen(state.categories, coroutineScope)
+                    NavHost(
+                        modifier = Modifier.padding(it),
+                        navController = navController,
+                        startDestination = KastRoutes.Home.route
+                    ) {
+                        composable(KastRoutes.Home.route) {
+                            MovieCategoriesScreen(state.categories, coroutineScope)
+                        }
+                        composable(KastRoutes.Watchlist.route) {
+                            WatchlistScreen()
+                        }
+                        composable(KastRoutes.Profile.route) {
+                            ProfileScreen()
+                        }
+                    }
                 }
             }
         }
@@ -156,10 +182,18 @@ fun MovieCard(movie: Movie) {
                     imageLoader = LocalContext.current.getImageLoader(),
                     model = movie.imageUrl,
                     loading = {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    },
+                    error = {
+                        Image(
+                            painter = painterResource(id = R.drawable.avengers),
+                            contentDescription = ""
+                        )
                     },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 140.dp)
+                    ,
                     contentDescription = movie.title
                 )
                 Text(

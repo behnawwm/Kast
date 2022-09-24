@@ -1,4 +1,4 @@
-package com.example.kast.android
+package com.example.kast.android.data
 
 interface TestRepository {
 

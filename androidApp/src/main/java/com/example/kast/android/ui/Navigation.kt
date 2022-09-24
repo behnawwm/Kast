@@ -1,4 +1,4 @@
-package com.example.kast.android
+package com.example.kast.android.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

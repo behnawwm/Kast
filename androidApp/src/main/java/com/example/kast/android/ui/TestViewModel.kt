@@ -1,13 +1,11 @@
-package com.example.kast.android
+package com.example.kast.android.ui
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.cancel
+import com.example.kast.android.data.Category
+import com.example.kast.android.data.FakeData
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TestViewModel : ViewModel() {

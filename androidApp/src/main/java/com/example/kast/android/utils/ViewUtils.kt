@@ -1,17 +1,13 @@
 package com.example.kast.android.utils
 
-import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.graphics.Color
-import coil.ImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun SetSystemBarColors(){
+fun SetDarkSystemBarColors(){
     val systemUiController = rememberSystemUiController()
     val useDarkIcons = !isSystemInDarkTheme()
     DisposableEffect(systemUiController, useDarkIcons) {
