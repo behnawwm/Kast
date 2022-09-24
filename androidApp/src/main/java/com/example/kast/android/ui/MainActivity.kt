@@ -14,6 +14,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.Card
@@ -27,8 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -77,57 +78,62 @@ fun KastContent(viewModel: TestViewModel) {
         }
         SetDarkSystemBarColors(background, bottomNavigationContainerColor)
 
-        val coroutineScope = rememberCoroutineScope()
-        val navController = rememberNavController()
-        val bottomSheetState = rememberModalBottomSheetState(
-            initialValue = ModalBottomSheetValue.Hidden
-        )
-        var bottomSheetTitle by remember { mutableStateOf("Movie") }
-        val scope = rememberCoroutineScope()
-        ModalBottomSheetLayout(
-            sheetState = bottomSheetState,
-            sheetContent = {
-                Column(
-                    modifier = Modifier
-                        .background(background)
-                        .padding(16.dp, 8.dp, 16.dp, 8.dp)
-                ) {
-                    Text(text = bottomSheetTitle, color = bodyColor)
-                    OptionListItem(title = "Add to", icon = Icons.Default.Menu)
-                    OptionListItem(title = "Open With", icon = Icons.Default.Share)
-                    OptionListItem(title = "Watch Providers", icon = Icons.Default.Tv)
-                    OptionListItem(title = "All ratings", icon = Icons.Default.Favorite)
-                    OptionListItem(title = "Share", icon = Icons.Default.Share)
-                    OptionListItem(title = "Hide", icon = Icons.Default.HideImage)
-                }
-            }) {
-            Scaffold(
-                bottomBar = {
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentDestination = navBackStackEntry?.destination
-                    BottomNavigationBar(currentDestination = currentDestination,
-                        navigateToTopLevelDestination = { route ->
-                            navController.navigate(route.route) {
-                                restoreState = true
-                            }
-                        })
-                },
-                topBar = {
-                    CenterAlignedTopAppBar(title = {
-                        Icon(
-                            painterResource(id = R.drawable.kast),
-                            contentDescription = null,
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(56.dp)
-                        )
-                    }, navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {}
-                        }) {
-                            Icon(Icons.Default.Person, "")
+    val navController = rememberNavController()
+    val bottomSheetState = rememberBottomSheetScaffoldState(
+
+    )
+    var bottomSheetTitle by remember { mutableStateOf("Movie") }
+    val scope = rememberCoroutineScope()
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetState,
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        sheetBackgroundColor = background,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            Column(modifier = Modifier
+                .padding(16.dp, 8.dp, 16.dp, 16.dp)) {
+                Text(
+                    text = bottomSheetTitle,
+                    color = bodyColor,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(12.dp, 8.dp, 12.dp, 8.dp)
+                )
+                OptionListItem(title = "Add to", icon = Icons.Default.Menu)
+                OptionListItem(title = "Open With", icon = Icons.Default.OpenInNew)
+                OptionListItem(title = "Watch Providers", icon = Icons.Default.LiveTv)
+                OptionListItem(title = "All ratings", icon = Icons.Default.Favorite)
+                OptionListItem(title = "Share", icon = Icons.Default.Share)
+                OptionListItem(title = "Hide", icon = Icons.Default.HideSource)
+            }
+        }) {
+        Scaffold(
+            bottomBar = {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                BottomNavigationBar(currentDestination = currentDestination,
+                    navigateToTopLevelDestination = { route ->
+                        navController.navigate(route.route) {
+                            restoreState = true
                         }
-                    }, actions = {
-                        IconButton(onClick = {
+                    })
+            },
+            topBar = {
+                CenterAlignedTopAppBar(title = {
+                    Text(
+                        text = "Kast",
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(orange)
+                            .padding(8.dp, 2.dp, 8.dp, 2.dp)
+                    )
+                }, navigationIcon = {
+                    IconButton(onClick = {
+                        scope.launch {}
+                    }) {
+                        Icon(Icons.Default.Person, "")
+                    }
+                }, actions = {
+                    IconButton(onClick = {
 
                         }) {
                             Icon(Icons.Default.Search, "")
@@ -151,10 +157,10 @@ fun KastContent(viewModel: TestViewModel) {
                     startDestination = KastRoutes.Home.route
                 ) {
                     composable(KastRoutes.Home.route) {
-                        MovieCategoriesScreen(state.categories, bottomSheetState, onMovieClick = {
+                        MovieCategoriesScreen(state.categories, onMovieClick = {
                             scope.launch {
                                 bottomSheetTitle = it.title
-                                bottomSheetState.show()
+                                bottomSheetState.bottomSheetState.expand()
                             }
                         })
                     }
@@ -181,24 +187,22 @@ fun DefaultPreview() {
 @Composable
 fun MovieCategoriesScreen(
     categories: List<Category>,
-    bottomSheetState: ModalBottomSheetState,
     onMovieClick: (Movie) -> Unit,
 ) {
     if (categories.isEmpty()) {
         CircularProgressIndicator()
     } else LazyColumn() {
         items(categories) { category ->
-            MovieListWithHeader(category, bottomSheetState, onMovieClick = {
+            MovieListWithHeader(category, onMovieClick = {
                 onMovieClick(it)
             })
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieListWithHeader(
-    category: Category, bottomSheetState: ModalBottomSheetState, onMovieClick: (Movie) -> Unit
+    category: Category, onMovieClick: (Movie) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
