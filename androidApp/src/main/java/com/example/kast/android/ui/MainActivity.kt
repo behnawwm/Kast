@@ -19,7 +19,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,7 +39,7 @@ import com.example.kast.android.ui.components.BottomNavigationBar
 import com.example.kast.android.data.Category
 import com.example.kast.android.data.FakeData
 import com.example.kast.android.data.Movie
-import com.example.kast.android.theme.KastTheme
+import com.example.kast.android.theme.*
 import com.example.kast.android.utils.SetDarkSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
 import com.example.kast.android.utils.getImageLoader
@@ -59,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 viewModel.state
             }
             KastTheme(darkTheme = true) {
-                SetDarkSystemBarColors()
+                SetDarkSystemBarColors(background, bottomNavigationContainerColor)
 
                 val coroutineScope = rememberCoroutineScope()
                 val navController = rememberNavController()
@@ -135,15 +134,15 @@ fun MovieListWithHeader(category: Category) {
     ) {
         Text(
             text = category.title,
-//            style = MaterialTheme.typography.h5,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = titleColor,
             modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
         )
         Text(
             text = category.subtitle,
-//            style = MaterialTheme.typography.subtitle2,
-            color = Color.LightGray,
+            style = MaterialTheme.typography.labelSmall,
+            color = subtitleColor,
             modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
         )
     }
@@ -192,8 +191,7 @@ fun MovieCard(movie: Movie) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .defaultMinSize(minHeight = 140.dp)
-                    ,
+                        .defaultMinSize(minHeight = 140.dp),
                     contentDescription = movie.title
                 )
                 Text(
@@ -202,9 +200,9 @@ fun MovieCard(movie: Movie) {
                     fontSize = 12.sp,
                     modifier = Modifier
                         .padding(4.dp, 2.dp, 4.dp, 2.dp)
-                        .alpha(0.7f)
+//                        .alpha(0.7f)
                         .background(
-                            Color.Black,
+                            black50Alpha,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .padding(4.dp, 2.dp, 4.dp, 2.dp),
@@ -221,7 +219,7 @@ fun MovieCard(movie: Movie) {
             Text(
                 text = movie.title.addEmptyLines(1),
                 style = TextStyle(
-                    color = Color.White,
+                    color = bodyColor,
                     fontWeight = FontWeight.Light
                 ),
                 overflow = TextOverflow.Ellipsis,
@@ -231,7 +229,7 @@ fun MovieCard(movie: Movie) {
             Icon(
                 Icons.Default.MoreVert,
                 stringResource(id = R.string.more),
-                tint = Color.White,
+                tint = bodyColor,
                 modifier = Modifier
                     .clickable {
 
