@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,11 +37,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import coil.compose.SubcomposeAsyncImage
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.*
 import com.example.kast.android.R
 import com.example.kast.android.ui.components.BottomNavigationBar
 import com.example.kast.android.data.Category
@@ -52,8 +50,6 @@ import com.example.kast.android.ui.components.OptionListItem
 import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.SetDarkSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
-import com.example.kast.android.utils.getImageLoader
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -79,99 +75,142 @@ fun KastContent(viewModel: TestViewModel) {
         }
         SetDarkSystemBarColors(background, bottomNavigationContainerColor)
 
-    val navController = rememberNavController()
-    val bottomSheetState = rememberBottomSheetScaffoldState()
-    var bottomSheetTitle by remember { mutableStateOf("Movie") }
-    val scope = rememberCoroutineScope()
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetState,
-        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        sheetBackgroundColor = background,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            Column(modifier = Modifier
-                .padding(16.dp, 8.dp, 16.dp, 16.dp)) {
-                Text(
-                    text = bottomSheetTitle,
-                    color = bodyColor,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(12.dp, 8.dp, 12.dp, 8.dp)
-                )
-                OptionListItem(title = "Add to", icon = Icons.Default.Menu)
-                OptionListItem(title = "Open With", icon = Icons.Default.OpenInNew)
-                OptionListItem(title = "Watch Providers", icon = Icons.Default.LiveTv)
-                OptionListItem(title = "All ratings", icon = Icons.Default.Favorite)
-                OptionListItem(title = "Share", icon = Icons.Default.Share)
-                OptionListItem(title = "Hide", icon = Icons.Default.HideSource)
-            }
-        }) {
-        Scaffold(
-            bottomBar = {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                BottomNavigationBar(currentDestination = currentDestination,
-                    navigateToTopLevelDestination = { route ->
-                        navController.navigate(route.route) {
-                            restoreState = true
-                        }
-                    })
-            },
-            topBar = {
-                CenterAlignedTopAppBar(title = {
-                    Icon(
-                        painterResource(id = R.drawable.kast),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(56.dp)
-                    )
-                }, navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch {}
-                    }) {
-                        Icon(Icons.Default.Person, "")
-                    }
-                }, actions = {
-                    IconButton(onClick = {
+        val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-                        }) {
-                            Icon(Icons.Default.Search, "")
-                        }
-                        IconButton(onClick = {
+        val bottomSheetState = rememberBottomSheetScaffoldState()
+        var bottomSheetTitle by remember { mutableStateOf("") }
 
-                        }) {
-                            Icon(Icons.Default.MoreVert, "")
-                        }
-                    },
-                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                            containerColor = background,
-                        )
-                    )
+        val scope = rememberCoroutineScope()
+
+        BottomSheetScaffold(
+            scaffoldState = bottomSheetState,
+            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+            sheetBackgroundColor = background,
+            sheetPeekHeight = 0.dp,
+            sheetContent = {
+                MovieMoreBottomSheet(bottomSheetTitle)
+            }) {
+
+            Scaffold(
+                topBar = {
+                    KastTopBar()
                 },
-
-                ) {
-                NavHost(
-                    modifier = Modifier.padding(it),
-                    navController = navController,
-                    startDestination = KastRoutes.Home.route
-                ) {
-                    composable(KastRoutes.Home.route) {
-                        MovieCategoriesScreen(state.categories, onMovieClick = {
-                            scope.launch {
-                                bottomSheetTitle = it.title
-                                bottomSheetState.bottomSheetState.expand()
+                bottomBar = {
+                    BottomNavigationBar(
+                        currentDestination = navBackStackEntry?.destination,
+                        navigateToTopLevelDestination = { route ->
+                            navController.navigate(route.route) {
+                                restoreState = true
                             }
                         })
-                    }
-                    composable(KastRoutes.Watchlist.route) {
-                        WatchlistScreen()
-                    }
-                    composable(KastRoutes.Profile.route) {
-                        ProfileScreen()
-                    }
                 }
+            ) { scaffoldPadding ->
+                KastNavigation(
+                    navController,
+                    modifier = Modifier.padding(scaffoldPadding)
+                )
             }
         }
     }
+}
+
+@Composable
+fun KastNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = Screen.Home.route
+    ) {
+        addHome(navController)
+        addWatchlist(navController)
+        addProfile(navController)
+    }
+}
+
+private fun NavGraphBuilder.addHome(
+    navController: NavController,
+) {
+    composable(Screen.Home.route) {
+        MovieCategoriesScreen(state.categories, onMovieClick = {
+            scope.launch {
+                bottomSheetTitle = it.title
+                bottomSheetState.bottomSheetState.expand()
+            }
+        })
+    }
+}
+
+private fun NavGraphBuilder.addWatchlist(
+    navController: NavController,
+) {
+    composable(Screen.Watchlist.route) {
+        WatchlistScreen()
+    }
+}
+
+private fun NavGraphBuilder.addProfile(
+    navController: NavController,
+) {
+    composable(Screen.Profile.route) {
+        ProfileScreen()
+    }
+}
+
+
+@Composable
+fun MovieMoreBottomSheet(bottomSheetTitle: String) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp, 8.dp, 16.dp, 16.dp)
+    ) {
+        Text(
+            text = bottomSheetTitle,
+            color = bodyColor,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(12.dp, 8.dp, 12.dp, 8.dp)
+        )
+        OptionListItem(title = "Add to", icon = Icons.Default.Menu)
+        OptionListItem(title = "Open With", icon = Icons.Default.OpenInNew)
+        OptionListItem(title = "Watch Providers", icon = Icons.Default.LiveTv)
+        OptionListItem(title = "All ratings", icon = Icons.Default.Favorite)
+        OptionListItem(title = "Share", icon = Icons.Default.Share)
+        OptionListItem(title = "Hide", icon = Icons.Default.HideSource)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun KastTopBar() {
+    CenterAlignedTopAppBar(title = {
+        Icon(
+            painterResource(id = R.drawable.kast),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(56.dp)
+        )
+    }, navigationIcon = {
+        IconButton(onClick = {
+
+        }) {
+            Icon(Icons.Default.Person, "")
+        }
+    }, actions = {
+        IconButton(onClick = {
+
+        }) {
+            Icon(Icons.Default.Search, "")
+        }
+        IconButton(onClick = {
+
+        }) {
+            Icon(Icons.Default.MoreVert, "")
+        }
+    },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = background,
+        )
+    )
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_YES)
