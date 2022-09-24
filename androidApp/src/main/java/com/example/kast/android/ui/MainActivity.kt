@@ -84,27 +84,6 @@ fun KastApp(viewModel: TestViewModel) {
 
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
-    Scaffold(
-        bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
-            BottomNavigationBar(
-                currentDestination = currentDestination,
-                navigateToTopLevelDestination = { route ->
-                    navController.navigate(route.route) {
-                        restoreState = true
-                    }
-                }
-            )
-        },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Icon(
-                        painterResource(id = R.drawable.kast),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(56.dp)
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden
     )
