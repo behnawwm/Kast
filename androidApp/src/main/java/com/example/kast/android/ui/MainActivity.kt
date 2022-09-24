@@ -13,11 +13,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,13 +48,20 @@ import com.example.kast.android.theme.*
 import com.example.kast.android.utils.SetDarkSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
 import com.example.kast.android.utils.getImageLoader
-import kotlinx.coroutines.CoroutineScope
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import com.example.kast.android.ui.components.OptionListItem
+import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: TestViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,7 +74,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun KastApp(viewModel: TestViewModel) {
     val state by remember {
@@ -96,15 +105,51 @@ fun KastApp(viewModel: TestViewModel) {
                         contentDescription = null,
                         tint = Color.Unspecified,
                         modifier = Modifier.size(56.dp)
+    val bottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden
+    )
+    var bottomSheetTitle by remember { mutableStateOf("Movie") }
+    val scope = rememberCoroutineScope()
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState,
+        sheetContent = {
+            Column(modifier = Modifier.background(background).padding(16.dp, 8.dp, 16.dp, 8.dp)) {
+                Text(text = bottomSheetTitle, color = bodyColor)
+                OptionListItem(title = "Add to", icon = Icons.Default.Menu)
+                OptionListItem(title = "Open With", icon = Icons.Default.Share)
+                OptionListItem(title = "Watch Providers", icon = Icons.Default.Tv)
+                OptionListItem(title = "All ratings", icon = Icons.Default.Favorite)
+                OptionListItem(title = "Share", icon = Icons.Default.Share)
+                OptionListItem(title = "Hide", icon = Icons.Default.HideImage)
+            }
+        }) {
+        Scaffold(
+            bottomBar = {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                BottomNavigationBar(currentDestination = currentDestination,
+                    navigateToTopLevelDestination = { route ->
+                        navController.navigate(route.route) {
+                            restoreState = true
+                        }
+                    })
+            },
+            topBar = {
+                CenterAlignedTopAppBar(title = {
+                    Text(
+                        text = "Kast",
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(orange)
+                            .padding(8.dp, 2.dp, 8.dp, 2.dp)
                     )
                 }, navigationIcon = {
                     IconButton(onClick = {
-
+                        scope.launch {}
                     }) {
                         Icon(Icons.Default.Person, "")
                     }
-                },
-                actions = {
+                }, actions = {
                     IconButton(onClick = {
 
                     }) {
@@ -115,27 +160,32 @@ fun KastApp(viewModel: TestViewModel) {
                     }) {
                         Icon(Icons.Default.MoreVert, "")
                     }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = background,
                 )
-            )
-        },
+                )
+            },
 
-        ) {
-        NavHost(
-            modifier = Modifier.padding(it),
-            navController = navController,
-            startDestination = KastRoutes.Home.route
-        ) {
-            composable(KastRoutes.Home.route) {
-                MovieCategoriesScreen(state.categories, coroutineScope)
-            }
-            composable(KastRoutes.Watchlist.route) {
-                WatchlistScreen()
-            }
-            composable(KastRoutes.Profile.route) {
-                ProfileScreen()
+            ) {
+            NavHost(
+                modifier = Modifier.padding(it),
+                navController = navController,
+                startDestination = KastRoutes.Home.route
+            ) {
+                composable(KastRoutes.Home.route) {
+                    MovieCategoriesScreen(state.categories, bottomSheetState, onMovieClick = {
+                        scope.launch {
+                            bottomSheetTitle = it.title
+                            bottomSheetState.show()
+                        }
+                    })
+                }
+                composable(KastRoutes.Watchlist.route) {
+                    WatchlistScreen()
+                }
+                composable(KastRoutes.Profile.route) {
+                    ProfileScreen()
+                }
             }
         }
     }
@@ -150,26 +200,31 @@ fun DefaultPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieCategoriesScreen(
     categories: List<Category>,
-    coroutineScope: CoroutineScope
+    bottomSheetState: ModalBottomSheetState,
+    onMovieClick: (Movie) -> Unit,
 ) {
     if (categories.isEmpty()) {
         CircularProgressIndicator()
-    } else
-        LazyColumn() {
-            items(categories) { category ->
-                MovieListWithHeader(category)
-            }
+    } else LazyColumn() {
+        items(categories) { category ->
+            MovieListWithHeader(category, bottomSheetState, onMovieClick = {
+                onMovieClick(it)
+            })
         }
+    }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieListWithHeader(category: Category) {
+fun MovieListWithHeader(
+    category: Category, bottomSheetState: ModalBottomSheetState, onMovieClick: (Movie) -> Unit
+) {
     Row(
-        verticalAlignment = Alignment.Bottom,
-        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
+        verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
     ) {
         Text(
             text = category.title,
@@ -188,31 +243,38 @@ fun MovieListWithHeader(category: Category) {
     MovieList(
         movies = category.movies,
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
+        onMovieClick = {
+            onMovieClick(it)
+        },
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieList(movies: List<Movie>, modifier: Modifier) {
+fun MovieList(
+    movies: List<Movie>, modifier: Modifier, onMovieClick: (Movie) -> Unit
+) {
     LazyRow(
         contentPadding = PaddingValues(start = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
         items(movies) { movie ->
-            MovieCard(movie = movie)
+            MovieCard(movie = movie, onClick = { onMovieClick(movie) })
         }
     }
 }
 
-@Composable
-fun MovieCard(movie: Movie) {
-    Column(
-        modifier = Modifier
-            .width(140.dp)
-            .clickable {
 
-            }
-    ) {
+@Composable
+fun MovieCard(movie: Movie, onClick: (Movie) -> Unit) {
+
+    val scope = rememberCoroutineScope()
+    Column(modifier = Modifier
+        .width(140.dp)
+        .clickable {
+
+        }) {
 
         Card(shape = RoundedCornerShape(8.dp)) {
             Box(contentAlignment = Alignment.TopEnd) {
@@ -241,8 +303,7 @@ fun MovieCard(movie: Movie) {
                         .padding(4.dp, 2.dp, 4.dp, 2.dp)
 //                        .alpha(0.7f)
                         .background(
-                            black50Alpha,
-                            shape = RoundedCornerShape(8.dp)
+                            black50Alpha, shape = RoundedCornerShape(8.dp)
                         )
                         .padding(4.dp, 2.dp, 4.dp, 2.dp),
                 )
@@ -256,24 +317,21 @@ fun MovieCard(movie: Movie) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = movie.title.addEmptyLines(1),
-                style = TextStyle(
-                    color = bodyColor,
-                    fontWeight = FontWeight.Light
-                ),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2,
-                modifier = Modifier.weight(1f)
+                text = movie.title.addEmptyLines(1), style = TextStyle(
+                    color = bodyColor, fontWeight = FontWeight.Light
+                ), overflow = TextOverflow.Ellipsis, maxLines = 2, modifier = Modifier.weight(1f)
             )
-            Icon(
-                Icons.Default.MoreVert,
-                stringResource(id = R.string.more),
-                tint = bodyColor,
-                modifier = Modifier
-                    .clickable {
-
-                    }
-            )
+            IconButton(onClick = {
+                scope.launch {
+                    onClick(movie)
+                }
+            }) {
+                Icon(
+                    Icons.Default.MoreVert,
+                    stringResource(id = R.string.more),
+                    tint = bodyColor,
+                )
+            }
         }
 
     }

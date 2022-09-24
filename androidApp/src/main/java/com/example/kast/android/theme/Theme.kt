@@ -14,7 +14,8 @@ private val DarkColorPalette = darkColorScheme(
 //  primaryVariant = purple500,
   secondary = purple500,
   onPrimary = Color.White,
-  onSecondary = Color.White
+  onSecondary = Color.White,
+  surface = background
 )
 
 private val LightColorPalette = lightColorScheme(

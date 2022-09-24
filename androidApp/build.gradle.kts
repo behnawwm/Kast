@@ -35,6 +35,7 @@ dependencies {
     val composeUiVersion = "1.2.1"
     val composeActivityVersion = "1.6.0"
     val composeMaterial3Version = "1.0.0-beta03"
+    val composeMaterialVersion = "1.2.1"
     val composeNavigationVersion = "2.5.2"
     val coilVersion = "2.2.1"
     val coroutinesVersion = "1.6.4"
@@ -62,7 +63,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
     //disabled due to prevent conflicts with material3
-//    implementation("androidx.compose.material:material:$composeUiVersion")
+    implementation("androidx.compose.material:material:$composeMaterialVersion")
 
 
     // Compose Navigation
