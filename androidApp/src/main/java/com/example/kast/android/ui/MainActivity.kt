@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -79,9 +80,7 @@ fun KastContent(viewModel: TestViewModel) {
         SetDarkSystemBarColors(background, bottomNavigationContainerColor)
 
     val navController = rememberNavController()
-    val bottomSheetState = rememberBottomSheetScaffoldState(
-
-    )
+    val bottomSheetState = rememberBottomSheetScaffoldState()
     var bottomSheetTitle by remember { mutableStateOf("Movie") }
     val scope = rememberCoroutineScope()
     BottomSheetScaffold(
@@ -119,12 +118,11 @@ fun KastContent(viewModel: TestViewModel) {
             },
             topBar = {
                 CenterAlignedTopAppBar(title = {
-                    Text(
-                        text = "Kast",
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(orange)
-                            .padding(8.dp, 2.dp, 8.dp, 2.dp)
+                    Icon(
+                        painterResource(id = R.drawable.kast),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(56.dp)
                     )
                 }, navigationIcon = {
                     IconButton(onClick = {
