@@ -15,10 +15,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -37,7 +40,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.kast.android.R
 import com.example.kast.android.ui.components.BottomNavigationBar
 import com.example.kast.android.data.Category
-import com.example.kast.android.data.FakeData
 import com.example.kast.android.data.Movie
 import com.example.kast.android.theme.*
 import com.example.kast.android.utils.SetDarkSystemBarColors
@@ -54,48 +56,86 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val state by remember {
-                viewModel.state
-            }
+
             KastTheme(darkTheme = true) {
-                SetDarkSystemBarColors(background, bottomNavigationContainerColor)
+                KastApp(viewModel)
+            }
+        }
+    }
+}
 
-                val coroutineScope = rememberCoroutineScope()
-                val navController = rememberNavController()
-                Scaffold(
-                    bottomBar = {
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentDestination = navBackStackEntry?.destination
-                        BottomNavigationBar(
-                            currentDestination = currentDestination,
-                            navigateToTopLevelDestination = { route ->
-                                navController.navigate(route.route) {
-                                    restoreState = true
-                                }
-                            }
-                        )
-                    },
-                    topBar = {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun KastApp(viewModel: TestViewModel) {
+    val state by remember {
+        viewModel.state
+    }
+    SetDarkSystemBarColors(background, bottomNavigationContainerColor)
 
-                    },
-
-                    ) {
-                    NavHost(
-                        modifier = Modifier.padding(it),
-                        navController = navController,
-                        startDestination = KastRoutes.Home.route
-                    ) {
-                        composable(KastRoutes.Home.route) {
-                            MovieCategoriesScreen(state.categories, coroutineScope)
-                        }
-                        composable(KastRoutes.Watchlist.route) {
-                            WatchlistScreen()
-                        }
-                        composable(KastRoutes.Profile.route) {
-                            ProfileScreen()
-                        }
+    val coroutineScope = rememberCoroutineScope()
+    val navController = rememberNavController()
+    Scaffold(
+        bottomBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            BottomNavigationBar(
+                currentDestination = currentDestination,
+                navigateToTopLevelDestination = { route ->
+                    navController.navigate(route.route) {
+                        restoreState = true
                     }
                 }
+            )
+        },
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Kast",
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(orange)
+                            .padding(8.dp, 2.dp, 8.dp, 2.dp)
+                    )
+                }, navigationIcon = {
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(Icons.Default.Person, "")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(Icons.Default.Search, "")
+                    }
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(Icons.Default.MoreVert, "")
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                   containerColor = background,
+                )
+            )
+        },
+
+        ) {
+        NavHost(
+            modifier = Modifier.padding(it),
+            navController = navController,
+            startDestination = KastRoutes.Home.route
+        ) {
+            composable(KastRoutes.Home.route) {
+                MovieCategoriesScreen(state.categories, coroutineScope)
+            }
+            composable(KastRoutes.Watchlist.route) {
+                WatchlistScreen()
+            }
+            composable(KastRoutes.Profile.route) {
+                ProfileScreen()
             }
         }
     }
@@ -104,10 +144,9 @@ class MainActivity : ComponentActivity() {
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DefaultPreview() {
-    KastTheme {
-        val coroutineScope = rememberCoroutineScope()
-
-        MovieCategoriesScreen(FakeData.categories, coroutineScope)
+    val viewModel = TestViewModel()
+    KastTheme(darkTheme = true) {
+        KastApp(viewModel)
     }
 }
 

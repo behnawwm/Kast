@@ -23,3 +23,4 @@ val bottomNavigationSelectedTextColor = Color(0xffd8dae3)
 val bodyColor = Color(0xffccd3dd)
 
 val black50Alpha = Color(0x80000000)
+val orange = Color(0xffd3401b)

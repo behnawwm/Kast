@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.kast.KastApp"
+        android:name="com.example.kast.Kast"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
