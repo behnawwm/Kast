@@ -17,10 +17,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.kast.android.ui.home.HomeScreen
+import com.example.kast.android.ui.home.home.HomeScreen
 import com.example.kast.android.ui.home.MovieDetailScreen
 import com.example.kast.android.ui.profile.SettingsScreen
 import com.example.kast.android.ui.search.CategorySearchScreen
@@ -28,19 +27,11 @@ import com.example.kast.android.ui.search.QuerySearchScreen
 import com.example.kast.android.ui.search.SearchScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 
-sealed class Screen(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val route: String
-) {
-    object Home : Screen("Home", Icons.Default.Home, Icons.Outlined.Home, "home")
-    object Profile : Screen("Profile", Icons.Default.Person, Icons.Outlined.Person, "profile")
-    object Watchlist :
-        Screen("Watchlist", Icons.Default.Movie, Icons.Outlined.Movie, "watchlist")
-
-    object Search :
-        Screen("Search", Icons.Default.Search, Icons.Outlined.Search, "search")
+sealed class Screen(val route: String) {
+    object Home : Screen("home")
+    object Search : Screen("search")
+    object Watchlist : Screen("watchlist")
+    object Profile : Screen("profile")
 }
 
 private sealed class LeafScreen(
@@ -64,14 +55,6 @@ private sealed class LeafScreen(
     object Settings : LeafScreen("settings")
     object Profile : LeafScreen("profile")
 }
-
-
-val topLevelDestinations = listOf(
-    Screen.Home,
-    Screen.Search,
-    Screen.Watchlist,
-    Screen.Profile,
-)
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -103,9 +86,11 @@ private fun NavGraphBuilder.addHomeTopLevel(
 
 fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
     composable(route = LeafScreen.Home.createRoute(root)) {
-        HomeScreen(hiltViewModel(), onMovieClicked = { movie ->
-            navController.navigate(LeafScreen.MovieDetail.createRoute(root, movie.id))
-        })
+        HomeScreen(
+            hiltViewModel(),
+            onMovieClicked = { movie ->
+                navController.navigate(LeafScreen.MovieDetail.createRoute(root, movie.id))
+            })
 //        MovieCategoriesScreen(hiltViewModel(), onMovieClick = {
 //            scope.launch {
 //                bottomSheetTitle = it.title
@@ -143,7 +128,7 @@ private fun NavGraphBuilder.addSearchTopLevel(
     navController: NavController,
 ) {
     navigation(
-        route = Screen.Home.route,
+        route = Screen.Search.route,
         startDestination = LeafScreen.Search.createRoute(Screen.Search)
     ) {
         addSearch(navController, Screen.Search)

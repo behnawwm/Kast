@@ -1,4 +1,4 @@
-package com.example.kast.android.ui.home
+package com.example.kast.android.ui.home.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,8 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +18,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +29,6 @@ import com.example.kast.android.data.Category
 import com.example.kast.android.data.Movie
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.TestViewModel
-import com.example.kast.android.ui.home.home.HomeTopBar
 import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.addEmptyLines
 import kotlinx.coroutines.launch
@@ -184,7 +180,7 @@ fun MovieCard(movie: Movie, onClick: (Movie) -> Unit) {
             }) {
                 Icon(
                     Icons.Default.MoreVert,
-                    stringResource(id = R.string.more),
+                    "",
                     tint = bodyColor,
                 )
             }
