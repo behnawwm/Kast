@@ -40,7 +40,7 @@ dependencies {
     val hiltComposeNavigationVersion = "1.0.0"
     val coilVersion = "2.2.1"
     val coroutinesVersion = "1.6.4"
-    val accompanistSystemUiControllerVersion = "0.25.1"
+    val accompanistVersion = "0.25.1"
     val lifecycleVersion = "2.6.0-alpha02"
 
     implementation(project(":shared"))
@@ -58,8 +58,14 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
-    // Accompanist SystemUiController
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistSystemUiControllerVersion")
+    //------------------------- Accompanist -------------------------
+    // SystemUiController
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    // Navigation Material
+    implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
+    // Navigation Animation
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    //------------------------- Accompanist -------------------------
 
     // Material 3 Compose
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
@@ -79,5 +85,6 @@ dependencies {
     // Lifecycle-aware flow collecting
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+
 
 }

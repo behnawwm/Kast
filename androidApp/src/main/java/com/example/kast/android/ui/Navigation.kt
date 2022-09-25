@@ -1,5 +1,6 @@
 package com.example.kast.android.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Movie
@@ -25,6 +26,7 @@ import com.example.kast.android.ui.profile.SettingsScreen
 import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
 import com.example.kast.android.ui.search.SearchScreen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 sealed class Screen(
     val title: String,
@@ -72,9 +74,10 @@ val topLevelDestinations = listOf(
 )
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(
+    AnimatedNavHost(
         modifier = modifier,
         navController = navController,
         startDestination = Screen.Home.route
