@@ -37,16 +37,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.kast.android.R
-import com.example.kast.android.ui.components.BottomNavigationBar
+import com.example.kast.android.ui.components.AppBottomNavigationBar
 import com.example.kast.android.data.Category
 import com.example.kast.android.data.Movie
 import com.example.kast.android.theme.*
-import com.example.kast.android.ui.components.OptionListItem
+import com.example.kast.android.ui.home.OptionListItem
 import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.SetDarkSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
@@ -81,8 +78,6 @@ fun KastContent(viewModel: TestViewModel) {
         val bottomSheetState = rememberBottomSheetScaffoldState()
         var bottomSheetTitle by remember { mutableStateOf("") }
 
-        val scope = rememberCoroutineScope()
-
         BottomSheetScaffold(
             scaffoldState = bottomSheetState,
             sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
@@ -97,7 +92,7 @@ fun KastContent(viewModel: TestViewModel) {
                     KastTopBar()
                 },
                 bottomBar = {
-                    BottomNavigationBar(
+                    AppBottomNavigationBar(
                         currentDestination = navBackStackEntry?.destination,
                         navigateToTopLevelDestination = { route ->
                             navController.navigate(route.route) {
@@ -106,54 +101,12 @@ fun KastContent(viewModel: TestViewModel) {
                         })
                 }
             ) { scaffoldPadding ->
-                KastNavigation(
+                AppNavigation(
                     navController,
                     modifier = Modifier.padding(scaffoldPadding)
                 )
             }
         }
-    }
-}
-
-@Composable
-fun KastNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = Screen.Home.route
-    ) {
-        addHome(navController)
-        addWatchlist(navController)
-        addProfile(navController)
-    }
-}
-
-private fun NavGraphBuilder.addHome(
-    navController: NavController,
-) {
-    composable(Screen.Home.route) {
-        MovieCategoriesScreen(state.categories, onMovieClick = {
-            scope.launch {
-                bottomSheetTitle = it.title
-                bottomSheetState.bottomSheetState.expand()
-            }
-        })
-    }
-}
-
-private fun NavGraphBuilder.addWatchlist(
-    navController: NavController,
-) {
-    composable(Screen.Watchlist.route) {
-        WatchlistScreen()
-    }
-}
-
-private fun NavGraphBuilder.addProfile(
-    navController: NavController,
-) {
-    composable(Screen.Profile.route) {
-        ProfileScreen()
     }
 }
 
@@ -220,16 +173,17 @@ fun DefaultPreview() {
     KastContent(viewModel)
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieCategoriesScreen(
-    categories: List<Category>,
+fun MovieCategoriesList(
+    viewModel: TestViewModel,
     onMovieClick: (Movie) -> Unit,
 ) {
-    if (categories.isEmpty()) {
+    val state by remember { viewModel.state }
+
+    if (state.categories.isEmpty()) {
         CircularProgressIndicator()
     } else LazyColumn() {
-        items(categories) { category ->
+        items(state.categories) { category ->
             MovieListWithHeader(category, onMovieClick = {
                 onMovieClick(it)
             })

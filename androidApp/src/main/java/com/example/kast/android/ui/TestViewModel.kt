@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kast.android.data.Category
 import com.example.kast.android.data.FakeData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class TestViewModel : ViewModel() {
 
     data class State(

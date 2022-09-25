@@ -37,9 +37,11 @@ dependencies {
     val composeMaterial3Version = "1.0.0-beta03"
     val composeMaterialVersion = "1.2.1"
     val composeNavigationVersion = "2.5.2"
+    val hiltComposeNavigationVersion = "1.0.0"
     val coilVersion = "2.2.1"
     val coroutinesVersion = "1.6.4"
     val accompanistSystemUiControllerVersion = "0.25.1"
+    val lifecycleVersion = "2.6.0-alpha02"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -62,11 +64,20 @@ dependencies {
     // Material 3 Compose
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
-    //disabled due to prevent conflicts with material3
     implementation("androidx.compose.material:material:$composeMaterialVersion")
-
 
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
+
+    // Hilt Navigation Compose
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")
+
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+
+    // Lifecycle-aware flow collecting
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
 }

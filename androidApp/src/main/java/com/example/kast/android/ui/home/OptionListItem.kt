@@ -1,4 +1,4 @@
-package com.example.kast.android.ui.components
+package com.example.kast.android.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

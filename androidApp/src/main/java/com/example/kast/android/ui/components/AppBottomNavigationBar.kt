@@ -11,7 +11,7 @@ import com.example.kast.android.ui.Screen
 import com.example.kast.android.ui.topLevelDestinations
 
 @Composable
-fun BottomNavigationBar(
+fun AppBottomNavigationBar(
     currentDestination: NavDestination?,
     navigateToTopLevelDestination: (Screen) -> Unit
 ) {
