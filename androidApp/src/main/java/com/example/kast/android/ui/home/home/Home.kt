@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.kast.android.R
 import com.example.kast.android.data.Category
 import com.example.kast.android.data.Movie
 import com.example.kast.android.theme.*
@@ -36,7 +35,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: TestViewModel,
     onMovieClicked: (movie: Movie) -> Unit
 ) {
     Scaffold(
@@ -45,6 +43,7 @@ fun HomeScreen(
         }
     ) { paddingValues ->
         paddingValues
+        val viewModel = TestViewModel()
         MovieCategoriesList(viewModel, onMovieClicked)
     }
 }

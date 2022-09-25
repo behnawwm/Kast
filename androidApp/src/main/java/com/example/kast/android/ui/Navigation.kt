@@ -1,24 +1,11 @@
 package com.example.kast.android.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Movie
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.example.kast.android.ui.home.home.HomeScreen
 import com.example.kast.android.ui.home.MovieDetailScreen
 import com.example.kast.android.ui.profile.SettingsScreen
@@ -26,6 +13,8 @@ import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
 import com.example.kast.android.ui.search.SearchScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -61,9 +50,9 @@ private sealed class LeafScreen(
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     AnimatedNavHost(
-        modifier = modifier,
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.Home.route,
+        modifier = modifier
     ) {
         addHomeTopLevel(navController)
         addWatchlistTopLevel(navController)
@@ -72,6 +61,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addHomeTopLevel(
     navController: NavController,
 ) {
@@ -84,10 +74,12 @@ private fun NavGraphBuilder.addHomeTopLevel(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
-    composable(route = LeafScreen.Home.createRoute(root)) {
+    composable(
+        route = LeafScreen.Home.createRoute(root)
+    ) {
         HomeScreen(
-            hiltViewModel(),
             onMovieClicked = { movie ->
                 navController.navigate(LeafScreen.MovieDetail.createRoute(root, movie.id))
             })
@@ -100,12 +92,14 @@ fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addMovieDetail(navController: NavController, root: Screen) {
     composable(route = LeafScreen.MovieDetail.createRoute(root)) {
         MovieDetailScreen()
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addWatchlistTopLevel(
     navController: NavController,
 ) {
@@ -117,6 +111,7 @@ private fun NavGraphBuilder.addWatchlistTopLevel(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addWatchlist(navController: NavController, root: Screen) {
     composable(route = LeafScreen.Watchlist.createRoute(root)) {
         WatchlistScreen()
@@ -124,6 +119,7 @@ fun NavGraphBuilder.addWatchlist(navController: NavController, root: Screen) {
 }
 
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addSearchTopLevel(
     navController: NavController,
 ) {
@@ -137,24 +133,28 @@ private fun NavGraphBuilder.addSearchTopLevel(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addSearch(navController: NavController, root: Screen) {
     composable(route = LeafScreen.Search.createRoute(root)) {
         SearchScreen()
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addQuerySearch(navController: NavController, root: Screen) {
     composable(route = LeafScreen.QuerySearch.createRoute(root)) {
         QuerySearchScreen()
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addCategorySearch(navController: NavController, root: Screen) {
     composable(route = LeafScreen.CategorySearch.createRoute(root)) {
         CategorySearchScreen()
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addProfileTopLevel(
     navController: NavController,
 ) {
@@ -167,12 +167,14 @@ private fun NavGraphBuilder.addProfileTopLevel(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addProfile(navController: NavController, root: Screen) {
     composable(route = LeafScreen.Profile.createRoute(root)) {
         ProfileScreen()
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addSettings(navController: NavController, root: Screen) {
     composable(route = LeafScreen.Settings.createRoute(root)) {
         SettingsScreen()

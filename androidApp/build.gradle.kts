@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -42,6 +44,7 @@ dependencies {
     val coroutinesVersion = "1.6.4"
     val accompanistVersion = "0.25.1"
     val lifecycleVersion = "2.6.0-alpha02"
+    val hiltVersion = "2.43.2"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -74,6 +77,11 @@ dependencies {
 
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     // Hilt Navigation Compose
     implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")

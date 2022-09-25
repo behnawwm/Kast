@@ -2,14 +2,15 @@ package com.example.kast.android.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
@@ -30,7 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.kast.android.R
 import com.example.kast.android.theme.*
 import com.example.kast.android.utils.SetDarkSystemBarColors
@@ -38,7 +42,9 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +64,11 @@ class MainActivity : ComponentActivity() {
 fun KastContent() {
     KastTheme() {
         SetDarkSystemBarColors(background, bottomNavigationContainerColor)
-
-//        val navController = rememberNavController()
 //        val bottomSheetState = rememberBottomSheetScaffoldState()
 //        var bottomSheetTitle by remember { mutableStateOf("") }
 
         val bottomSheetNavigator = rememberBottomSheetNavigator()
         val navController = rememberAnimatedNavController(bottomSheetNavigator)
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
 
 //        BottomSheetScaffold(
 //            scaffoldState = bottomSheetState,
@@ -99,7 +102,10 @@ fun KastContent() {
             ModalBottomSheetLayout(bottomSheetNavigator) {
                 AppNavigation(
                     navController,
-                    modifier = Modifier.padding(scaffoldPadding)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Red)
+                        .padding(scaffoldPadding)
                 )
             }
         }
@@ -150,7 +156,7 @@ fun AppBottomNavigationBar(
 }
 
 @Composable
-private fun NavController.currentScreenAsState(): State<Screen> {
+fun NavController.currentScreenAsState(): State<Screen> {
     val selectedItem = remember { mutableStateOf<Screen>(Screen.Home) }
 
     DisposableEffect(this) {
@@ -188,7 +194,11 @@ private fun MainNavigationItemIcon(item: MainNavigationItem, selected: Boolean) 
     }
     val selectedPainter = when (item) {
         is MainNavigationItem.ResourceIcon -> item.selectedIconResId?.let { painterResource(it) }
-        is MainNavigationItem.ImageVectorIcon -> item.selectedImageVector?.let { rememberVectorPainter(it) }
+        is MainNavigationItem.ImageVectorIcon -> item.selectedImageVector?.let {
+            rememberVectorPainter(
+                it
+            )
+        }
     }
 
     if (selectedPainter != null) {

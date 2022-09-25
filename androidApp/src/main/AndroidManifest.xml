@@ -5,18 +5,21 @@
 
     <application
         android:name="com.example.kast.KastApp"
-        android:label="Kast"
         android:allowBackup="false"
-        android:supportsRtl="true"
         android:icon="@mipmap/ic_launcher_round"
+        android:label="Kast"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

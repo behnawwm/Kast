@@ -8,9 +8,10 @@ import com.example.kast.android.data.FakeData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class TestViewModel : ViewModel() {
+class TestViewModel @Inject constructor() : ViewModel() {
 
     data class State(
         val error: String? = null,
