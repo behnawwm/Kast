@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
 )
 @Composable
 fun KastContent() {
-    KastTheme() {
+    KastTheme(darkTheme = true) {
         SetDarkSystemBarColors(background, bottomNavigationContainerColor)
 //        val bottomSheetState = rememberBottomSheetScaffoldState()
 //        var bottomSheetTitle by remember { mutableStateOf("") }
@@ -104,7 +104,6 @@ fun KastContent() {
                     navController,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Red)
                         .padding(scaffoldPadding)
                 )
             }
@@ -143,13 +142,13 @@ fun AppBottomNavigationBar(
                     )
                 },
                 alwaysShowLabel = false,
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = bottomNavigationSelectedIconColor,
-                    selectedTextColor = bottomNavigationSelectedTextColor,
-                    indicatorColor = bottomNavigationSelectedIconBackground,
-                    unselectedIconColor = bottomNavigationUnselectedTextColor,
-                    unselectedTextColor = bottomNavigationUnselectedTextColor,
-                )
+//                colors = NavigationBarItemDefaults.colors(
+//                    selectedIconColor = bottomNavigationSelectedIconColor,
+//                    selectedTextColor = bottomNavigationSelectedTextColor,
+//                    indicatorColor = bottomNavigationSelectedIconBackground,
+//                    unselectedIconColor = bottomNavigationUnselectedTextColor,
+//                    unselectedTextColor = bottomNavigationUnselectedTextColor,
+//                )
             )
         }
     }
