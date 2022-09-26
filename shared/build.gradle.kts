@@ -24,6 +24,7 @@ kotlin {
     }
 
     val ktorVersion = "2.0.2"
+    val lifecycle_version = "2.6.0-alpha02"
 
     sourceSets {
         val commonMain by getting {
@@ -38,6 +39,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:${ktorVersion}")
+
+
             }
         }
         val commonTest by getting {
@@ -49,6 +52,16 @@ kotlin {
             dependencies {
                 //ktor
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+                // LiveData
+                implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+                // Lifecycles only (without ViewModel or LiveData)
+                implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+
+                // Saved state module for ViewModel
+                implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+
             }
         }
         val androidTest by getting
@@ -74,6 +87,15 @@ kotlin {
             iosX64Test.dependsOn(this)
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
+        }
+    }
+    // export correct artifact to use all classes of library directly from Swift
+    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
+        binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
+            export("dev.icerock.moko:mvvm-core:0.14.0")
+            export("dev.icerock.moko:mvvm-livedata:0.14.0")
+            export("dev.icerock.moko:mvvm-livedata-resources:0.14.0")
+            export("dev.icerock.moko:mvvm-state:0.14.0")
         }
     }
 }
