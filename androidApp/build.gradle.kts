@@ -68,6 +68,10 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
     // Navigation Animation
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    // Insets
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    // insets-ui
+    implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
     //------------------------- Accompanist -------------------------
 
     // Material 3 Compose
