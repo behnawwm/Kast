@@ -32,17 +32,18 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
-                //ktor
+                // Ktor
                 implementation("io.ktor:ktor-client-json:${ktorVersion}")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:${ktorVersion}")
+                implementation("io.ktor:ktor-client-logging:${ktorVersion}")
 
                 // Sqldelight
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0")
                 implementation("com.squareup.sqldelight:runtime:$sqldelightVersion")
-                implementation("io.ktor:ktor-client-logging:${ktorVersion}")
+                implementation("com.squareup.sqldelight:coroutines-extensions:$sqldelightVersion")
             }
         }
         val androidMain by getting {
@@ -61,6 +62,8 @@ kotlin {
 
                 // Sqldelight
                 implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
+                implementation("com.squareup.sqldelight:android-paging-extensions:$sqldelightVersion")
+
             }
         }
         val commonTest by getting {

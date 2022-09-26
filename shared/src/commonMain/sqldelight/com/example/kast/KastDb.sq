@@ -1,19 +1,19 @@
 CREATE TABLE MovieEntity (
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  id INTEGER PRIMARY KEY NOT NULL,
   title TEXT NOT NULL,
   rating REAL,
-  image_url TEXT
+  posterPath TEXT
 );
 
 insertMovie:
-INSERT OR REPLACE INTO MovieEntity(title,rating,image_url)
-VALUES (?,?,?);
+INSERT OR REPLACE INTO MovieEntity(id,title,rating,posterPath)
+VALUES (?,?,?,?);
 
 selectAllMovies:
 SELECT * FROM MovieEntity;
 
 selectMovieById:
-SELECT * FROM MovieEntity WHERE id = ?;
+SELECT * FROM MovieEntity WHERE id = :movieId;
 
 deleteAllMovies:
 DELETE FROM MovieEntity;

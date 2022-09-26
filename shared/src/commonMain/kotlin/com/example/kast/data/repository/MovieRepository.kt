@@ -1,19 +1,25 @@
 package com.example.kast.data.repository
 
+import com.example.kast.MovieEntity
+import com.example.kast.data.model.MovieView
 import com.example.kast.data.model.TmdbMovie
-import com.example.kast.data.source.remote.ApiClient
+import com.example.kast.data.source.local.Database
+import com.example.kast.data.source.local.DatabaseDriverFactory
 import com.example.kast.data.source.remote.MovieServices
-import com.example.kast.data.source.remote.MovieServicesImpl
-import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class MovieRepository(
-    private val apiServices: MovieServices
+    private val apiServices: MovieServices,
+    private val databaseDriverFactory: DatabaseDriverFactory
 ) {
-    constructor() : this(apiServices = MovieServicesImpl(ApiClient()))
+    //    constructor() : this(apiServices = MovieServicesImpl(ApiClient()),databaseDriverFactory = DatabaseDriverFactory())
+
+    private val database = Database(databaseDriverFactory)
 
     fun getPopularMovies(): Flow<List<TmdbMovie>?> {
         return flow {
@@ -26,4 +32,35 @@ class MovieRepository(
             emit(apiServices.test())
         }.flowOn(Dispatchers.Default)
     }
+
+    @OptIn(FlowPreview::class)
+    fun selectAllMovies(): Flow<List<MovieView>> {
+        return database.selectAllMovies().flatMapConcat {
+            flow {
+                it.map {
+                    it.toMovieView()
+                }
+            }
+        }
+    }
+
+    suspend fun selectMovieById(movieId: Long): MovieView? {
+        return database.getMovieById(movieId)?.toMovieView()
+    }
+
+    suspend fun insertMovie(movie: MovieView) {
+        database.insertMovie(movie.toMovieEntity())
+    }
+
+    suspend fun deleteAllMovies() {
+        database.deleteAllMovies()
+    }
+}
+
+fun MovieEntity.toMovieView(): MovieView {
+    return MovieView(id, title, rating, posterPath)
+}
+
+fun MovieView.toMovieEntity(): MovieEntity {
+    return MovieEntity(id, title, rating, posterPath)
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TestViewModel @Inject constructor() : ViewModel() {
+class TestViewModel @Inject constructor(): ViewModel() {
 
     data class State(
         val error: String? = null,
@@ -29,5 +29,9 @@ class TestViewModel @Inject constructor() : ViewModel() {
             delay(1000)
             state.value = state.value.copy(categories = FakeData.categories)
         }
+    }
+
+    private fun test(){
+
     }
 }

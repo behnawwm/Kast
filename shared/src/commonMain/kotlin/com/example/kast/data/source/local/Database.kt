@@ -3,25 +3,41 @@ package com.example.kast.data.source.local
 import com.example.kast.KastDb
 import com.example.kast.MovieEntity
 import com.example.kast.data.model.MovieView
+import com.squareup.sqldelight.Query
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
+import kotlinx.coroutines.flow.flatMapConcat
 
-internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
+internal class Database(databaseDriverFactory: DatabaseDriverFactory) : MoviesDao {
     private val database = KastDb(databaseDriverFactory.createDriver())
     private val dbQuery = database.kastDbQueries
 
-    internal fun insertMovie(movie: MovieView) {
-        dbQuery.transaction {
-            dbQuery.insertMovie(movie.title, movie.rating.toDouble(), movie.imageUrl)
+    override suspend fun insertMovie(movie: MovieEntity) {
+        withContext(Dispatchers.Default) {
+            dbQuery.insertMovie(movie.id, movie.title, movie.rating, movie.posterPath)
         }
     }
 
-    internal fun selectAllMovies(): List<MovieEntity> {
-        return dbQuery.selectAllMovies().executeAsList()
+    override fun selectAllMovies(): Flow<List<MovieEntity>> {   //todo apply caching strategy
+        return dbQuery.selectAllMovies().asFlow().mapToList()
     }
 
-    internal fun clearDatabase() {
-        dbQuery.transaction {
+    override suspend fun getMovieById(movieId: Long): MovieEntity? {
+        return withContext(Dispatchers.Default) {
+            dbQuery.selectMovieById(movieId).executeAsOneOrNull()
+        }
+    }
+
+    override suspend fun deleteAllMovies() {
+        withContext(Dispatchers.Default) {
             dbQuery.deleteAllMovies()
         }
     }
 }
+
 

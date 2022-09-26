@@ -69,7 +69,6 @@ fun KastContent() {
         val bottomSheetNavigator = rememberBottomSheetNavigator()
         val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
-
         ModalBottomSheetLayout(
             bottomSheetNavigator,
             sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
