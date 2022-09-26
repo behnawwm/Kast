@@ -30,11 +30,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-                implementation("com.russhwolf:multiplatform-settings-no-arg:0.7.7")
+
                 //ktor
-                implementation("io.ktor:ktor-client-json:${ktorVersion}")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -90,14 +87,6 @@ kotlin {
         }
     }
     // export correct artifact to use all classes of library directly from Swift
-    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
-        binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
-            export("dev.icerock.moko:mvvm-core:0.14.0")
-            export("dev.icerock.moko:mvvm-livedata:0.14.0")
-            export("dev.icerock.moko:mvvm-livedata-resources:0.14.0")
-            export("dev.icerock.moko:mvvm-state:0.14.0")
-        }
-    }
 }
 
 android {
