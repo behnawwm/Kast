@@ -41,23 +41,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import coil.compose.SubcomposeAsyncImage
+import com.example.kast.MovieViewModel
 import com.example.kast.android.R
 import com.example.kast.android.ui.components.BottomNavigationBar
-import com.example.kast.android.data.Category
-import com.example.kast.android.data.Movie
+
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.components.OptionListItem
 import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.SetDarkSystemBarColors
 import com.example.kast.android.utils.addEmptyLines
-import com.example.kast.android.utils.getImageLoader
-import kotlinx.coroutines.CoroutineScope
+import com.example.kast.data.model.Category
+import com.example.kast.data.model.Movie
+import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: TestViewModel by viewModels()
+    private val viewModel: MovieViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun KastContent(viewModel: TestViewModel) {
+fun KastContent(viewModel: MovieViewModel) {
     KastTheme(darkTheme = true) {
         val state by remember {
             viewModel.state
@@ -179,7 +179,7 @@ fun KastContent(viewModel: TestViewModel) {
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DefaultPreview() {
-    val viewModel = TestViewModel()
+    val viewModel = MovieViewModel(MovieRepository())
     KastContent(viewModel)
 }
 

@@ -1,12 +1,11 @@
 package com.example.kast
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.kast.data.model.Category
 import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
@@ -15,13 +14,31 @@ actual class MovieViewModel actual constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
     actual val viewModelScope: CoroutineScope = androidXViewModelScope
-    val _movies: MutableStateFlow<List<TmdbMovie>> = MutableStateFlow(emptyList())
-    val movies: StateFlow<List<TmdbMovie>> = _movies
+
+    data class State(
+        val error: String? = null,
+        val categories: List<Category> = emptyList(),
+        val movies: List<TmdbMovie> = emptyList()
+    )
+
+    val state = mutableStateOf(State())
+
+    init {
+//        getMovies()
+    }
+
 
     actual fun getMovies() {
         viewModelScope.launch {
-            movieRepository.getPopularMovies(onSuccess = {
-                _movies.update { it }
+            movieRepository.getPopularMovies(onSuccess = { movies ->
+                state.value = state.value.copy(
+                    categories = mutableListOf(
+                        Category(0, "Trending", "movies", movies.map { it.toMovie() }),
+                        Category(1, "Popular", "series", movies.map { it.toMovie() }),
+                        Category(2, "New", "movies", movies.map { it.toMovie() }),
+                        Category(3, "Top", "movies", movies.map { it.toMovie() }),
+                    )
+                )
             }, onFailure = {
 
             })

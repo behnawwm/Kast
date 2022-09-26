@@ -14,7 +14,7 @@ data class TmdbMovie(
     @SerialName("genre_ids")
     val genreIds: List<Int>?,
 
-    val id: Int,
+    val id: Long,
 
     @SerialName("original_language")
     val originalLanguage: String?,
@@ -42,5 +42,9 @@ data class TmdbMovie(
     @SerialName("vote_count")
     val voteCount: Int?
 ) {
-//    fun toMovieView() = MovieView(id, posterPath, title.orEmpty(), voteAverage ?: 0.0, false)
+    public fun toMovie(): Movie {
+        return Movie(
+            id, originalTitle ?: "", voteAverage?.toFloat() ?: 0f
+        )
+    }
 }
