@@ -1,15 +1,17 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.example.kast.android"
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "com.example.kast.android"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -32,11 +34,69 @@ android {
 }
 
 dependencies {
+    val composeUiVersion = "1.2.1"
+    val composeActivityVersion = "1.6.0"
+    val composeMaterial3Version = "1.0.0-beta03"
+    val composeMaterialVersion = "1.2.1"
+    val composeNavigationVersion = "2.5.2"
+    val hiltComposeNavigationVersion = "1.0.0"
+    val coilVersion = "2.2.1"
+    val coroutinesVersion = "1.6.4"
+    val accompanistVersion = "0.25.1"
+    val lifecycleVersion = "2.6.0-alpha02"
+    val hiltVersion = "2.43.2"
+
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")
-    implementation("androidx.compose.foundation:foundation:1.2.1")
-    implementation("androidx.compose.material:material:1.2.1")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.compose.ui:ui:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
+    implementation("androidx.compose.foundation:foundation:$composeUiVersion")
+    implementation("androidx.activity:activity-compose:$composeActivityVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:$coilVersion")
+
+    //------------------------- Accompanist -------------------------
+    // SystemUiController
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    // Navigation Material
+    implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
+    // Navigation Animation
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    // Insets
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    // insets-ui
+    implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
+    //------------------------- Accompanist -------------------------
+
+    // Material 3 Compose
+    implementation("androidx.compose.material3:material3:$composeMaterial3Version")
+    implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
+    implementation("androidx.compose.material:material:$composeMaterialVersion")
+
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+
+    // Hilt Navigation Compose
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")
+
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+
+    // Lifecycle-aware flow collecting
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+
+
 }
