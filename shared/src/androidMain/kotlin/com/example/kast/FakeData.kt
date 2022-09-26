@@ -1,4 +1,7 @@
-package com.example.kast.android.data
+package com.example.kast
+
+import com.example.kast.data.model.Category
+import com.example.kast.data.model.Movie
 
 object FakeData {
 
@@ -18,17 +21,3 @@ object FakeData {
     )
 }
 
-data class Movie(
-    val id: Long,
-    val title: String,
-    val rating: Float,
-    val imageUrl: String = "https://c8.alamy.com/compde/pma8m3/von-marvel-avengers-alter-von-panasonic-poster-marvel-2015-poster-pma8m3.jpg"
-)
-
-data class Category(
-    val id: Long,
-    val title: String,
-    val subtitle:String,
-    val movies: List<Movie>,
-    val deepLink: String = ""
-)

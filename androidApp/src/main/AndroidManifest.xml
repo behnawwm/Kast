@@ -9,6 +9,7 @@
         android:icon="@mipmap/ic_launcher_round"
         android:label="Kast"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
         <activity
