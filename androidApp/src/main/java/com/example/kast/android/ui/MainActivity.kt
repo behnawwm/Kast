@@ -1,43 +1,44 @@
 package com.example.kast.android.ui
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.kast.android.R
-import com.example.kast.android.theme.*
+import com.example.kast.android.theme.KastTheme
+import com.example.kast.android.theme.background
+import com.example.kast.android.theme.bottomNavigationContainerColor
 import com.example.kast.android.utils.SetDarkSystemBarColors
+import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -57,49 +58,42 @@ class MainActivity : ComponentActivity() {
 }
 
 @OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class
+    ExperimentalMaterialNavigationApi::class,
+    ExperimentalAnimationApi::class
 )
 @Composable
 fun KastContent() {
     KastTheme(darkTheme = true) {
         SetDarkSystemBarColors(background, bottomNavigationContainerColor)
-//        val bottomSheetState = rememberBottomSheetScaffoldState()
-//        var bottomSheetTitle by remember { mutableStateOf("") }
 
         val bottomSheetNavigator = rememberBottomSheetNavigator()
         val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
-//        BottomSheetScaffold(
-//            scaffoldState = bottomSheetState,
-//            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-//            sheetBackgroundColor = background,
-//            sheetPeekHeight = 0.dp,
-//            sheetContent = {
-//                MovieMoreBottomSheet(bottomSheetTitle)
-//            }
-//        ) {
 
-        Scaffold(
-            bottomBar = {
-                val currentSelectedItem by navController.currentScreenAsState()
-                AppBottomNavigationBar(
-                    selectedNavigation = currentSelectedItem,
-                    onNavigationSelected = { selected ->
-                        navController.navigate(selected.route) {
-                            launchSingleTop = true
-                            restoreState = true
+        ModalBottomSheetLayout(
+            bottomSheetNavigator,
+            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+            sheetBackgroundColor = bottomNavigationContainerColor
+        ) {
+            Scaffold(
+                bottomBar = {
+                    val currentSelectedItem by navController.currentScreenAsState()
+                    AppBottomNavigationBar(
+                        selectedNavigation = currentSelectedItem,
+                        onNavigationSelected = { selected ->
+                            navController.navigate(selected.route) {
+                                launchSingleTop = true
+                                restoreState = true
 
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
                             }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        ) { scaffoldPadding ->
-            ModalBottomSheetLayout(bottomSheetNavigator) {
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            ) { scaffoldPadding ->
                 AppNavigation(
                     navController,
                     modifier = Modifier
@@ -108,7 +102,6 @@ fun KastContent() {
                 )
             }
         }
-//        }
     }
 }
 
@@ -250,8 +243,8 @@ private val mainNavigationItems = listOf(
         screen = Screen.Watchlist,
         labelResId = R.string.watchlist_title,
         contentDescriptionResId = R.string.watchlist_title,
-        iconImageVector = Icons.Outlined.Bookmark,
-        selectedImageVector = Icons.Default.Bookmark
+        iconImageVector = Icons.Outlined.Bookmarks,
+        selectedImageVector = Icons.Default.Bookmarks
     ),
     MainNavigationItem.ImageVectorIcon(
         screen = Screen.Profile,
