@@ -112,12 +112,6 @@ fun KastContent() {
     }
 }
 
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun DefaultPreview() {
-    KastContent()
-}
-
 @Composable
 fun AppBottomNavigationBar(
     selectedNavigation: Screen,

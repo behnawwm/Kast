@@ -1,5 +1,6 @@
 package com.example.kast.android.ui.home.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,16 +17,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kast.android.theme.bodyColor
+import com.example.kast.android.theme.bottomNavigationContainerColor
 
 
 @Composable
-fun MovieMoreBottomSheet(bottomSheetTitle: String) {
+fun MovieOptionsBottomSheet(movieId: Long, movieTitle: String) {
     Column(
         modifier = Modifier
+            .background(bottomNavigationContainerColor)
             .padding(16.dp, 8.dp, 16.dp, 16.dp)
     ) {
         Text(
-            text = bottomSheetTitle,
+            text = movieTitle,
             color = bodyColor,
             fontSize = 14.sp,
             modifier = Modifier.padding(12.dp, 8.dp, 12.dp, 8.dp)
@@ -56,7 +59,11 @@ fun OptionListItem(
             tint = bodyColor,
             modifier = Modifier.padding(12.dp, 0.dp, 12.dp, 0.dp)
         )
-        androidx.compose.material.Text(text = title, color = bodyColor, fontWeight = FontWeight.Bold)
+        androidx.compose.material.Text(
+            text = title,
+            color = bodyColor,
+            fontWeight = FontWeight.Bold
+        )
 
     }
 }

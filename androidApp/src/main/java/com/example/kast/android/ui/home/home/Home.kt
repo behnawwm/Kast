@@ -1,5 +1,6 @@
 package com.example.kast.android.ui.home.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,13 +19,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.kast.android.data.Category
+import com.example.kast.android.data.FakeData
 import com.example.kast.android.data.Movie
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.TestViewModel
@@ -32,43 +35,59 @@ import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.addEmptyLines
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onMovieClicked: (movie: Movie) -> Unit
+    onMovieClick: (movie: Movie) -> Unit,
+    onOptionsClick: (movie: Movie) -> Unit
 ) {
     Scaffold(
         topBar = {
             HomeTopBar()
         }
     ) { paddingValues ->
-        paddingValues
-        val viewModel = TestViewModel()
-        MovieCategoriesList(viewModel, onMovieClicked)
+        val viewModel: TestViewModel = hiltViewModel()
+        val state by remember { viewModel.state }
+        MovieCategoriesList(
+            categories = state.categories,
+            onMovieClick = onMovieClick,
+            onOptionsClick = onOptionsClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        )
     }
 }
 
 @Composable
 fun MovieCategoriesList(
-    viewModel: TestViewModel,
+    categories: List<Category>,
     onMovieClick: (Movie) -> Unit,
+    onOptionsClick: (Movie) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val state by remember { viewModel.state }
-
-    if (state.categories.isEmpty()) {
-        CircularProgressIndicator()
-    } else LazyColumn() {
-        items(state.categories) { category ->
-            MovieListWithHeader(category, onMovieClick = {
-                onMovieClick(it)
-            })
+    Box(modifier = modifier) {
+        if (categories.isEmpty()) {
+            CircularProgressIndicator(color = orange, modifier = Modifier.align(Alignment.Center))
+        } else LazyColumn() {
+            items(categories) { category ->
+                MovieListWithHeader(
+                    category,
+                    onMovieClick = onMovieClick,
+                    onOptionsClick = onOptionsClick
+                )
+            }
         }
+
     }
 }
 
 @Composable
 fun MovieListWithHeader(
-    category: Category, onMovieClick: (Movie) -> Unit
+    category: Category,
+    onMovieClick: (Movie) -> Unit,
+    onOptionsClick: (Movie) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
@@ -90,17 +109,19 @@ fun MovieListWithHeader(
     }
     MovieList(
         movies = category.movies,
+        onMovieClick = onMovieClick,
+        onOptionsClick = onOptionsClick,
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
-        onMovieClick = {
-            onMovieClick(it)
-        },
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieList(
-    movies: List<Movie>, modifier: Modifier, onMovieClick: (Movie) -> Unit
+    movies: List<Movie>,
+    onMovieClick: (Movie) -> Unit,
+    onOptionsClick: (Movie) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyRow(
         contentPadding = PaddingValues(start = 8.dp),
@@ -108,21 +129,30 @@ fun MovieList(
         modifier = modifier
     ) {
         items(movies) { movie ->
-            MovieCard(movie = movie, onClick = { onMovieClick(movie) })
+            MovieCard(
+                movie = movie,
+                onMovieClick = onMovieClick,
+                onOptionsClick = onOptionsClick
+            )
         }
     }
 }
 
 
 @Composable
-fun MovieCard(movie: Movie, onClick: (Movie) -> Unit) {
+fun MovieCard(
+    movie: Movie,
+    onMovieClick: (Movie) -> Unit,
+    onOptionsClick: (Movie) -> Unit
+) {
 
     val scope = rememberCoroutineScope()
     Column(modifier = Modifier
         .width(140.dp)
         .clickable {
-
-        }) {
+            onMovieClick(movie)
+        }
+    ) {
 
         Card(shape = RoundedCornerShape(8.dp)) {
             Box(contentAlignment = Alignment.TopEnd) {
@@ -174,7 +204,7 @@ fun MovieCard(movie: Movie, onClick: (Movie) -> Unit) {
             )
             IconButton(onClick = {
                 scope.launch {
-                    onClick(movie)
+                    onOptionsClick(movie)
                 }
             }) {
                 Icon(
@@ -187,4 +217,22 @@ fun MovieCard(movie: Movie, onClick: (Movie) -> Unit) {
 
     }
 
+}
+
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(onMovieClick = {}, onOptionsClick = {})
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun MovieCategoriesListPreview() {
+    MovieCategoriesList(
+        FakeData.categories,
+        onMovieClick = {},
+        onOptionsClick = {},
+        modifier = Modifier.fillMaxSize()
+    )
 }

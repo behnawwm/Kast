@@ -3,11 +3,10 @@ package com.example.kast.android.ui
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import com.example.kast.android.ui.home.home.HomeScreen
 import com.example.kast.android.ui.home.MovieDetailScreen
+import com.example.kast.android.ui.home.home.MovieOptionsBottomSheet
 import com.example.kast.android.ui.profile.SettingsScreen
 import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
@@ -15,6 +14,8 @@ import com.example.kast.android.ui.search.SearchScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.bottomSheet
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -29,6 +30,12 @@ private sealed class LeafScreen(
     fun createRoute(root: Screen) = "${root.route}/$route"
 
     object Home : LeafScreen("home")
+    object MovieOptionsBottomSheet : LeafScreen("options/{movieId}/{movieTitle}") {
+        fun createRoute(root: Screen, movieId: Long, movieTitle: String): String {
+            return "${root.route}/options/$movieId/$movieTitle"
+        }
+    }
+
     object MovieDetail : LeafScreen("movie-detail/{movieId}") {
         fun createRoute(root: Screen, movieId: Long): String {
             return "${root.route}/movie-detail/$movieId"
@@ -70,6 +77,7 @@ private fun NavGraphBuilder.addHomeTopLevel(
         startDestination = LeafScreen.Home.createRoute(Screen.Home)
     ) {
         addHome(navController, Screen.Home)
+        addOptionsBottomSheet(navController, Screen.Home)
         addMovieDetail(navController, Screen.Home)
     }
 }
@@ -80,15 +88,38 @@ fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
         route = LeafScreen.Home.createRoute(root)
     ) {
         HomeScreen(
-            onMovieClicked = { movie ->
+            onMovieClick = { movie ->
                 navController.navigate(LeafScreen.MovieDetail.createRoute(root, movie.id))
+            },
+            onOptionsClick = { movie ->
+                navController.navigate(
+                    LeafScreen.MovieOptionsBottomSheet.createRoute(
+                        root,
+                        movie.id,
+                        movie.title
+                    )
+                )
             })
-//        MovieCategoriesScreen(hiltViewModel(), onMovieClick = {
-//            scope.launch {
-//                bottomSheetTitle = it.title
-//                bottomSheetState.bottomSheetState.expand()
-//            }
-//        })
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
+fun NavGraphBuilder.addOptionsBottomSheet(navController: NavController, root: Screen) {
+    composable(route = LeafScreen.MovieDetail.createRoute(root)) {
+        MovieDetailScreen()
+    }
+    bottomSheet(
+        route = LeafScreen.MovieOptionsBottomSheet.createRoute(root),
+        arguments = listOf(
+            navArgument("movieTitle") {
+                type = NavType.StringType
+            }
+        )
+    ) {
+        MovieOptionsBottomSheet(
+            it.arguments!!.getLong("movieId"),
+            it.arguments!!.getString("movieTitle")!!
+        )
     }
 }
 
