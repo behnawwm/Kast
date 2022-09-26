@@ -1,0 +1,21 @@
+CREATE TABLE MovieEntity (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  title TEXT NOT NULL,
+  rating REAL,
+  image_url TEXT
+);
+
+insertMovie:
+INSERT OR REPLACE INTO MovieEntity(title,rating,image_url)
+VALUES (?,?,?);
+
+selectAllMovies:
+SELECT * FROM MovieEntity;
+
+selectMovieById:
+SELECT * FROM MovieEntity WHERE id = ?;
+
+deleteAllMovies:
+DELETE FROM MovieEntity;
+
+
