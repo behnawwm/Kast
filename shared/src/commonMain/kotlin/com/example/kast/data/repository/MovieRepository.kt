@@ -24,6 +24,6 @@ class MovieRepository(
         onFailure: (Throwable) -> Unit
     ): Flow<List<TmdbMovie>?>{
         return flow { emit(apiServices.getPopularMovies()) }
-            .flowOn(CoroutineContext)
+            .flowOn(Dispatchers.Default)
     }
 }
