@@ -42,8 +42,8 @@ data class TmdbMovie(
     @SerialName("vote_count")
     val voteCount: Int?
 ) {
-    public fun toMovie(): Movie {
-        return Movie(
+    public fun toMovie(): MovieView {
+        return MovieView(
             id, originalTitle ?: "", voteAverage?.toFloat() ?: 0f, posterPath?:""
         )
     }

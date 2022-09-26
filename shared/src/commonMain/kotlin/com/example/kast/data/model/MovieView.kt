@@ -2,7 +2,7 @@ package com.example.kast.data.model
 
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB_IMAGE
 
-data class Movie(
+data class MovieView(
     val id: Long,
     val title: String,
     val rating: Float,

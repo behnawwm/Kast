@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.kast.FakeData
 import com.example.kast.MovieViewModel
 
@@ -33,7 +32,7 @@ import com.example.kast.android.theme.*
 import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.addEmptyLines
 import com.example.kast.data.model.Category
-import com.example.kast.data.model.Movie
+import com.example.kast.data.model.MovieView
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
@@ -41,8 +40,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onMovieClick: (movie: Movie) -> Unit,
-    onOptionsClick: (movie: Movie) -> Unit
+    onMovieClick: (movie: MovieView) -> Unit,
+    onOptionsClick: (movie: MovieView) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -65,8 +64,8 @@ fun HomeScreen(
 @Composable
 fun MovieCategoriesList(
     categories: List<Category>,
-    onMovieClick: (Movie) -> Unit,
-    onOptionsClick: (Movie) -> Unit,
+    onMovieClick: (MovieView) -> Unit,
+    onOptionsClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -88,8 +87,8 @@ fun MovieCategoriesList(
 @Composable
 fun MovieListWithHeader(
     category: Category,
-    onMovieClick: (Movie) -> Unit,
-    onOptionsClick: (Movie) -> Unit
+    onMovieClick: (MovieView) -> Unit,
+    onOptionsClick: (MovieView) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
@@ -120,9 +119,9 @@ fun MovieListWithHeader(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieList(
-    movies: List<Movie>,
-    onMovieClick: (Movie) -> Unit,
-    onOptionsClick: (Movie) -> Unit,
+    movies: List<MovieView>,
+    onMovieClick: (MovieView) -> Unit,
+    onOptionsClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -143,9 +142,9 @@ fun MovieList(
 
 @Composable
 fun MovieCard(
-    movie: Movie,
-    onMovieClick: (Movie) -> Unit,
-    onOptionsClick: (Movie) -> Unit
+    movie: MovieView,
+    onMovieClick: (MovieView) -> Unit,
+    onOptionsClick: (MovieView) -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
