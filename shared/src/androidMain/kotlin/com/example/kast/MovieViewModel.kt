@@ -1,11 +1,13 @@
 package com.example.kast
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.kast.data.model.Category
 import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
@@ -24,24 +26,40 @@ actual class MovieViewModel actual constructor(
     val state = mutableStateOf(State())
 
     init {
-//        getMovies()
+        getMovies()
     }
 
 
     actual fun getMovies() {
         viewModelScope.launch {
-            movieRepository.getPopularMovies(onSuccess = { movies ->
+            movieRepository.getPopularMovies().collect { movies ->
+                Log.i("ktor_kast", movies.toString())
                 state.value = state.value.copy(
                     categories = mutableListOf(
-                        Category(0, "Trending", "movies", movies.map { it.toMovie() }),
-                        Category(1, "Popular", "series", movies.map { it.toMovie() }),
-                        Category(2, "New", "movies", movies.map { it.toMovie() }),
-                        Category(3, "Top", "movies", movies.map { it.toMovie() }),
+                        Category(
+                            0,
+                            "Trending",
+                            "movies",
+                            movies?.map { it.toMovie() } ?: emptyList()
+                        ),
+                        Category(
+                            1,
+                            "Popular",
+                            "series",
+                            movies?.map { it.toMovie() } ?: emptyList()
+                        ),
+                        Category(2, "New", "movies", movies?.map { it.toMovie() } ?: emptyList()),
+                        Category(3, "Top", "movies", movies?.map { it.toMovie() } ?: emptyList()),
                     )
                 )
-            }, onFailure = {
+            }
+        }
+        viewModelScope.launch {
+            movieRepository.test().collect {
 
-            })
+            }
         }
     }
+
+
 }

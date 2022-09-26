@@ -1,8 +1,11 @@
 package com.example.kast.data.model
 
+import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB_IMAGE
+
 data class Movie(
     val id: Long,
     val title: String,
     val rating: Float,
-    val imageUrl: String = "https://c8.alamy.com/compde/pma8m3/von-marvel-avengers-alter-von-panasonic-poster-marvel-2015-poster-pma8m3.jpg"
+    val posterPath: String = "",
+    val imageUrl: String = BASE_URL_TMDB_IMAGE + posterPath
 )

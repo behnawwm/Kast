@@ -26,13 +26,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.kast.android.data.Category
-import com.example.kast.android.data.FakeData
-import com.example.kast.android.data.Movie
+import com.example.kast.FakeData
+import com.example.kast.MovieViewModel
+
 import com.example.kast.android.theme.*
-import com.example.kast.android.ui.TestViewModel
 import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.addEmptyLines
+import com.example.kast.data.model.Category
+import com.example.kast.data.model.Movie
+import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
 
@@ -47,7 +49,7 @@ fun HomeScreen(
             HomeTopBar()
         }
     ) { paddingValues ->
-        val viewModel: TestViewModel = hiltViewModel()
+        val viewModel = MovieViewModel(MovieRepository())
         val state by remember { viewModel.state }
         MovieCategoriesList(
             categories = state.categories,

@@ -15,11 +15,15 @@ class MovieRepository(
 ) {
     constructor() : this(apiServices = MovieServicesImpl(ApiClient()))
 
-    fun getPopularMovies(
-        onSuccess: (List<TmdbMovie>) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ): Flow<List<TmdbMovie>?>{
-        return flow { emit(apiServices.getPopularMovies()) }
-            .flowOn(Dispatchers.Default)
+    fun getPopularMovies(): Flow<List<TmdbMovie>?> {
+        return flow {
+            emit(apiServices.getPopularMovies()?.results)
+        }.flowOn(Dispatchers.Default)
+    }
+
+    fun test(): Flow<String> {
+        return flow {
+            emit(apiServices.test())
+        }.flowOn(Dispatchers.Default)
     }
 }

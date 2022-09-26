@@ -44,7 +44,7 @@ data class TmdbMovie(
 ) {
     public fun toMovie(): Movie {
         return Movie(
-            id, originalTitle ?: "", voteAverage?.toFloat() ?: 0f
+            id, originalTitle ?: "", voteAverage?.toFloat() ?: 0f, posterPath?:""
         )
     }
 }
