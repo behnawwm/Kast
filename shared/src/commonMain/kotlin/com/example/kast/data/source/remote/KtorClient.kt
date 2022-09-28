@@ -3,42 +3,42 @@ package com.example.kast.data.source.remote
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB
 import io.ktor.client.HttpClient
 import io.ktor.client.call.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.observer.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlin.math.log
 
 
-class ApiClient  {
+class ApiClient(
+    private val engine: HttpClientEngine,
+    val baseUrl: String = BASE_URL_TMDB
+) {
 
-    val baseUrl = BASE_URL_TMDB
-
-    val client = HttpClient {
+    val client = HttpClient(engine) {
         install(ContentNegotiation) {
             json()
             Logging {
                 logger = Logger.DEFAULT
             }
         }
-        install(ResponseObserver){
-            onResponse { response->
-                println("HTTP status: ${response.status.value}")
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    println(message)
+                }
             }
+            level = LogLevel.INFO
         }
         HttpResponseValidator {
             validateResponse { response: HttpResponse ->
                 val statusCode = response.status.value
-
                 println("HTTP status: $statusCode")
-
-
             }
 
-            handleResponseException { cause: Throwable ->
+            handleResponseExceptionWithRequest { cause, request ->
                 throw cause
             }
         }
@@ -56,9 +56,8 @@ class ApiClient  {
         try {
             // please notice, Ktor Client is switching to a background thread under the hood
             // so the http call doesn't happen on the main thread, even if the coroutine has been launched on Dispatchers.Main
-            return client.get{
-                url("http://192.168.0.60:805/lego.web/api/KasraFood/movies/movies")
-//                url(url)
+            return client.get {
+                url(url)
 //                parameter("api_key","29227321b612ab6cd44435b4403a2f63")
             }.body<T>()
         } catch (e: Exception) {
@@ -66,11 +65,5 @@ class ApiClient  {
         }
         return null
     }
-
-    suspend fun getHtml(): String {
-        val response = client.get("https://ktor.io/docs")
-        return response.bodyAsText()
-    }
-
 
 }

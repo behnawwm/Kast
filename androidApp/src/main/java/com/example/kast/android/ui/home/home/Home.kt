@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kast.FakeData
 import com.example.kast.MovieViewModel
 
@@ -35,20 +36,20 @@ import com.example.kast.data.model.Category
 import com.example.kast.data.model.MovieView
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.launch
-
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onMovieClick: (movie: MovieView) -> Unit,
-    onOptionsClick: (movie: MovieView) -> Unit
+    onOptionsClick: (movie: MovieView) -> Unit,
+    viewModel: MovieViewModel = getViewModel()
 ) {
     Scaffold(
         topBar = {
             HomeTopBar()
         }
     ) { paddingValues ->
-        val viewModel = MovieViewModel()
         val state by remember { viewModel.state }
         MovieCategoriesList(
             categories = state.categories,

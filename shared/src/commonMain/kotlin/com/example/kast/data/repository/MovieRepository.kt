@@ -3,7 +3,7 @@ package com.example.kast.data.repository
 import com.example.kast.MovieEntity
 import com.example.kast.data.model.MovieView
 import com.example.kast.data.model.TmdbMovie
-import com.example.kast.data.source.local.Database
+import com.example.kast.data.source.local.MoviesDatabase
 import com.example.kast.data.source.local.DatabaseDriverFactory
 import com.example.kast.data.source.remote.MovieServices
 import kotlinx.coroutines.Dispatchers
@@ -15,11 +15,8 @@ import kotlinx.coroutines.flow.flowOn
 
 class MovieRepository(
     private val apiServices: MovieServices,
-    private val databaseDriverFactory: DatabaseDriverFactory
+    private val database: MoviesDatabase
 ) {
-    //    constructor() : this(apiServices = MovieServicesImpl(ApiClient()),databaseDriverFactory = DatabaseDriverFactory())
-
-    private val database = Database(databaseDriverFactory)
 
     fun getPopularMovies(): Flow<List<TmdbMovie>?> {
         return flow {
@@ -27,11 +24,6 @@ class MovieRepository(
         }.flowOn(Dispatchers.Default)
     }
 
-    fun test(): Flow<String> {
-        return flow {
-            emit(apiServices.test())
-        }.flowOn(Dispatchers.Default)
-    }
 
     @OptIn(FlowPreview::class)
     fun selectAllMovies(): Flow<List<MovieView>> {

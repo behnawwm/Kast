@@ -5,5 +5,4 @@ import com.example.kast.data.model.TmdbMovieResult
 
 interface MovieServices {
     suspend fun getPopularMovies(): TmdbMovieResult?
-    suspend fun test(): String
 }

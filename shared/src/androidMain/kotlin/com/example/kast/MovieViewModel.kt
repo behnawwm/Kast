@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope as androidXViewModelScope
 actual class MovieViewModel actual constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
-
+    val test = "sdsd"
     actual val viewModelScope: CoroutineScope = androidXViewModelScope
 
     data class State(
@@ -50,11 +50,6 @@ actual class MovieViewModel actual constructor(
                         Category(3, "Top", "movies", movies?.map { it.toMovie() } ?: emptyList()),
                     )
                 )
-            }
-        }
-        viewModelScope.launch {
-            movieRepository.test().collect {
-
             }
         }
     }

@@ -69,7 +69,7 @@ dependencies {
     val lifecycleVersion = "2.6.0-alpha02"
     val hiltVersion = "2.43.2"
     val koinCoreVersion = "3.2.1"
-    val koinAnnotationsVersion = "1.0.3"
+    val koinAndroidComposeVersion = "3.2.1"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -127,6 +127,8 @@ dependencies {
     implementation("io.insert-koin:koin-core:$koinCoreVersion")
 //    implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
     implementation("io.insert-koin:koin-android:$koinCoreVersion")
+    // Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:$koinAndroidComposeVersion")
 //    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
 
 }
