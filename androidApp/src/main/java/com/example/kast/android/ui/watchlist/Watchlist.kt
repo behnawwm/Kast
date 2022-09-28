@@ -1,14 +1,23 @@
 package com.example.kast.android.ui.watchlist
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.kast.android.theme.bodyColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -20,7 +29,23 @@ import kotlinx.coroutines.launch
 @Preview
 fun WatchlistScreen() {
     Scaffold(topBar = { WatchListTopBar() }) { paddingValues ->
-        val items = createItems()
+
+        fun watchListTabItems() = listOf(
+            HorizontalPagerContent(title = "Movie"),
+            HorizontalPagerContent(title = "TvShow"),
+            HorizontalPagerContent(title = "Season"),
+            HorizontalPagerContent(title = "Episodes"),
+        )
+
+        fun historyListTabItems() = listOf(
+            HorizontalPagerContent(title = "Movie"),
+            HorizontalPagerContent(title = "TvShow"),
+            HorizontalPagerContent(title = "Season"),
+        )
+
+
+        val watchListTabItems = watchListTabItems()
+        val historyListTabItems = historyListTabItems()
         val pagerState = rememberPagerState()
 
         val watchlistPagerState = rememberPagerState()
@@ -36,90 +61,121 @@ fun WatchlistScreen() {
         val historyTabData = listOf(
             "Movies", "TV Shows", "Episodes"
         )
+
+        val watchListTabPosition = 0
+        val historyTabPosition = 1
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
             Row(
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
             ) {
                 Text(
-                    modifier = Modifier.padding(16.dp, 0.dp),
+                    modifier = Modifier
+                        .padding(16.dp, 0.dp)
+                        .alpha(
+                            if (pagerState.currentPage == watchListTabPosition) {
+                                1f
+                            } else {
+                                0.5f
+                            }
+                        )
+                        .clickable {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(watchListTabPosition)
+                            }
+                        },
                     text = "Watchlist",
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                 )
                 Text(
-                    modifier = Modifier.padding(16.dp, 0.dp),
+                    modifier = Modifier
+                        .padding(16.dp, 0.dp)
+                        .alpha(
+                            if (pagerState.currentPage == historyTabPosition) {
+                                1f
+                            } else {
+                                0.5f
+                            }
+                        )
+                        .clickable {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(historyTabPosition)
+                            }
+                        },
                     text = "History",
-                    style = MaterialTheme.typography.headlineLarge
+                    style = MaterialTheme.typography.headlineMedium
                 )
             }
 
-
-
             HorizontalPager(count = 2, state = pagerState, modifier = Modifier) { currentPage ->
-                if (currentPage == 0) {
+                if (currentPage == watchListTabPosition) {
                     // Watchlist TAB
-                    TabRow(
-                        selectedTabIndex = watchlistTabIndex,
-                        modifier = Modifier.padding(top = 20.dp)
-                    ) {
-                        watchlistTabData.forEachIndexed { index, text ->
-                            Tab(selected = watchlistTabIndex == index,
-                                onClick = {
-                                coroutineScope.launch {
-                                    watchlistPagerState.scrollToPage(index)
-                                }
-                            }, text = {
-                                Text(text = text)
-                            })
+                    Column {
+
+                        TabLayout(
+                            tabData = watchlistTabData,
+                            tabIndex = watchlistTabIndex,
+                            pagerState = watchlistPagerState,
+                            coroutineScope = coroutineScope
+                        )
+
+                        HorizontalPager(
+                            count = watchListTabItems.size,
+                            state = watchlistPagerState,
+                            modifier = Modifier
+                        ) { currentPage ->
+                            Box(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Text(
+                                    text = watchListTabItems[currentPage].title,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+                            }
+
                         }
+
                     }
+
                 } else {
                     // History TAB
-                    TabRow(
-                        selectedTabIndex = historyTabIndex,
-                        modifier = Modifier.padding(top = 20.dp)
-                    ) {
-                        historyTabData.forEachIndexed { index, text ->
-                            Tab(selected = historyTabIndex == index, onClick = {
-                                coroutineScope.launch {
-                                    historyPagerState.animateScrollToPage(index)
-                                }
-                            }, text = {
-                                Text(text = text)
-                            })
+                    Column {
+                        TabLayout(
+                            tabData = historyTabData,
+                            tabIndex = historyTabIndex,
+                            pagerState = historyPagerState,
+                            coroutineScope = coroutineScope
+                        )
+
+                        HorizontalPager(
+                            count = historyListTabItems.size,
+                            state = historyPagerState,
+                            modifier = Modifier
+                        ) { currentPage ->
+                            Box(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Text(
+                                    text = historyListTabItems[currentPage].title,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+                            }
+
                         }
                     }
-                }
-            }
-
-            HorizontalPager(
-                count = 4, state = watchlistPagerState, modifier = Modifier
-            ) { currentPage ->
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = items[currentPage].title, fontSize = 16.sp
-                    )
 
                 }
-
             }
         }
+
 
     }
 }
 
-fun createItems() = listOf(
-    HorizontalPagerContent(title = "Movie"),
-    HorizontalPagerContent(title = "Tv Show"),
-    HorizontalPagerContent(title = "Season"),
-    HorizontalPagerContent(title = "Episodes"),
-)
 
-data class HorizontalPagerContent(
-    val title: String,
-)

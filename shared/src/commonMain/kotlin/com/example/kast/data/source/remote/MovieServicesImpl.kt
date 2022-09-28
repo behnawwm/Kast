@@ -7,7 +7,7 @@ class MovieServicesImpl(
     private val apiClient: ApiClient
 ) : MovieServices {
     override suspend fun getPopularMovies(): TmdbMovieResult? {
-        return apiClient.getResponse("movies/movies")
+        return apiClient.getResponse("3/movie/popular")
     }
 
     override suspend fun test(): String {
