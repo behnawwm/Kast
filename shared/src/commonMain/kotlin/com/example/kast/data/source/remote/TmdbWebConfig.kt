@@ -2,7 +2,7 @@ package com.example.kast.data.source.remote
 
 object TmdbWebConfig {
 
-    const val BASE_URL_TMDB = "http://192.168.0.60:805/lego.web/api/KasraFood/"
+    const val BASE_URL_TMDB = "https://api.themoviedb.org"
     const val VERSION_PATH_V3 = "3"
     const val VERSION_PATH_V4 = "4"
     const val BASE_URL_TMDB_IMAGE = "https://image.tmdb.org/t/p/w400/"

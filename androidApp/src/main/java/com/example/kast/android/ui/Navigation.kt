@@ -11,6 +11,7 @@ import com.example.kast.android.ui.profile.SettingsScreen
 import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
 import com.example.kast.android.ui.search.SearchScreen
+import com.example.kast.android.ui.watchlist.WatchlistScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation

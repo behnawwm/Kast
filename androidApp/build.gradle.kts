@@ -97,6 +97,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     // insets-ui
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
+    //pager
+    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     //------------------------- Accompanist -------------------------
 
     // Material 3 Compose

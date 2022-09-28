@@ -8,7 +8,7 @@ class MovieServicesImpl(
 ) : MovieServices {
 
     override suspend fun getPopularMovies(): TmdbMovieResult? {
-        return apiClient.getResponse("movies/movies")
+        return apiClient.getResponse("3/movie/popular")
     }
 
 }
