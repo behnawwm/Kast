@@ -48,7 +48,7 @@ fun HomeScreen(
             HomeTopBar()
         }
     ) { paddingValues ->
-        val viewModel = MovieViewModel(MovieRepository())
+        val viewModel = MovieViewModel()
         val state by remember { viewModel.state }
         MovieCategoriesList(
             categories = state.categories,

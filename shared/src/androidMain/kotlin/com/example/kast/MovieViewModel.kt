@@ -1,15 +1,11 @@
 package com.example.kast
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.kast.data.model.Category
 import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.repository.MovieRepository
-import com.example.kast.data.source.local.DatabaseDriverFactory
-import com.example.kast.data.source.remote.ApiClient
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
@@ -17,6 +13,7 @@ import androidx.lifecycle.viewModelScope as androidXViewModelScope
 actual class MovieViewModel actual constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
+
     actual val viewModelScope: CoroutineScope = androidXViewModelScope
 
     data class State(
@@ -35,7 +32,6 @@ actual class MovieViewModel actual constructor(
     actual fun getMovies() {
         viewModelScope.launch {
             movieRepository.getPopularMovies().collect { movies ->
-                Log.i("ktor_kast", movies.toString())
                 state.value = state.value.copy(
                     categories = mutableListOf(
                         Category(

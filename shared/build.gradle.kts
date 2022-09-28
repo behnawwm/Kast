@@ -3,7 +3,12 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     kotlin("plugin.serialization") version "1.6.21"
+
+    // Sqldeligt
     id("com.squareup.sqldelight")
+
+    // Ksp
+//    id("com.google.devtools.ksp") version "1.6.21-1.0.6"
 }
 
 kotlin {
@@ -26,6 +31,8 @@ kotlin {
     val ktorVersion = "2.0.2"
     val sqldelightVersion = "1.5.3"
     val lifecycleVersion = "2.6.0-alpha02"
+    val koinCoreVersion = "3.2.1"
+    val koinAnnotationsVersion = "1.0.3"
 
     sourceSets {
         val commonMain by getting {
@@ -44,6 +51,12 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0")
                 implementation("com.squareup.sqldelight:runtime:$sqldelightVersion")
                 implementation("com.squareup.sqldelight:coroutines-extensions:$sqldelightVersion")
+
+                // Koin
+                // Koin Core
+                implementation("io.insert-koin:koin-core:$koinCoreVersion")
+                // Koin Annotations
+//                implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
             }
         }
         val androidMain by getting {
@@ -122,3 +135,12 @@ sqldelight {
         packageName = "com.example.kast"
     }
 }
+
+//val koinAnnotationsVersion = "1.0.3"
+
+//dependencies {
+//    add("kspCommonMainMetadata", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+//    add("kspAndroid", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+//    add("kspIosX64", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+//    add("kspIosSimulatorArm64", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+//}
