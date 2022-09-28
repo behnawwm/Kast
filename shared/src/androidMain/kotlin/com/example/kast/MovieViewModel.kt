@@ -1,11 +1,14 @@
 package com.example.kast
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.kast.data.model.Category
+import com.example.kast.data.model.MovieView
 import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
