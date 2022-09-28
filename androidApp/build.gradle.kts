@@ -2,7 +2,9 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+
     id("dagger.hilt.android.plugin")
+//    id("com.google.devtools.ksp")
 }
 
 android {
@@ -31,6 +33,27 @@ android {
             isMinifyEnabled = false
         }
     }
+
+//    applicationVariants.all {
+//        val variantName = name
+//        sourceSets {
+//            getByName("main") {
+//                java.srcDir("build/generated/ksp/main/kotlin")
+//            }
+//        }
+////        sourceSets.main {
+////            kotlin.srcDir("build/generated/ksp/main/kotlin")
+////        }
+////            getByName("main") {
+////                java.srcDir("build/generated/ksp/$variantName/kotlin")
+////            }
+////        }
+//    }
+////    applicationVariants.all { variant ->
+////        variant.sourceSets.java.each {
+////            it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
+////        }
+////    }
 }
 
 dependencies {
@@ -45,6 +68,8 @@ dependencies {
     val accompanistVersion = "0.25.1"
     val lifecycleVersion = "2.6.0-alpha02"
     val hiltVersion = "2.43.2"
+    val koinCoreVersion = "3.2.1"
+    val koinAndroidComposeVersion = "3.2.1"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -98,5 +123,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
+    // Koin
+    implementation("io.insert-koin:koin-core:$koinCoreVersion")
+//    implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
+    implementation("io.insert-koin:koin-android:$koinCoreVersion")
+    // Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:$koinAndroidComposeVersion")
+//    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
 
 }
