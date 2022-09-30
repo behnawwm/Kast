@@ -1,0 +1,132 @@
+package com.example.kast.android.ui.watchlist
+
+import android.graphics.Paint.Align
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.SnackbarDefaults.backgroundColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.kast.FakeData.sampleMovieList
+import com.example.kast.android.theme.black50Alpha
+import com.example.kast.android.utils.AsyncImage
+import com.example.kast.data.model.MovieView
+
+@Preview
+@Composable
+fun MovieExtendedCardPreview() {
+    MovieExtendedCard(sampleMovieList[0], {}, {})
+}
+
+@Composable
+fun MovieExtendedCard(
+    movie: MovieView,
+    onMovieClick: (MovieView) -> Unit,
+    onOptionsClick: (MovieView) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp)
+        .clickable {
+            onMovieClick(movie)
+        }
+        .then(modifier)
+    ) {
+        Card(
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.width(120.dp)
+        ) {
+            Box(contentAlignment = Alignment.TopEnd) {
+                AsyncImage(
+                    model = movie.imageUrl,
+//                    loading = {
+//                        CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+//                    },
+//                    error = {
+//                        Image(
+//                            painter = painterResource(id = R.drawable.avengers),
+//                            contentDescription = ""
+//                        )
+//                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 140.dp),
+                    contentDescription = movie.title
+                )
+                Text(
+                    text = movie.rating.toString(),
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(4.dp, 2.dp, 4.dp, 2.dp)
+                        .background(
+                            black50Alpha,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(4.dp, 2.dp, 4.dp, 2.dp),
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+        ) {
+            IconButton(
+                onClick = { onOptionsClick(movie) },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .clickable {
+                        onOptionsClick(movie)
+                    }
+            ) {
+                Icon(
+                    Icons.Default.MoreVert,
+                    "",
+                    tint = Color.White
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    movie.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text("Action/Thriller", style = MaterialTheme.typography.bodyMedium) //todo
+            }
+            Text(
+                text = "30/9/2022", //todo
+                color = Color.White,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .clip(Shapes().medium)
+                    .background(Color.White.copy(0.3f))
+                    .padding(16.dp, 4.dp, 16.dp, 4.dp)
+                    .clickable {
+                        //todo open datePicker
+                    }
+            )
+
+        }
+
+    }
+
+}
