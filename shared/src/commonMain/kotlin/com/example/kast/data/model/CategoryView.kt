@@ -1,6 +1,6 @@
 package com.example.kast.data.model
 
-data class Category(
+data class CategoryView(
     val id: Long,
     val title: String,
     val subtitle:String,

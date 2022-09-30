@@ -19,7 +19,7 @@ import com.example.kast.FakeData
 import com.example.kast.MovieViewModel
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.shared_components.MovieCard
-import com.example.kast.data.model.Category
+import com.example.kast.data.model.CategoryView
 import com.example.kast.data.model.MovieView
 import org.koin.androidx.compose.getViewModel
 
@@ -49,7 +49,7 @@ fun HomeScreen(
 
 @Composable
 fun MovieCategoriesList(
-    categories: List<Category>,
+    categories: List<CategoryView>,
     onMovieClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier,
@@ -72,7 +72,7 @@ fun MovieCategoriesList(
 
 @Composable
 fun MovieListWithHeader(
-    category: Category,
+    categoryView: CategoryView,
     onMovieClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit
 ) {
@@ -81,21 +81,21 @@ fun MovieListWithHeader(
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
     ) {
         Text(
-            text = category.title,
+            text = categoryView.title,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = titleColor,
             modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
         )
         Text(
-            text = category.subtitle,
+            text = categoryView.subtitle,
             style = MaterialTheme.typography.labelSmall,
             color = subtitleColor,
             modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
         )
     }
     MovieList(
-        movies = category.movies,
+        movies = categoryView.movies,
         onMovieClick = onMovieClick,
         onOptionsClick = onOptionsClick,
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),

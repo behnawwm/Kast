@@ -1,14 +1,11 @@
 package com.example.kast
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.kast.data.model.Category
-import com.example.kast.data.model.MovieView
+import com.example.kast.data.model.CategoryView
 import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
@@ -20,7 +17,7 @@ actual class MovieViewModel actual constructor(
 
     data class State(
         val error: String? = null,
-        val categories: List<Category> = emptyList(),
+        val categories: List<CategoryView> = emptyList(),
         val movies: List<TmdbMovie> = emptyList()
     )
 
@@ -36,20 +33,20 @@ actual class MovieViewModel actual constructor(
             movieRepository.getPopularMovies().collect { movies ->
                 state.value = state.value.copy(
                     categories = mutableListOf(
-                        Category(
+                        CategoryView(
                             0,
                             "Trending",
                             "movies",
                             movies?.map { it.toMovie() } ?: emptyList()
                         ),
-                        Category(
+                        CategoryView(
                             1,
                             "Popular",
                             "series",
                             movies?.map { it.toMovie() } ?: emptyList()
                         ),
-                        Category(2, "New", "movies", movies?.map { it.toMovie() } ?: emptyList()),
-                        Category(3, "Top", "movies", movies?.map { it.toMovie() } ?: emptyList()),
+                        CategoryView(2, "New", "movies", movies?.map { it.toMovie() } ?: emptyList()),
+                        CategoryView(3, "Top", "movies", movies?.map { it.toMovie() } ?: emptyList()),
                     )
                 )
             }

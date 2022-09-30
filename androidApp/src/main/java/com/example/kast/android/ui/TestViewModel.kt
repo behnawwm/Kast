@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kast.FakeData
-import com.example.kast.data.model.Category
+import com.example.kast.data.model.CategoryView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ class TestViewModel @Inject constructor(): ViewModel() {
 
     data class State(
         val error: String? = null,
-        val categories: List<Category> = emptyList(),
+        val categories: List<CategoryView> = emptyList(),
     )
 
     val state = mutableStateOf(State())
