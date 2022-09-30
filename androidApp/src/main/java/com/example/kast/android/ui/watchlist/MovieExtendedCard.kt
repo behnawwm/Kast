@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +27,7 @@ import com.example.kast.FakeData.sampleMovieList
 import com.example.kast.android.theme.black50Alpha
 import com.example.kast.android.theme.bottomNavigationContainerColor
 import com.example.kast.android.utils.AsyncImage
+import com.example.kast.android.utils.addEmptyLines
 import com.example.kast.data.model.MovieView
 
 @Preview
@@ -115,14 +117,17 @@ fun MovieExtendedCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp)
+                    .padding(start = 8.dp, end = 40.dp)
             ) {
                 Text(
-                    movie.title,
-                    style = MaterialTheme.typography.titleMedium,
+                    movie.title.addEmptyLines(1),
+                    style = MaterialTheme.typography.titleLarge,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold
                 )
-                Text("Action/Thriller", style = MaterialTheme.typography.bodyMedium) //todo
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Action, Thriller", style = MaterialTheme.typography.bodyMedium) //todo
             }
             Text(
                 text = "30/9/22", //todo
