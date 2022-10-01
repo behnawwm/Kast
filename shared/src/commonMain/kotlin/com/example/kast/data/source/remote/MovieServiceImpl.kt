@@ -10,4 +10,8 @@ class MovieServiceImpl(
         return apiClient.getResponse("3/movie/popular")
     }
 
+    override suspend fun getMovies(url: String): TmdbMovieResult? {
+        return apiClient.getResponse("3/movie$url")
+    }
+
 }

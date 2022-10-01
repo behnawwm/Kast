@@ -1,6 +1,7 @@
 package com.example.kast.data.repository
 
 import com.example.kast.MovieEntity
+import com.example.kast.data.model.CategoryTypeUrl
 import com.example.kast.data.model.MovieView
 import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.source.local.MoviesDatabase
@@ -17,9 +18,10 @@ class MovieRepository(
     private val database: MoviesDatabase
 ) {
 
-    fun getPopularMovies(): Flow<List<TmdbMovie>?> {
+    fun getDynamicMovies(categoryTypeUrl: CategoryTypeUrl): Flow<List<TmdbMovie>?> {
         return flow {
-            emit(apiServices.getPopularMovies()?.results)
+            val result = apiServices.getMovies(categoryTypeUrl.url)
+            emit(result?.results)
         }.flowOn(Dispatchers.Default)
     }
 

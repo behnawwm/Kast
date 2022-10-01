@@ -15,10 +15,10 @@ sealed class CategoryType(val title: String, val url: CategoryTypeUrl, val detai
 }
 
 sealed class CategoryTypeUrl(val url: String) {
-    object NowPlayingUrl : CategoryTypeUrl("/movie/now_playing")
-    object PopularUrl : CategoryTypeUrl("/movie/popular")
-    object TopRatedUrl : CategoryTypeUrl("/movie/top_rated")
-    object UpcomingUrl : CategoryTypeUrl("/movie/upcoming")
+    object NowPlayingUrl : CategoryTypeUrl("/now_playing")
+    object PopularUrl : CategoryTypeUrl("/popular")
+    object TopRatedUrl : CategoryTypeUrl("/top_rated")
+    object UpcomingUrl : CategoryTypeUrl("/upcoming")
 }
 
 fun Category.toCategoryView() =

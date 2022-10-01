@@ -3,8 +3,8 @@ package com.example.kast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.kast.data.model.Category
+import com.example.kast.data.model.CategoryType
 import com.example.kast.data.model.CategoryView
-import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.model.toCategoryView
 import com.example.kast.data.repository.FakeRepository
 import com.example.kast.data.repository.MovieRepository
@@ -33,6 +33,7 @@ actual class MovieViewModel actual constructor(
     actual fun getMovieCategories() {
         viewModelScope.launch {
             fakeRepository.getMovieCategories().collect { categoryList ->
+                getMoviesForCategories(categoryList)
                 state.value = state.value.copy(
                     categories = categoryList.map { it.toCategoryView() }
                 )
@@ -40,35 +41,24 @@ actual class MovieViewModel actual constructor(
         }
     }
 
+    private fun getMoviesForCategories(categoryList: List<Category>) {
+        categoryList.forEach {
+            getMovies(it.type)
+        }
+    }
 
-    actual fun getMovies() {
+
+    actual fun getMovies(type: CategoryType) {
         viewModelScope.launch {
-            movieRepository.getPopularMovies().collect { movies ->
+            movieRepository.getDynamicMovies(type.url).collect { movies ->
+                val prevCategories = state.value.categories
                 state.value = state.value.copy(
-//                    categories = mutableListOf(
-//                        CategoryView(
-//                            0,
-//                            "Trending",
-//                            "movies",
-//                            movies?.map { it.toMovie() } ?: emptyList()
-//                        ),
-//                        CategoryView(
-//                            1,
-//                            "Popular",
-//                            "series",
-//                            movies?.map { it.toMovie() } ?: emptyList()
-//                        ),
-//                        CategoryView(
-//                            2,
-//                            "New",
-//                            "movies",
-//                            movies?.map { it.toMovie() } ?: emptyList()),
-//                        CategoryView(
-//                            3,
-//                            "Top",
-//                            "movies",
-//                            movies?.map { it.toMovie() } ?: emptyList()),
-//                    )
+                    categories = prevCategories.map {
+                        if (it.type == type)
+                            it.copy(movies = movies.orEmpty().map { it.toMovie() })
+                        else
+                            it
+                    }
                 )
             }
         }

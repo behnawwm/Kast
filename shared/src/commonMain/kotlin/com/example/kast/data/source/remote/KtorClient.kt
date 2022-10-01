@@ -10,6 +10,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 
 class ApiClient(
@@ -19,7 +20,13 @@ class ApiClient(
 
     val client = HttpClient(engine) {
         install(ContentNegotiation) {
-            json()
+            json(
+                Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                }
+            )
             Logging {
                 logger = Logger.DEFAULT
             }
@@ -58,7 +65,7 @@ class ApiClient(
             // so the http call doesn't happen on the main thread, even if the coroutine has been launched on Dispatchers.Main
             return client.get {
                 url(url)
-                parameter("api_key","29227321b612ab6cd44435b4403a2f63")
+                parameter("api_key", "29227321b612ab6cd44435b4403a2f63")
             }.body<T>()
         } catch (e: Exception) {
             e.printStackTrace()
