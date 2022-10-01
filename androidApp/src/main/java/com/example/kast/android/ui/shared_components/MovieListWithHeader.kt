@@ -4,11 +4,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,34 +30,51 @@ fun MovieListWithHeader(
     categoryView: CategoryView,
     onMovieClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
+    onMoreClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.height(200.dp)) {
-        Row(
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = categoryView.type.title,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = titleColor,
-                modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
-            )
-            Text(
-                text = categoryView.subtitle,
-                style = MaterialTheme.typography.labelSmall,
-                color = subtitleColor,
-                modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
+    BoxWithConstraints {
+        val maxWidth = maxWidth.value - 30
+        Column(modifier = modifier.defaultMinSize(minHeight = 180.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                ) {
+                    Text(
+                        text = categoryView.type.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = titleColor,
+                    )
+                    Text(
+                        text = categoryView.subtitle,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = subtitleColor,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                IconButton(onClick = {
+                    onMoreClick()
+                }) {
+                    Icon(Icons.Default.ArrowForward, contentDescription = "", tint = Color.White)
+                }
+            }
+            MovieList(
+                movies = categoryView.movies,
+                onMovieClick = onMovieClick,
+                onOptionsClick = onOptionsClick,
+                maxWidth,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.CenterHorizontally)
             )
         }
-        MovieList(
-            movies = categoryView.movies,
-            onMovieClick = onMovieClick,
-            onOptionsClick = onOptionsClick,
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.CenterHorizontally)
-        )
     }
 }
 
@@ -61,6 +83,7 @@ fun MovieList(
     movies: List<MovieView>,
     onMovieClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
+    maxWidth: Float,
     modifier: Modifier = Modifier
 ) {
     if (movies.isEmpty())
@@ -82,7 +105,8 @@ fun MovieList(
                 MovieCard(
                     movie = movie,
                     onMovieClick = onMovieClick,
-                    onOptionsClick = onOptionsClick
+                    onOptionsClick = onOptionsClick,
+                    modifier.width((maxWidth / 3).dp)
                 )
             }
         }
@@ -94,7 +118,8 @@ fun MovieListWithHeaderPreview() {
     MovieListWithHeader(
         categoryView = CategoryView(CategoryType.NowPlaying, "Movies", emptyList()),
         onMovieClick = {},
-        onOptionsClick = {})
+        onOptionsClick = {},
+        onMoreClick = {})
 }
 
 @Preview
@@ -107,5 +132,6 @@ fun MovieListWithHeaderPreview2() {
             )
         ),
         onMovieClick = {},
-        onOptionsClick = {})
+        onOptionsClick = {},
+        onMoreClick = {})
 }

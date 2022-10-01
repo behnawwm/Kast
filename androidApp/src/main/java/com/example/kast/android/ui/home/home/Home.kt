@@ -66,7 +66,8 @@ fun MovieCategoriesList(
                     category,
                     onMovieClick = onMovieClick,
                     onOptionsClick = onOptionsClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onMoreClick = {}
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
