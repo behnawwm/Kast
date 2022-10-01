@@ -19,6 +19,7 @@ import com.example.kast.FakeData
 import com.example.kast.MovieViewModel
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.shared_components.MovieCard
+import com.example.kast.data.model.Category
 import com.example.kast.data.model.CategoryView
 import com.example.kast.data.model.MovieView
 import org.koin.androidx.compose.getViewModel
@@ -66,7 +67,6 @@ fun MovieCategoriesList(
                 )
             }
         }
-
     }
 }
 
@@ -81,7 +81,7 @@ fun MovieListWithHeader(
         modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
     ) {
         Text(
-            text = categoryView.title,
+            text = categoryView.type.title,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = titleColor,
@@ -138,7 +138,7 @@ fun HomeScreenPreview() {
 @Composable
 fun MovieCategoriesListPreview() {
     MovieCategoriesList(
-        FakeData.sampleCategoryList,
+        emptyList(), //todo
         onMovieClick = {},
         onOptionsClick = {},
         modifier = Modifier.fillMaxSize()

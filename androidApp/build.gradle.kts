@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
 
-    id("dagger.hilt.android.plugin")
+//    id("dagger.hilt.android.plugin")
 //    id("com.google.devtools.ksp")
 }
 
@@ -33,27 +33,6 @@ android {
             isMinifyEnabled = false
         }
     }
-
-//    applicationVariants.all {
-//        val variantName = name
-//        sourceSets {
-//            getByName("main") {
-//                java.srcDir("build/generated/ksp/main/kotlin")
-//            }
-//        }
-////        sourceSets.main {
-////            kotlin.srcDir("build/generated/ksp/main/kotlin")
-////        }
-////            getByName("main") {
-////                java.srcDir("build/generated/ksp/$variantName/kotlin")
-////            }
-////        }
-//    }
-////    applicationVariants.all { variant ->
-////        variant.sourceSets.java.each {
-////            it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
-////        }
-////    }
 }
 
 dependencies {
@@ -109,13 +88,13 @@ dependencies {
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 
-    //Hilt
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-
-    // Hilt Navigation Compose
-    implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")
+//    //Hilt
+//    implementation("com.google.dagger:hilt-android:$hiltVersion")
+//    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+//    kapt("androidx.hilt:hilt-compiler:1.0.0")
+//
+//    // Hilt Navigation Compose
+//    implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")
 
     // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
