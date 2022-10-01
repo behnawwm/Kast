@@ -27,7 +27,7 @@ class TestViewModel @Inject constructor(): ViewModel() {
     private fun getCategories() {
         viewModelScope.launch {
             delay(1000)
-            state.value = state.value.copy(categories = FakeData.categories)
+            state.value = state.value.copy(categories = FakeData.sampleCategoryList)
         }
     }
 

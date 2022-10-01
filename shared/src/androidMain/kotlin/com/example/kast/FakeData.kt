@@ -1,5 +1,6 @@
 package com.example.kast
 
+import androidx.compose.ui.graphics.Color
 import com.example.kast.data.model.CategoryView
 import com.example.kast.data.model.MovieView
 
@@ -13,11 +14,12 @@ object FakeData {
         MovieView(4, "Dragon Ball Super: Super Hero", 1.5, ""),
     )
 
-    val categories = mutableListOf(
+    val sampleCategoryList = mutableListOf(
         CategoryView(0, "Trending", "movies", sampleMovieList.shuffled()),
         CategoryView(1, "Popular", "series", sampleMovieList.shuffled()),
         CategoryView(2, "New", "movies", sampleMovieList.shuffled()),
         CategoryView(3, "Top", "movies", sampleMovieList.shuffled()),
     )
+
 }
 

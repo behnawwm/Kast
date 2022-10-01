@@ -138,7 +138,7 @@ fun HomeScreenPreview() {
 @Composable
 fun MovieCategoriesListPreview() {
     MovieCategoriesList(
-        FakeData.categories,
+        FakeData.sampleCategoryList,
         onMovieClick = {},
         onOptionsClick = {},
         modifier = Modifier.fillMaxSize()
