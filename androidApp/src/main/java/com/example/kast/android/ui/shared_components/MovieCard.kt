@@ -41,16 +41,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun MovieCard(
     movie: MovieView,
-    onMovieClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .defaultMinSize(minWidth = 140.dp)
-            .clickable {
-                onMovieClick(movie)
-            }
     ) {
         Card(shape = RoundedCornerShape(8.dp)) {
             Box(contentAlignment = Alignment.TopEnd) {
@@ -122,7 +118,6 @@ fun MovieCard(
 fun MovieCardPreview() {
     MovieCard(
         movie = MovieView(1, "test title", 4.5, ""),
-        onMovieClick = {},
         onOptionsClick = {}
     )
 }

@@ -1,5 +1,8 @@
 package com.example.kast.android.ui.shared_components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,6 +32,7 @@ import com.example.kast.data.model.MovieView
 fun MovieListWithHeader(
     categoryView: CategoryView,
     onMovieClick: (MovieView) -> Unit,
+    onMovieLongClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
     onMoreClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -68,6 +72,7 @@ fun MovieListWithHeader(
             MovieList(
                 movies = categoryView.movies,
                 onMovieClick = onMovieClick,
+                onMovieLongClick = onMovieLongClick,
                 onOptionsClick = onOptionsClick,
                 maxWidth,
                 modifier = Modifier
@@ -78,10 +83,12 @@ fun MovieListWithHeader(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovieList(
     movies: List<MovieView>,
     onMovieClick: (MovieView) -> Unit,
+    onMovieLongClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
     maxWidth: Float,
     modifier: Modifier = Modifier
@@ -104,9 +111,17 @@ fun MovieList(
             items(movies) { movie ->
                 MovieCard(
                     movie = movie,
-                    onMovieClick = onMovieClick,
                     onOptionsClick = onOptionsClick,
-                    modifier.width((maxWidth / 3).dp)
+                    modifier
+                        .width((maxWidth / 3).dp)
+                        .combinedClickable(
+                            onClick = {
+                                onMovieClick(movie)
+                            },
+                            onLongClick = {
+                                onMovieLongClick(movie)
+                            }
+                        ),
                 )
             }
         }
@@ -118,6 +133,7 @@ fun MovieListWithHeaderPreview() {
     MovieListWithHeader(
         categoryView = CategoryView(CategoryType.NowPlaying, "Movies", emptyList()),
         onMovieClick = {},
+        onMovieLongClick = {},
         onOptionsClick = {},
         onMoreClick = {})
 }
@@ -132,6 +148,7 @@ fun MovieListWithHeaderPreview2() {
             )
         ),
         onMovieClick = {},
+        onMovieLongClick = {},
         onOptionsClick = {},
         onMoreClick = {})
 }

@@ -30,6 +30,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HomeScreen(
     onMovieClick: (movie: MovieView) -> Unit,
+    onMovieLongClick: (movie: MovieView) -> Unit,
     onOptionsClick: (movie: MovieView) -> Unit,
     viewModel: MovieViewModel = getViewModel()
 ) {
@@ -42,6 +43,7 @@ fun HomeScreen(
         MovieCategoriesList(
             categories = state.categories,
             onMovieClick = onMovieClick,
+            onMovieLongClick = onMovieLongClick,
             onOptionsClick = onOptionsClick,
             modifier = Modifier
                 .fillMaxSize()
@@ -54,6 +56,7 @@ fun HomeScreen(
 fun MovieCategoriesList(
     categories: List<CategoryView>,
     onMovieClick: (MovieView) -> Unit,
+    onMovieLongClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -65,6 +68,7 @@ fun MovieCategoriesList(
                 MovieListWithHeader(
                     category,
                     onMovieClick = onMovieClick,
+                    onMovieLongClick = onMovieLongClick,
                     onOptionsClick = onOptionsClick,
                     modifier = Modifier.fillMaxWidth(),
                     onMoreClick = {}
@@ -79,7 +83,7 @@ fun MovieCategoriesList(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(onMovieClick = {}, onOptionsClick = {})
+    HomeScreen(onMovieClick = {}, onOptionsClick = {}, onMovieLongClick = {})
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -92,6 +96,7 @@ fun MovieCategoriesListPreview() {
             CategoryView(CategoryType.NowPlaying, "sdsa", emptyList()),
         ),
         onMovieClick = {},
+        onMovieLongClick = {},
         onOptionsClick = {},
         modifier = Modifier.fillMaxSize()
     )

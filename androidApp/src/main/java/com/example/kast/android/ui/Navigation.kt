@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import com.example.kast.android.ui.home.home.HomeScreen
 import com.example.kast.android.ui.home.MovieDetailScreen
+import com.example.kast.android.ui.home.home.AddToListsBottomSheet
 import com.example.kast.android.ui.home.home.MovieOptionsBottomSheet
 import com.example.kast.android.ui.profile.SettingsScreen
 import com.example.kast.android.ui.search.CategorySearchScreen
@@ -35,6 +36,11 @@ private sealed class LeafScreen(
         fun createRoute(root: Screen, movieId: Long, movieTitle: String): String {
             return "${root.route}/options/$movieId/$movieTitle"
         }
+    }
+    object MovieAddToListsBottomSheet : LeafScreen("add-to-lists") { //todo
+//        fun createRoute(root: Screen): String {
+//            return "${root.route}/add-to-lists/e"
+//        }
     }
 
     object MovieDetail : LeafScreen("movie-detail/{movieId}") {
@@ -79,6 +85,7 @@ private fun NavGraphBuilder.addHomeTopLevel(
     ) {
         addHome(navController, Screen.Home)
         addOptionsBottomSheet(navController, Screen.Home)
+        addAddToListsBottomSheet(navController, Screen.Home)
         addMovieDetail(navController, Screen.Home)
     }
 }
@@ -91,6 +98,9 @@ fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
         HomeScreen(
             onMovieClick = { movie ->
                 navController.navigate(LeafScreen.MovieDetail.createRoute(root, movie.id))
+            },
+            onMovieLongClick = { movie ->
+                navController.navigate(LeafScreen.MovieAddToListsBottomSheet.createRoute(root))
             },
             onOptionsClick = { movie ->
                 navController.navigate(
@@ -106,9 +116,6 @@ fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 fun NavGraphBuilder.addOptionsBottomSheet(navController: NavController, root: Screen) {
-    composable(route = LeafScreen.MovieDetail.createRoute(root)) {
-        MovieDetailScreen()
-    }
     bottomSheet(
         route = LeafScreen.MovieOptionsBottomSheet.createRoute(root),
         arguments = listOf(
@@ -122,6 +129,24 @@ fun NavGraphBuilder.addOptionsBottomSheet(navController: NavController, root: Sc
             it.arguments!!.getString("movieTitle")!!
         )
     }
+}
+
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
+fun NavGraphBuilder.addAddToListsBottomSheet(navController: NavController, root: Screen) {
+    bottomSheet(
+        route = LeafScreen.MovieAddToListsBottomSheet.createRoute(root),
+        arguments = listOf(
+//            navArgument("movieTitle") {
+//                type = NavType.StringType
+//            }
+        )
+    ) {
+        AddToListsBottomSheet(
+//            it.arguments!!.getLong("movieId"),
+//            it.arguments!!.getString("movieTitle")!!
+        )
+    }
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)
