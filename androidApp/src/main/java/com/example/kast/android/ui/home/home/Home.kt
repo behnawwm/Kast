@@ -19,7 +19,9 @@ import com.example.kast.FakeData
 import com.example.kast.MovieViewModel
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.shared_components.MovieCard
+import com.example.kast.android.ui.shared_components.MovieListWithHeader
 import com.example.kast.data.model.Category
+import com.example.kast.data.model.CategoryType
 import com.example.kast.data.model.CategoryView
 import com.example.kast.data.model.MovieView
 import org.koin.androidx.compose.getViewModel
@@ -63,69 +65,14 @@ fun MovieCategoriesList(
                 MovieListWithHeader(
                     category,
                     onMovieClick = onMovieClick,
-                    onOptionsClick = onOptionsClick
+                    onOptionsClick = onOptionsClick,
+                    modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
 }
-
-@Composable
-fun MovieListWithHeader(
-    categoryView: CategoryView,
-    onMovieClick: (MovieView) -> Unit,
-    onOptionsClick: (MovieView) -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.Bottom,
-        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
-    ) {
-        Text(
-            text = categoryView.type.title,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = titleColor,
-            modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
-        )
-        Text(
-            text = categoryView.subtitle,
-            style = MaterialTheme.typography.labelSmall,
-            color = subtitleColor,
-            modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp)
-        )
-    }
-    MovieList(
-        movies = categoryView.movies,
-        onMovieClick = onMovieClick,
-        onOptionsClick = onOptionsClick,
-        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
-    )
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun MovieList(
-    movies: List<MovieView>,
-    onMovieClick: (MovieView) -> Unit,
-    onOptionsClick: (MovieView) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyRow(
-        contentPadding = PaddingValues(start = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        items(movies) { movie ->
-            MovieCard(
-                movie = movie,
-                onMovieClick = onMovieClick,
-                onOptionsClick = onOptionsClick
-            )
-        }
-    }
-}
-
-
 
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -138,7 +85,11 @@ fun HomeScreenPreview() {
 @Composable
 fun MovieCategoriesListPreview() {
     MovieCategoriesList(
-        emptyList(), //todo
+        listOf(
+            CategoryView(CategoryType.NowPlaying, "sdsa", emptyList()),
+            CategoryView(CategoryType.NowPlaying, "sdsa", emptyList()),
+            CategoryView(CategoryType.NowPlaying, "sdsa", emptyList()),
+        ),
         onMovieClick = {},
         onOptionsClick = {},
         modifier = Modifier.fillMaxSize()
