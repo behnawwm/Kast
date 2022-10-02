@@ -24,3 +24,7 @@ val bodyColor = Color(0xffccd3dd)
 
 val black50Alpha = Color(0x80000000)
 val orange = Color(0xffd3401b)
+
+val greenWatchlist = Color(0xff598536)
+val blueBookmark = Color(0xff0774af)
+val darkGreenCollection = Color(0xff055a53)

@@ -9,7 +9,12 @@ data class MovieView(
     val title: String,
     val rating: Double?,
     val posterPath: String?,
-    val isBookmarked: Boolean = false
+    val isBookmarked: Boolean = false,
+    val bookmarkDate: String? = null,
+    val isWatched: Boolean = false,
+    val watchDate: String? = null,
+    val isCollected: Boolean = false,
+    val collectDate: String? = null,
 ) {
     val imageUrl: String? =
         if (posterPath != null)

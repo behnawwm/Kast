@@ -86,20 +86,9 @@ actual class MovieViewModel actual constructor(
     }
 
     actual fun getMovies(type: CategoryType) {
-        viewModelScope.launch {
-            movieRepository.getDynamicMovies(type.url).collect { movies ->
-                _remoteMovies.update { Pair(type, movies.orEmpty()) }
-//                val prevCategories = state.value.categories
-//                state.value = state.value.copy(
-//                    categories = prevCategories.map {
-//                        if (it.type == type)
-//                            it.copy(movies = movies.orEmpty())
-//                        else
-//                            it
-//                    }
-//                )
-            }
-        }
+        movieRepository.getDynamicMovies(type.url).onEach { movies ->
+            _remoteMovies.update { Pair(type, movies.orEmpty()) }
+        }.launchIn(viewModelScope)
     }
 
     fun addMovieToWatchlist(movie: MovieView) {
