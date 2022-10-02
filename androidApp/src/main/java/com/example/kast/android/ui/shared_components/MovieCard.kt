@@ -98,6 +98,10 @@ fun MovieCard(
                 maxLines = 2,
                 modifier = Modifier.weight(1f)
             )
+            Text(
+                text = movie.isBookmarked.toString(),
+                color = if (movie.isBookmarked) Color.Green else Color.Red
+            )
             Icon(
                 Icons.Default.MoreVert,
                 "",

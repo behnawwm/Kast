@@ -3,7 +3,6 @@ package com.example.kast.data.repository
 import com.example.kast.MovieEntity
 import com.example.kast.data.model.CategoryTypeUrl
 import com.example.kast.data.model.MovieView
-import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.source.local.MoviesDatabase
 import com.example.kast.data.source.remote.MovieService
 import kotlinx.coroutines.Dispatchers
@@ -18,10 +17,10 @@ class MovieRepository(
     private val database: MoviesDatabase
 ) {
 
-    fun getDynamicMovies(categoryTypeUrl: CategoryTypeUrl): Flow<List<TmdbMovie>?> {
+    fun getDynamicMovies(categoryTypeUrl: CategoryTypeUrl): Flow<List<MovieView>?> {
         return flow {
             val result = apiServices.getMovies(categoryTypeUrl.url)
-            emit(result?.results)
+            emit(result?.results?.map { it.toMovieView() })
         }.flowOn(Dispatchers.Default)
     }
 
@@ -52,7 +51,7 @@ class MovieRepository(
 }
 
 fun MovieEntity.toMovieView(): MovieView {
-    return MovieView(id, title, rating, posterPath)
+    return MovieView(id, title, rating, posterPath, isBookmarked = true)
 }
 
 fun MovieView.toMovieEntity(): MovieEntity {
