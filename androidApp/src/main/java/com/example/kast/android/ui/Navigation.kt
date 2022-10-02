@@ -1,7 +1,6 @@
 package com.example.kast.android.ui
 
 import android.net.Uri
-import android.os.Bundle
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -156,9 +155,8 @@ fun NavGraphBuilder.addAddToListsBottomSheet(navController: NavController, root:
         }
         AddToListsBottomSheet(
             movie,
-            onBookmarkClick = {
-                navController.popBackStack()
-        })
+            navController
+        )
     }
 
 }
