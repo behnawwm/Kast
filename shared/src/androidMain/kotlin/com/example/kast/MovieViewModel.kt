@@ -42,12 +42,18 @@ actual class MovieViewModel actual constructor(
             }
 
             val prevCategories = state.value.categories
+
+            //todo check for better solutions
             state.value = state.value.copy(
                 categories = prevCategories.map {
                     if (it.type == remoteCategory)
                         it.copy(movies = modifiedMovies)
                     else
-                        it
+                        it.apply {
+                            it.movies.map { movie ->
+                                movie.copy(isBookmarked = bookmarked.any { it.id == movie.id })
+                            }
+                        }
                 }
             )
         }.launchIn(viewModelScope)
