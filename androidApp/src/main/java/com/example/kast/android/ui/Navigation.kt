@@ -46,7 +46,6 @@ private sealed class LeafScreen(
 
     object MovieAddToListsBottomSheet : LeafScreen("add-to-lists/{movie}") {
         fun createRoute(root: Screen, movie: MovieView): String {
-
             val movieUri = Uri.encode(Json.encodeToString(movie))
             return "${root.route}/add-to-lists/$movieUri"
         }
@@ -155,7 +154,11 @@ fun NavGraphBuilder.addAddToListsBottomSheet(navController: NavController, root:
         val movie = it.arguments!!.getString("movie")!!.let { movie ->
             Json.decodeFromString<MovieView>(movie)
         }
-        AddToListsBottomSheet(movie)
+        AddToListsBottomSheet(
+            movie,
+            onBookmarkClick = {
+                navController.popBackStack()
+        })
     }
 
 }

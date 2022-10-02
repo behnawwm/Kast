@@ -29,9 +29,11 @@ class MovieRepository(
     fun selectAllMovies(): Flow<List<MovieView>> {
         return database.selectAllMovies().flatMapConcat {
             flow {
-                it.map {
-                    it.toMovieView()
-                }
+                emit(
+                    it.map {
+                        it.toMovieView()
+                    }
+                )
             }
         }
     }

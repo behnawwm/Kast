@@ -1,5 +1,6 @@
 package com.example.kast.data.model
 
+import com.example.kast.MovieEntity
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB_IMAGE
 
 @kotlinx.serialization.Serializable
@@ -15,4 +16,8 @@ data class MovieView(
             BASE_URL_TMDB_IMAGE + posterPath
         else
             null
+
+    fun MovieView.toMovieEntity(): MovieEntity {
+        return MovieEntity(id, title, rating, posterPath)
+    }
 }

@@ -24,17 +24,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kast.FakeData.sampleMovieList
+import com.example.kast.WatchlistViewModel
 import com.example.kast.android.theme.bottomNavigationContainerColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun WatchlistScreen() {
+    val viewModel = getViewModel<WatchlistViewModel>()
+
     Scaffold(topBar = { WatchListTopBar() }) { paddingValues ->
 
         fun watchListTabItems() = listOf(
@@ -136,7 +140,7 @@ fun WatchlistScreen() {
                             modifier = Modifier
                         ) { currentPage ->
                             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                                items(sampleMovieList) {
+                                items(viewModel.state.value.bookmarkedMovies) {
                                     MovieExtendedCard(
                                         movie = it,
                                         onMovieClick = {},

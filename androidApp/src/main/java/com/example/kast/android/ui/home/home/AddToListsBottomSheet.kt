@@ -31,7 +31,7 @@ import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun AddToListsBottomSheet(movie: MovieView) {
+fun AddToListsBottomSheet(movie: MovieView, onBookmarkClick: () -> Unit) {
     val viewModel = getViewModel<AddToListsViewModel>()
 
     viewModel.setMovie(movie)
@@ -47,6 +47,7 @@ fun AddToListsBottomSheet(movie: MovieView) {
         Spacer(modifier = Modifier.height(16.dp))
         AddToListsItem(Icons.Default.Bookmark, "Add to watchlist") {
             viewModel.addMovieToWatchlist()
+            onBookmarkClick()
         }
         Spacer(modifier = Modifier.height(16.dp))
         AddToListsItem(Icons.Default.Book, "Add to Collection") {
@@ -82,5 +83,5 @@ fun AddToListsItem(
 @Preview
 @Composable
 fun AddToListsBottomSheetPreview() {
-    AddToListsBottomSheet(MovieView(1, "test", 1.3, ""))
+    AddToListsBottomSheet(MovieView(1, "test", 1.3, ""), {})
 }
