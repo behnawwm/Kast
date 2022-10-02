@@ -37,23 +37,21 @@ actual class MovieViewModel actual constructor(
         _remoteMovies.combine(_bookmarkedMovies) { remote, bookmarked ->
             val (remoteCategory, remoteMovies) = remote
 
-            val modifiedMovies = remoteMovies.map { movie ->
-                movie.copy(isBookmarked = bookmarked.any { it.id == movie.id })
-            }
-
             val prevCategories = state.value.categories
 
             //todo check for better solutions
             state.value = state.value.copy(
                 categories = prevCategories.map {
-                    if (it.type == remoteCategory)
-                        it.copy(movies = modifiedMovies)
-                    else
-                        it.apply {
-                            it.movies.map { movie ->
-                                movie.copy(isBookmarked = bookmarked.any { it.id == movie.id })
-                            }
+                    val newMovies =
+                        if (it.type == remoteCategory)
+                            remoteMovies
+                        else
+                            it.movies
+                    it.copy(
+                        movies = newMovies.map { movie ->
+                            movie.copy(isBookmarked = bookmarked.any { it.id == movie.id })
                         }
+                    )
                 }
             )
         }.launchIn(viewModelScope)
