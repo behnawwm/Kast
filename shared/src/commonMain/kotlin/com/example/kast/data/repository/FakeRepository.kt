@@ -21,7 +21,7 @@ class FakeRepository(
 
     fun getMovieCategories(): Flow<List<Category>>{
         return flow {
-            delay(1500)
+            delay(500)
             emit(categoryList)
         }.flowOn(Dispatchers.Default)
     }

@@ -1,8 +1,10 @@
 package com.example.kast.android.ui.home.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -18,22 +20,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.kast.AddToListsViewModel
+import com.example.kast.MovieViewModel
 import com.example.kast.android.theme.bottomNavigationContainerColor
 import com.example.kast.android.theme.bottomNavigationSelectedIconBackground
+import com.example.kast.android.theme.orange
+import com.example.kast.data.model.MovieView
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.getViewModel
 
-@Preview
 @Composable
-fun AddToListsBottomSheet() {
+fun AddToListsBottomSheet(movie: MovieView) {
+    val viewModel = getViewModel<AddToListsViewModel>()
+
+    viewModel.setMovie(movie)
+    val state = viewModel.state.value
+
     Column(
         modifier = Modifier
             .background(bottomNavigationContainerColor)
             .padding(20.dp)
     ) {
-        AddToListsItem(Icons.Default.Circle, "Mark as watched")
+        AddToListsItem(Icons.Default.Circle, "Mark as watched") {
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        AddToListsItem(Icons.Default.Bookmark, "Add to watchlist")
+        AddToListsItem(Icons.Default.Bookmark, "Add to watchlist") {
+            viewModel.addMovieToWatchlist()
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        AddToListsItem(Icons.Default.Book, "Add to Collection")
+        AddToListsItem(Icons.Default.Book, "Add to Collection") {
+
+        }
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -42,12 +60,16 @@ fun AddToListsBottomSheet() {
 fun AddToListsItem(
     icon: ImageVector,
     title: String,
+    onClick: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
             .clip(RoundedCornerShape(16.dp))
             .background(bottomNavigationSelectedIconBackground)
             .padding(16.dp)
@@ -59,6 +81,6 @@ fun AddToListsItem(
 
 @Preview
 @Composable
-fun AddToListsItemPreview() {
-    AddToListsItem(Icons.Outlined.Circle, "Mark as watched")
+fun AddToListsBottomSheetPreview() {
+    AddToListsBottomSheet(MovieView(1, "test", 1.3, ""))
 }

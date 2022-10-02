@@ -1,5 +1,7 @@
 package com.example.kast.android.ui
 
+import android.net.Uri
+import android.os.Bundle
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,11 +15,15 @@ import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
 import com.example.kast.android.ui.search.SearchScreen
 import com.example.kast.android.ui.watchlist.WatchlistScreen
+import com.example.kast.data.model.MovieView
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -37,10 +43,13 @@ private sealed class LeafScreen(
             return "${root.route}/options/$movieId/$movieTitle"
         }
     }
-    object MovieAddToListsBottomSheet : LeafScreen("add-to-lists") { //todo
-//        fun createRoute(root: Screen): String {
-//            return "${root.route}/add-to-lists/e"
-//        }
+
+    object MovieAddToListsBottomSheet : LeafScreen("add-to-lists/{movie}") {
+        fun createRoute(root: Screen, movie: MovieView): String {
+
+            val movieUri = Uri.encode(Json.encodeToString(movie))
+            return "${root.route}/add-to-lists/$movieUri"
+        }
     }
 
     object MovieDetail : LeafScreen("movie-detail/{movieId}") {
@@ -100,7 +109,9 @@ fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
                 navController.navigate(LeafScreen.MovieDetail.createRoute(root, movie.id))
             },
             onMovieLongClick = { movie ->
-                navController.navigate(LeafScreen.MovieAddToListsBottomSheet.createRoute(root))
+                navController.navigate(
+                    LeafScreen.MovieAddToListsBottomSheet.createRoute(root, movie)
+                )
             },
             onOptionsClick = { movie ->
                 navController.navigate(
@@ -136,15 +147,15 @@ fun NavGraphBuilder.addAddToListsBottomSheet(navController: NavController, root:
     bottomSheet(
         route = LeafScreen.MovieAddToListsBottomSheet.createRoute(root),
         arguments = listOf(
-//            navArgument("movieTitle") {
-//                type = NavType.StringType
-//            }
+            navArgument("movie") {
+                type = MovieType()
+            }
         )
     ) {
-        AddToListsBottomSheet(
-//            it.arguments!!.getLong("movieId"),
-//            it.arguments!!.getString("movieTitle")!!
-        )
+        val movie = it.arguments!!.getString("movie")!!.let { movie ->
+            Json.decodeFromString<MovieView>(movie)
+        }
+        AddToListsBottomSheet(movie)
     }
 
 }
@@ -237,3 +248,4 @@ fun NavGraphBuilder.addSettings(navController: NavController, root: Screen) {
         SettingsScreen()
     }
 }
+

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    kotlin("plugin.serialization") version "1.6.21"
 
 //    id("dagger.hilt.android.plugin")
 //    id("com.google.devtools.ksp")
@@ -49,6 +50,7 @@ dependencies {
     val hiltVersion = "2.43.2"
     val koinCoreVersion = "3.2.1"
     val koinAndroidComposeVersion = "3.2.1"
+    val kotlinSerializationVersion = "1.4.0"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -111,5 +113,8 @@ dependencies {
     // Jetpack Compose
     implementation("io.insert-koin:koin-androidx-compose:$koinAndroidComposeVersion")
 //    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+
+    //Kotlin Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
 }

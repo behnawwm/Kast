@@ -2,10 +2,7 @@ package com.example.kast
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.kast.data.model.Category
-import com.example.kast.data.model.CategoryType
-import com.example.kast.data.model.CategoryView
-import com.example.kast.data.model.toCategoryView
+import com.example.kast.data.model.*
 import com.example.kast.data.repository.FakeRepository
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +58,12 @@ actual class MovieViewModel actual constructor(
                     }
                 )
             }
+        }
+    }
+
+    fun addMovieToWatchlist(movie: MovieView) {
+        viewModelScope.launch {
+            movieRepository.insertMovie(movie)
         }
     }
 
