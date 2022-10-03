@@ -16,6 +16,7 @@ data class MovieView(
     val isCollected: Boolean = false,
     val collectDateTime: Long? = null,
 ) {
+
     val imageUrl: String? =
         if (posterPath != null)
             BASE_URL_TMDB_IMAGE + posterPath

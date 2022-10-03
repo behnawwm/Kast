@@ -5,9 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Satellite
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,20 +13,38 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.kast.android.theme.blueBookmark
 import com.example.kast.android.theme.bottomNavigationContainerColor
+import com.example.kast.android.theme.darkGreenCollection
+import com.example.kast.android.theme.greenWatchlist
+import com.example.kast.data.model.MovieView
+
+
+@Composable
+fun TagChips(movie: MovieView, modifier: Modifier = Modifier) {
+    val tags = mutableListOf<TagChipDataView>()
+    if (movie.isBookmarked)
+        tags.add(TagChipDataView(Icons.Default.Bookmark, blueBookmark))
+    if (movie.isWatched)
+        tags.add(TagChipDataView(Icons.Default.Check, greenWatchlist))
+    if (movie.isCollected)
+        tags.add(TagChipDataView(Icons.Default.Book, darkGreenCollection))
+
+    TagChips(tags = tags, modifier = modifier)
+}
 
 @Composable
 fun TagChips(
-    tags: List<TagChipData>,
-    modifier: Modifier = Modifier
+    tags: List<TagChipDataView>,
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier) {
         tags.forEachIndexed { pos, item ->
             Box(
                 modifier = Modifier
                     .offset((-6 * pos).dp)
+                    .border(2.dp, bottomNavigationContainerColor, CircleShape)
                     .clip(CircleShape)
-                    .border(1.dp, bottomNavigationContainerColor, CircleShape)
                     .background(item.backgroundColor)
             ) {
                 Icon(
@@ -43,15 +59,3 @@ fun TagChips(
         }
     }
 }
-
-val sampleTagChipDataList = listOf(
-    TagChipData(Icons.Default.Bookmark, Color.Blue),
-    TagChipData(Icons.Default.Save, Color.Red),
-    TagChipData(Icons.Default.Satellite, Color.Green),
-)
-
-data class TagChipData(
-    val icon: ImageVector,
-    val backgroundColor: Color,
-    val iconTint: Color = Color.White
-)

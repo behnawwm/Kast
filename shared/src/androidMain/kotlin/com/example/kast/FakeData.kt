@@ -5,7 +5,7 @@ import com.example.kast.data.model.MovieView
 object FakeData {
 
     val sampleMovieList = mutableListOf(
-        MovieView(0, "Thor Love and Thunder", 4.5, ""),
+        MovieView(0, "Thor Love and Thunder", 4.5, "", isBookmarked = true, isCollected = true),
         MovieView(1, "Batman", 4.3, ""),
         MovieView(2, "Rop Gun: Maverick", 4.7, ""),
         MovieView(3, "Ted 2", 3.5, ""),

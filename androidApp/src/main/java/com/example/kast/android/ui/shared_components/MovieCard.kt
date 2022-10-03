@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 fun MovieCard(
     movie: MovieView,
     onOptionsClick: (MovieView) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -83,6 +83,9 @@ fun MovieCard(
 
             }
         }
+        TagChips(movie, modifier = Modifier
+            .align(Alignment.End)
+            .offset(y = (-8).dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,10 +100,6 @@ fun MovieCard(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = movie.isBookmarked.toString(),
-                color = if (movie.isBookmarked) Color.Green else Color.Red
             )
             Icon(
                 Icons.Default.MoreVert,
@@ -121,7 +120,13 @@ fun MovieCard(
 @Composable
 fun MovieCardPreview() {
     MovieCard(
-        movie = MovieView(1, "test title", 4.5, ""),
+        movie = MovieView(1,
+            "test title",
+            4.5,
+            "",
+            isBookmarked = true,
+            isWatched = true,
+            isCollected = true),
         onOptionsClick = {}
     )
 }
