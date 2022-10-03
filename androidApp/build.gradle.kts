@@ -2,7 +2,10 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "1.6.21"
+
+//    id("dagger.hilt.android.plugin")
+//    id("com.google.devtools.ksp")
 }
 
 android {
@@ -19,7 +22,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.0"
+        kotlinCompilerExtensionVersion = "1.3.1"
     }
     packagingOptions {
         resources {
@@ -45,6 +48,9 @@ dependencies {
     val accompanistVersion = "0.25.1"
     val lifecycleVersion = "2.6.0-alpha02"
     val hiltVersion = "2.43.2"
+    val koinCoreVersion = "3.2.1"
+    val koinAndroidComposeVersion = "3.2.1"
+    val kotlinSerializationVersion = "1.4.0"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -72,6 +78,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     // insets-ui
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
+    //pager
+    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     //------------------------- Accompanist -------------------------
 
     // Material 3 Compose
@@ -82,13 +90,13 @@ dependencies {
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 
-    //Hilt
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-
-    // Hilt Navigation Compose
-    implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")
+//    //Hilt
+//    implementation("com.google.dagger:hilt-android:$hiltVersion")
+//    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+//    kapt("androidx.hilt:hilt-compiler:1.0.0")
+//
+//    // Hilt Navigation Compose
+//    implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeNavigationVersion")
 
     // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
@@ -98,5 +106,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
+    // Koin
+    implementation("io.insert-koin:koin-core:$koinCoreVersion")
+//    implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
+    implementation("io.insert-koin:koin-android:$koinCoreVersion")
+    // Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:$koinAndroidComposeVersion")
+//    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+
+    //Kotlin Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
 }
