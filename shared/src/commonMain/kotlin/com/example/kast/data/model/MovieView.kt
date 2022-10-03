@@ -1,7 +1,7 @@
 package com.example.kast.data.model
 
-import com.example.kast.MovieEntity
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB_IMAGE
+import com.example.kast.utils.toDateString
 
 @kotlinx.serialization.Serializable
 data class MovieView(
@@ -10,11 +10,11 @@ data class MovieView(
     val rating: Double?,
     val posterPath: String?,
     val isBookmarked: Boolean = false,
-    val bookmarkDate: String? = null,
+    val bookmarkDateTime: Long? = null,
     val isWatched: Boolean = false,
-    val watchDate: String? = null,
+    val watchDateTime: Long? = null,
     val isCollected: Boolean = false,
-    val collectDate: String? = null,
+    val collectDateTime: Long? = null,
 ) {
     val imageUrl: String? =
         if (posterPath != null)
@@ -22,7 +22,10 @@ data class MovieView(
         else
             null
 
-    fun MovieView.toMovieEntity(): MovieEntity {
-        return MovieEntity(id, title, rating, posterPath)
-    }
+    val bookmarkDate: String? = bookmarkDateTime?.toDateString()
+
+    val watchDate: String? = watchDateTime?.toDateString()
+
+    val collectDate: String? = collectDateTime?.toDateString()
+
 }

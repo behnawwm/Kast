@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,7 +40,7 @@ fun AddToListsBottomSheet(movie: MovieView, navController: NavController) {
     Box(
         modifier = Modifier
             .wrapContentWidth()
-            .background(bottkomNavigationContainerColor)
+            .background(backgroundSurface)
             .padding(top = 0.dp, end = 0.dp)
     ) {
         Surface(
@@ -86,7 +85,8 @@ fun AddToListsBottomSheet(movie: MovieView, navController: NavController) {
                 inactiveTitle = "Mark as watched",
                 activeTitle = "Watched"
             ) {
-                //todo
+                viewModel.addMovieToWatched()
+                navController.popBackStack()
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -99,7 +99,7 @@ fun AddToListsBottomSheet(movie: MovieView, navController: NavController) {
                 inactiveTitle = "Add to watchlist",
                 activeTitle = "Watched"
             ) {
-                viewModel.addMovieToWatchlist()
+                viewModel.addMovieToBookmarked()
                 navController.popBackStack()
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -113,7 +113,8 @@ fun AddToListsBottomSheet(movie: MovieView, navController: NavController) {
                 inactiveTitle = "Add to Collection",
                 activeTitle = "Collected"
             ) {
-                //todo
+                viewModel.addMovieToCollections()
+                navController.popBackStack()
             }
             Spacer(modifier = Modifier.height(16.dp))
         }

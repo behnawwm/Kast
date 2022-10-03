@@ -3,10 +3,10 @@ package com.example.kast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.kast.data.model.*
-import com.example.kast.data.repository.FakeRepository
 import com.example.kast.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
 
@@ -23,10 +23,36 @@ actual class AddToListsViewModel actual constructor(
 
     val state = mutableStateOf(State())
 
-
-    fun addMovieToWatchlist() {
+    fun addMovieToBookmarked() {
         viewModelScope.launch {
-            movieRepository.insertMovie(state.value.movie!!)
+            movieRepository.insertMovie(
+                state.value.movie!!.copy(
+                    isBookmarked = true,
+                    bookmarkDateTime = Clock.System.now().toEpochMilliseconds()
+                )
+            )
+        }
+    }
+
+    fun addMovieToWatched() {
+        viewModelScope.launch {
+            movieRepository.insertMovie(
+                state.value.movie!!.copy(
+                    isWatched = true,
+                    watchDateTime = Clock.System.now().toEpochMilliseconds()
+                )
+            )
+        }
+    }
+
+    fun addMovieToCollections() {
+        viewModelScope.launch {
+            movieRepository.insertMovie(
+                state.value.movie!!.copy(
+                    isCollected = true,
+                    collectDateTime = Clock.System.now().toEpochMilliseconds()
+                )
+            )
         }
     }
 

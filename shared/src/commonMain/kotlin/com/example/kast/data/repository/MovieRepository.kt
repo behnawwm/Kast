@@ -55,5 +55,16 @@ fun MovieEntity.toMovieView(): MovieView {
 }
 
 fun MovieView.toMovieEntity(): MovieEntity {
-    return MovieEntity(id, title, rating, posterPath)
+    return MovieEntity(
+        id,
+        title,
+        rating,
+        posterPath,
+        isBookmarked,
+        bookmarkDateTime,
+        isWatched,
+        watchDateTime,
+        isCollected,
+        collectDateTime
+    )
 }

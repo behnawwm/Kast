@@ -2,12 +2,18 @@ CREATE TABLE MovieEntity (
   id INTEGER PRIMARY KEY NOT NULL,
   title TEXT NOT NULL,
   rating REAL,
-  posterPath TEXT
+  posterPath TEXT,
+  isBookmarked INTEGER AS Boolean DEFAULT 0,
+  bookmarkDateTime INTEGER,
+  isWatched INTEGER AS Boolean DEFAULT 0,
+  watchDateTime INTEGER,
+  isCollected INTEGER AS Boolean DEFAULT 0,
+  collectDateTime INTEGER
 );
 
 insertMovie:
-INSERT OR REPLACE INTO MovieEntity(id,title,rating,posterPath)
-VALUES (?,?,?,?);
+INSERT OR REPLACE INTO MovieEntity(id,title,rating,posterPath,isBookmarked,bookmarkDateTime,isWatched,watchDateTime,isCollected,collectDateTime)
+VALUES (?,?,?,?,?,?,?,?,?,?);
 
 selectAllMovies:
 SELECT * FROM MovieEntity;

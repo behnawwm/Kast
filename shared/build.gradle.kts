@@ -33,6 +33,7 @@ kotlin {
     val lifecycleVersion = "2.6.0-alpha02"
     val koinCoreVersion = "3.2.1"
     val koinAnnotationsVersion = "1.0.3"
+    val kotlinDateTimeVersion = "0.4.0"
 
     sourceSets {
         val commonMain by getting {
@@ -57,6 +58,9 @@ kotlin {
                 implementation("io.insert-koin:koin-core:$koinCoreVersion")
                 // Koin Annotations
 //                implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
+
+                // Kotlin DateTime
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinDateTimeVersion")
             }
         }
         val androidMain by getting {
