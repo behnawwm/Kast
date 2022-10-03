@@ -1,11 +1,10 @@
 package com.example.kast.data.repository
 
 import com.example.kast.MovieEntity
+import com.example.kast.data.model.CategoryTypeUrl
 import com.example.kast.data.model.MovieView
-import com.example.kast.data.model.TmdbMovie
 import com.example.kast.data.source.local.MoviesDatabase
-import com.example.kast.data.source.local.DatabaseDriverFactory
-import com.example.kast.data.source.remote.MovieServices
+import com.example.kast.data.source.remote.MovieService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -14,24 +13,26 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class MovieRepository(
-    private val apiServices: MovieServices,
+    private val apiServices: MovieService,
     private val database: MoviesDatabase
 ) {
 
-    fun getPopularMovies(): Flow<List<TmdbMovie>?> {
+    fun getDynamicMovies(categoryTypeUrl: CategoryTypeUrl): Flow<List<MovieView>?> {
         return flow {
-            emit(apiServices.getPopularMovies()?.results)
+            val result = apiServices.getMovies(categoryTypeUrl.url)
+            emit(result?.results?.map { it.toMovieView() })
         }.flowOn(Dispatchers.Default)
     }
-
 
     @OptIn(FlowPreview::class)
     fun selectAllMovies(): Flow<List<MovieView>> {
         return database.selectAllMovies().flatMapConcat {
             flow {
-                it.map {
-                    it.toMovieView()
-                }
+                emit(
+                    it.map {
+                        it.toMovieView()
+                    }
+                )
             }
         }
     }
@@ -50,9 +51,31 @@ class MovieRepository(
 }
 
 fun MovieEntity.toMovieView(): MovieView {
-    return MovieView(id, title, rating, posterPath)
+    return MovieView(
+        id,
+        title,
+        rating,
+        posterPath,
+        isBookmarked,
+        bookmarkDateTime,
+        isWatched,
+        watchDateTime,
+        isCollected,
+        collectDateTime
+    )
 }
 
 fun MovieView.toMovieEntity(): MovieEntity {
-    return MovieEntity(id, title, rating, posterPath)
+    return MovieEntity(
+        id,
+        title,
+        rating,
+        posterPath,
+        isBookmarked,
+        bookmarkDateTime,
+        isWatched,
+        watchDateTime,
+        isCollected,
+        collectDateTime
+    )
 }

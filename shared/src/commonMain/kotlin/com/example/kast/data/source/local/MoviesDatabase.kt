@@ -19,7 +19,18 @@ class MoviesDatabase(
 
     override suspend fun insertMovie(movie: MovieEntity) {
         withContext(backgroundDispatcher) {
-            dbQuery.insertMovie(movie.id, movie.title, movie.rating, movie.posterPath)
+            dbQuery.insertMovie(
+                movie.id,
+                movie.title,
+                movie.rating,
+                movie.posterPath,
+                movie.isBookmarked,
+                movie.bookmarkDateTime,
+                movie.isWatched,
+                movie.watchDateTime,
+                movie.isCollected,
+                movie.collectDateTime
+            )
         }
     }
 
