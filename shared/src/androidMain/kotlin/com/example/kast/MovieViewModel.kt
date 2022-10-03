@@ -24,8 +24,8 @@ actual class MovieViewModel actual constructor(
 
     val state = mutableStateOf(State())
 
-    private val _bookmarkedMovies = MutableStateFlow(emptyList<MovieView>())
-    private val _remoteMovies =
+    private val savedMovies = MutableStateFlow(emptyList<MovieView>())
+    private val remoteMovies =
         MutableStateFlow<Pair<CategoryType, List<MovieView>>>(
             Pair(
                 CategoryType.Popular,
@@ -34,7 +34,7 @@ actual class MovieViewModel actual constructor(
         )
 
     init {
-        _remoteMovies.combine(_bookmarkedMovies) { remote, bookmarked ->
+        remoteMovies.combine(savedMovies) { remote, saved ->
             val (remoteCategory, remoteMovies) = remote
 
             val prevCategories = state.value.categories
@@ -49,7 +49,18 @@ actual class MovieViewModel actual constructor(
                             it.movies
                     it.copy(
                         movies = newMovies.map { movie ->
-                            movie.copy(isBookmarked = bookmarked.any { it.id == movie.id })
+                            val savedVersion = saved.firstOrNull { it.id == movie.id }
+                            if (savedVersion != null)
+                                movie.copy(
+                                    isBookmarked = savedVersion.isBookmarked,
+                                    bookmarkDateTime = savedVersion.bookmarkDateTime,
+                                    isWatched = savedVersion.isWatched,
+                                    watchDateTime = savedVersion.watchDateTime,
+                                    isCollected = savedVersion.isCollected,
+                                    collectDateTime = savedVersion.collectDateTime
+                                )
+                            else
+                                movie
                         }
                     )
                 }
@@ -63,7 +74,7 @@ actual class MovieViewModel actual constructor(
     private fun getBookmarkedMovies() {
         viewModelScope.launch {
             movieRepository.selectAllMovies().collectLatest { movies ->
-                _bookmarkedMovies.update { movies }
+                savedMovies.update { movies }
             }
         }
     }
@@ -87,7 +98,7 @@ actual class MovieViewModel actual constructor(
 
     actual fun getMovies(type: CategoryType) {
         movieRepository.getDynamicMovies(type.url).onEach { movies ->
-            _remoteMovies.update { Pair(type, movies.orEmpty()) }
+            remoteMovies.update { Pair(type, movies.orEmpty()) }
         }.launchIn(viewModelScope)
     }
 

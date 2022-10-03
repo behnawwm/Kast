@@ -51,7 +51,18 @@ class MovieRepository(
 }
 
 fun MovieEntity.toMovieView(): MovieView {
-    return MovieView(id, title, rating, posterPath, isBookmarked = true)
+    return MovieView(
+        id,
+        title,
+        rating,
+        posterPath,
+        isBookmarked,
+        bookmarkDateTime,
+        isWatched,
+        watchDateTime,
+        isCollected,
+        collectDateTime
+    )
 }
 
 fun MovieView.toMovieEntity(): MovieEntity {

@@ -3,11 +3,11 @@ CREATE TABLE MovieEntity (
   title TEXT NOT NULL,
   rating REAL,
   posterPath TEXT,
-  isBookmarked INTEGER AS Boolean DEFAULT 0,
+  isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0,
   bookmarkDateTime INTEGER,
-  isWatched INTEGER AS Boolean DEFAULT 0,
+  isWatched INTEGER AS Boolean NOT NULL DEFAULT 0,
   watchDateTime INTEGER,
-  isCollected INTEGER AS Boolean DEFAULT 0,
+  isCollected INTEGER AS Boolean NOT NULL DEFAULT 0,
   collectDateTime INTEGER
 );
 
