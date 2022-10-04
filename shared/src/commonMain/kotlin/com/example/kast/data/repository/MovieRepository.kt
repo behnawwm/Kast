@@ -14,15 +14,22 @@ import kotlinx.coroutines.flow.flowOn
 
 class MovieRepository(
     private val apiServices: MovieService,
-    private val database: MoviesDatabase
+    private val database: MoviesDatabase,
 ) {
 
-    fun getDynamicMovies(categoryTypeUrl: CategoryTypeUrl): Flow<List<MovieView>?> {
-        return flow {
-            val result = apiServices.getMovies(categoryTypeUrl.url)
-            emit(result?.results?.map { it.toMovieView() })
-        }.flowOn(Dispatchers.Default)
-    }
+    //    fun getDynamicMovies(
+//        categoryTypeUrl: CategoryTypeUrl,
+//        pageNumber: Int,
+//    ): Flow<List<MovieView>?> {
+//        return flow {
+//            val result = apiServices.getMovies(categoryTypeUrl.url, pageNumber)
+//            emit(result?.results?.map { it.toMovieView() })
+//        }.flowOn(Dispatchers.Default)
+//    }
+    suspend fun getDynamicMovies(
+        categoryTypeUrl: CategoryTypeUrl,
+        pageNumber: Int,
+    ) = apiServices.getMovies(categoryTypeUrl.url, pageNumber)
 
     @OptIn(FlowPreview::class)
     fun selectAllMovies(): Flow<List<MovieView>> {

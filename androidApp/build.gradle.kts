@@ -51,6 +51,7 @@ dependencies {
     val koinCoreVersion = "3.2.1"
     val koinAndroidComposeVersion = "3.2.1"
     val kotlinSerializationVersion = "1.4.0"
+    val paging3ComposeVersion = "1.0.0-alpha16"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -108,13 +109,13 @@ dependencies {
 
     // Koin
     implementation("io.insert-koin:koin-core:$koinCoreVersion")
-//    implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
     implementation("io.insert-koin:koin-android:$koinCoreVersion")
-    // Jetpack Compose
+    // Koin for Compose
     implementation("io.insert-koin:koin-androidx-compose:$koinAndroidComposeVersion")
-//    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
 
     //Kotlin Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
+    // Paging3 for Compose
+    implementation("androidx.paging:paging-compose:$paging3ComposeVersion")
 }

@@ -34,6 +34,7 @@ kotlin {
     val koinCoreVersion = "3.2.1"
     val koinAnnotationsVersion = "1.0.3"
     val kotlinDateTimeVersion = "0.4.0"
+    val pagingVersion = "3.1.1"
 
     sourceSets {
         val commonMain by getting {
@@ -54,13 +55,11 @@ kotlin {
                 implementation("com.squareup.sqldelight:coroutines-extensions:$sqldelightVersion")
 
                 // Koin
-                // Koin Core
                 implementation("io.insert-koin:koin-core:$koinCoreVersion")
-                // Koin Annotations
-//                implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
 
                 // Kotlin DateTime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinDateTimeVersion")
+
             }
         }
         val androidMain by getting {
@@ -79,8 +78,10 @@ kotlin {
 
                 // Sqldelight
                 implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
-                implementation("com.squareup.sqldelight:android-paging-extensions:$sqldelightVersion")
+                implementation("com.squareup.sqldelight:android-paging3-extensions:$sqldelightVersion")
 
+                // Paging
+                implementation("androidx.paging:paging-common-ktx:$pagingVersion")
             }
         }
         val commonTest by getting {
@@ -127,17 +128,9 @@ kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarge
         binaryOptions["memoryModel"] = "experimental"
     }
 }
+
 sqldelight {
     database("KastDb") {
         packageName = "com.example.kast"
     }
 }
-
-//val koinAnnotationsVersion = "1.0.3"
-
-//dependencies {
-//    add("kspCommonMainMetadata", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
-//    add("kspAndroid", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
-//    add("kspIosX64", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
-//    add("kspIosSimulatorArm64", "io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
-//}

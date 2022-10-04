@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.example.kast.FakeData
 import com.example.kast.MovieViewModel
 import com.example.kast.android.theme.*
@@ -32,7 +34,7 @@ fun HomeScreen(
     onMovieClick: (movie: MovieView) -> Unit,
     onMovieLongClick: (movie: MovieView) -> Unit,
     onOptionsClick: (movie: MovieView) -> Unit,
-    viewModel: MovieViewModel = getViewModel()
+    viewModel: MovieViewModel = getViewModel(),
 ) {
     Scaffold(
         topBar = {
@@ -40,15 +42,25 @@ fun HomeScreen(
         }
     ) { paddingValues ->
         val state by remember { viewModel.state }
-        MovieCategoriesList(
-            categories = state.categories,
-            onMovieClick = onMovieClick,
-            onMovieLongClick = onMovieLongClick,
-            onOptionsClick = onOptionsClick,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        )
+//        MovieCategoriesList(
+//            categories = state.categories,
+//            onMovieClick = onMovieClick,
+//            onMovieLongClick = onMovieLongClick,
+//            onOptionsClick = onOptionsClick,
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(paddingValues)
+//        )
+        val test = viewModel.testMovies
+        val movies = test.collectAsLazyPagingItems()
+
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(movies) {
+                it?.let {
+                    Text(text = it.title, modifier = Modifier.padding(16.dp))
+                }
+            }
+        }
     }
 }
 

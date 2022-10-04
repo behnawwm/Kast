@@ -2,6 +2,10 @@ package com.example.kast
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.kast.data.MoviesSource
 import com.example.kast.data.model.*
 import com.example.kast.data.repository.FakeRepository
 import com.example.kast.data.repository.MovieRepository
@@ -13,7 +17,7 @@ import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
 actual class MovieViewModel actual constructor(
     private val movieRepository: MovieRepository,
-    private val fakeRepository: FakeRepository
+    private val fakeRepository: FakeRepository,
 ) : ViewModel() {
     actual val viewModelScope: CoroutineScope = androidXViewModelScope
 
@@ -34,6 +38,8 @@ actual class MovieViewModel actual constructor(
         )
 
     init {
+        getMovies(CategoryType.Popular)
+
         remoteMovies.combine(savedMovies) { remote, saved ->
             val (remoteCategory, remoteMovies) = remote
 
@@ -96,10 +102,17 @@ actual class MovieViewModel actual constructor(
         }
     }
 
+    lateinit var testMovies : Flow<PagingData<MovieView>>
+
     actual fun getMovies(type: CategoryType) {
-        movieRepository.getDynamicMovies(type.url).onEach { movies ->
-            remoteMovies.update { Pair(type, movies.orEmpty()) }
-        }.launchIn(viewModelScope)
+//        movieRepository.getDynamicMovies(type.url).onEach { movies ->
+//            remoteMovies.update { Pair(type, movies.orEmpty()) }
+//        }.launchIn(viewModelScope)
+
+        //test
+        testMovies = Pager(PagingConfig(pageSize = 20)) {
+            MoviesSource(movieRepository)
+        }.flow
     }
 
     fun addMovieToWatchlist(movie: MovieView) {

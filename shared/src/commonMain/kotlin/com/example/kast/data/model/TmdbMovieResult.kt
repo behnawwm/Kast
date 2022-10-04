@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class TmdbMovieResult(
 
     @SerialName("page")
-    val page: Long?,
+    val page: Int?,
 
     @SerialName("results")
     val results: List<TmdbMovie>?,

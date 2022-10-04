@@ -1,6 +1,7 @@
 package com.example.kast.data.source.remote
 
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB
+import com.example.kast.utils.Constants
 import io.ktor.client.HttpClient
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -15,7 +16,7 @@ import kotlinx.serialization.json.Json
 
 class ApiClient(
     private val engine: HttpClientEngine,
-    val baseUrl: String = BASE_URL_TMDB
+    val baseUrl: String = BASE_URL_TMDB,
 ) {
 
     val client = HttpClient(engine) {
@@ -58,14 +59,18 @@ class ApiClient(
     }
 
 
-    suspend inline fun <reified T : Any> getResponse(endpoint: String): T? {
+    suspend inline fun <reified T : Any> getResponse(
+        endpoint: String,
+        httpRequestBuilder: HttpRequestBuilder.() -> Unit,
+    ): T? {
         val url = baseUrl + endpoint
         try {
             // please notice, Ktor Client is switching to a background thread under the hood
             // so the http call doesn't happen on the main thread, even if the coroutine has been launched on Dispatchers.Main
             return client.get {
                 url(url)
-                parameter("api_key", "29227321b612ab6cd44435b4403a2f63")
+                parameter("api_key", Constants.TMDB_API_KEY)
+                httpRequestBuilder()
             }.body<T>()
         } catch (e: Exception) {
             e.printStackTrace()
