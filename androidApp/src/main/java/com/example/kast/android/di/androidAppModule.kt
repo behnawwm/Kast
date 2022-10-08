@@ -3,9 +3,9 @@ package com.example.kast.android.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.kast.AddToListsViewModel
-import com.example.kast.MovieViewModel
-import com.example.kast.WatchlistViewModel
+import com.example.kast.presentation.AddToListsViewModel
+import com.example.kast.presentation.MovieViewModel
+import com.example.kast.presentation.WatchlistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,21 +1,18 @@
-package com.example.kast
+package com.example.kast.presentation
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.kast.data.model.*
-import com.example.kast.data.repository.FakeRepository
-import com.example.kast.data.repository.MovieRepository
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.viewModelScope
+import com.example.kast.data.repository.FakeMovieCategoryRepositoryImpl
+import com.example.kast.data.repository.MovieRepositoryImpl
+import com.example.kast.domain.model.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import androidx.lifecycle.viewModelScope as androidXViewModelScope
-
 
 actual class MovieViewModel actual constructor(
-    private val movieRepository: MovieRepository,
-    private val fakeRepository: FakeRepository
+    private val movieRepository: MovieRepositoryImpl,
+    private val fakeRepository: FakeMovieCategoryRepositoryImpl
 ) : ViewModel() {
-    actual val viewModelScope: CoroutineScope = androidXViewModelScope
 
     data class State(
         val error: String? = null,
@@ -97,7 +94,7 @@ actual class MovieViewModel actual constructor(
     }
 
     actual fun getMovies(type: CategoryType) {
-        movieRepository.getDynamicMovies(type.url).onEach { movies ->
+        movieRepository.getDynamicMovies(type).onEach { movies ->
             remoteMovies.update { Pair(type, movies.orEmpty()) }
         }.launchIn(viewModelScope)
     }
@@ -110,5 +107,3 @@ actual class MovieViewModel actual constructor(
 
 
 }
-
-

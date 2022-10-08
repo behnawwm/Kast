@@ -1,20 +1,16 @@
-package com.example.kast
+package com.example.kast.presentation
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.kast.data.model.*
-import com.example.kast.data.repository.MovieRepository
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.viewModelScope
+import com.example.kast.domain.model.MovieView
+import com.example.kast.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import androidx.lifecycle.viewModelScope as androidXViewModelScope
-
 
 actual class AddToListsViewModel actual constructor(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepositoryImpl
 ) : ViewModel() {
-
-    actual val viewModelScope: CoroutineScope = androidXViewModelScope
 
     data class State(
         val error: String? = null,
@@ -61,5 +57,3 @@ actual class AddToListsViewModel actual constructor(
     }
 
 }
-
-

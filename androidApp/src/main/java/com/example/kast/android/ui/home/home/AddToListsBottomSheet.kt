@@ -25,9 +25,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.kast.AddToListsViewModel
+import com.example.kast.presentation.AddToListsViewModel
 import com.example.kast.android.theme.*
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.MovieView
 import org.koin.androidx.compose.getViewModel
 
 @Composable

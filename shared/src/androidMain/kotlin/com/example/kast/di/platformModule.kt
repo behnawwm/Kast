@@ -1,6 +1,6 @@
 package com.example.kast.di
 
-import com.example.kast.MovieViewModel
+import com.example.kast.presentation.MovieViewModel
 import com.example.kast.data.source.local.DatabaseDriverFactory
 import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.*

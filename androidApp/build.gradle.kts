@@ -51,6 +51,7 @@ dependencies {
     val koinCoreVersion = "3.2.1"
     val koinAndroidComposeVersion = "3.2.1"
     val kotlinSerializationVersion = "1.4.0"
+    val arrowVersion = "1.0.1"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -116,5 +117,8 @@ dependencies {
 
     //Kotlin Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
+
+    // Arrow
+    implementation("io.arrow-kt:arrow-core:$arrowVersion")
 
 }

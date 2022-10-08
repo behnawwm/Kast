@@ -2,7 +2,7 @@ package com.example.kast.android.ui
 
 import android.os.Bundle
 import androidx.navigation.NavType
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.MovieView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

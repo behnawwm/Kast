@@ -10,14 +10,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.kast.android.theme.blueBookmark
 import com.example.kast.android.theme.bottomNavigationContainerColor
 import com.example.kast.android.theme.darkGreenCollection
 import com.example.kast.android.theme.greenWatchlist
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.MovieView
 
 
 @Composable

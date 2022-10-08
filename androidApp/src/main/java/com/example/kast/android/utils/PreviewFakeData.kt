@@ -1,8 +1,8 @@
-package com.example.kast
+package com.example.kast.android.utils
 
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.MovieView
 
-object FakeData {
+object PreviewFakeData {
 
     val sampleMovieList = mutableListOf(
         MovieView(0, "Thor Love and Thunder", 4.5, "", isBookmarked = true, isCollected = true),

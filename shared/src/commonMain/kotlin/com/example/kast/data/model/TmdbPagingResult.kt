@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TmdbMovieResult(
+data class TmdbPagingResult<T>(
 
     @SerialName("page")
     val page: Long?,
 
     @SerialName("results")
-    val results: List<TmdbMovie>?,
+    val results: List<T>?,
 
     @SerialName("total_pages")
     val total_pages: Long?,

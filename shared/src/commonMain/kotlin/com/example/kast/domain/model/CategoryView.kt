@@ -1,4 +1,4 @@
-package com.example.kast.data.model
+package com.example.kast.domain.model
 
 data class CategoryView(
     val type: CategoryType,

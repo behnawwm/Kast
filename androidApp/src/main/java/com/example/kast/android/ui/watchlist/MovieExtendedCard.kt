@@ -20,13 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
-import com.example.kast.FakeData.sampleMovieList
+import com.example.kast.android.utils.PreviewFakeData.sampleMovieList
 import com.example.kast.android.theme.black50Alpha
 import com.example.kast.android.theme.orange
 import com.example.kast.android.ui.shared_components.TagChips
-import com.example.kast.android.utils.AsyncImage
 import com.example.kast.android.utils.addEmptyLines
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.MovieView
 
 @Preview
 @Composable

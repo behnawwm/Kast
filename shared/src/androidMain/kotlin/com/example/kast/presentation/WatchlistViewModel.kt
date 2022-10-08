@@ -1,20 +1,15 @@
-package com.example.kast
+package com.example.kast.presentation
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kast.data.model.CategoryType
-import com.example.kast.data.model.MovieView
-import com.example.kast.data.repository.FakeRepository
-import com.example.kast.data.repository.MovieRepository
-import kotlinx.coroutines.CoroutineScope
+import com.example.kast.domain.model.MovieView
+import com.example.kast.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.launch
-import androidx.lifecycle.viewModelScope as androidXViewModelScope
 
 actual class WatchlistViewModel actual constructor(
-    private val movieRepository: MovieRepository,
+    private val movieRepository: MovieRepositoryImpl,
 ) : ViewModel() {
-    actual val viewModelScope: CoroutineScope = androidXViewModelScope
 
     data class State(
         val bookmarkedMovies: List<MovieView> = emptyList(),

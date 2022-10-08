@@ -1,4 +1,4 @@
-package com.example.kast.data.model
+package com.example.kast.domain.model
 
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB_IMAGE
 import com.example.kast.utils.toDateString

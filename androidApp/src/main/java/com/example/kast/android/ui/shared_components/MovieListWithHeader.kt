@@ -1,7 +1,6 @@
 package com.example.kast.android.ui.shared_components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.example.kast.android.theme.orange
 import com.example.kast.android.theme.subtitleColor
 import com.example.kast.android.theme.titleColor
-import com.example.kast.data.model.CategoryType
-import com.example.kast.data.model.CategoryView
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.CategoryType
+import com.example.kast.domain.model.CategoryView
+import com.example.kast.domain.model.MovieView
 
 
 @Composable

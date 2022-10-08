@@ -1,12 +1,11 @@
-package com.example.kast
+package com.example.kast.presentation
 
-import com.example.kast.data.model.CategoryType
-import com.example.kast.data.repository.FakeRepository
-import com.example.kast.data.repository.MovieRepository
+import com.example.kast.domain.model.CategoryType
+import com.example.kast.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 
 actual class WatchlistViewModel actual constructor(
-    movieRepository: MovieRepository,
+    movieRepository: MovieRepositoryImpl,
 ) {
     actual val viewModelScope: CoroutineScope
         get() = TODO("Not yet implemented")

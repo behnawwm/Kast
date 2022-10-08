@@ -9,6 +9,7 @@ object TmdbWebConfig {
     const val BASE_URL_YOUTUBE_IMAGE = "https://img.youtube.com/vi"
     const val LOGO_FILTER = "_filter(negate,000,666)"
 
+    const val TMDB_API_KEY = "29227321b612ab6cd44435b4403a2f63"
 }
 
 object TmdbUrlParameter {

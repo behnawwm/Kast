@@ -34,6 +34,7 @@ kotlin {
     val koinCoreVersion = "3.2.1"
     val koinAnnotationsVersion = "1.0.3"
     val kotlinDateTimeVersion = "0.4.0"
+    val arrowVersion = "1.0.1"
 
     sourceSets {
         val commonMain by getting {
@@ -61,6 +62,9 @@ kotlin {
 
                 // Kotlin DateTime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinDateTimeVersion")
+
+                // Arrow
+                implementation("io.arrow-kt:arrow-core:$arrowVersion")
             }
         }
         val androidMain by getting {
