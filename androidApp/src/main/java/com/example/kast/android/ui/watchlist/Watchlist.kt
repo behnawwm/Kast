@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.kast.presentation.WatchlistViewModel
+import com.example.kast.presentation.viewModel.WatchlistViewModel
 import com.example.kast.android.theme.bottomNavigationContainerColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager

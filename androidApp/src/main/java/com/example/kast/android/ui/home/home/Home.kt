@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.kast.presentation.MovieViewModel
+import com.example.kast.presentation.viewModel.MovieViewModel
 import com.example.kast.android.theme.*
 import com.example.kast.android.ui.shared_components.MovieListWithHeader
 import com.example.kast.domain.model.CategoryType

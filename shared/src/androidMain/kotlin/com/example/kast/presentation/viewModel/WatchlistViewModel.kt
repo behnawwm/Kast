@@ -1,14 +1,15 @@
-package com.example.kast.presentation
+package com.example.kast.presentation.viewModel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kast.domain.model.MovieView
 import com.example.kast.data.repository.MovieRepositoryImpl
+import com.example.kast.domain.model.MovieView
+import com.example.kast.domain.repository.MovieRepository
 import kotlinx.coroutines.launch
 
 actual class WatchlistViewModel actual constructor(
-    private val movieRepository: MovieRepositoryImpl,
+    private val movieRepository: MovieRepository,
 ) : ViewModel() {
 
     data class State(

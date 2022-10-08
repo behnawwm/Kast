@@ -1,7 +1,7 @@
 package com.example.kast.data.repository
 
 import com.example.kast.domain.model.CategoryType
-import com.example.kast.domain.model.Category
+import com.example.kast.domain.model.CategoryView
 import com.example.kast.domain.repository.MovieCategoryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.flowOn
 class FakeMovieCategoryRepositoryImpl : MovieCategoryRepository {
 
     private val categoryList = listOf(
-        Category(CategoryType.Popular, "Movies"),
-        Category(CategoryType.TopRated, "Movies"),
-        Category(CategoryType.Upcoming, "Movies"),
-        Category(CategoryType.NowPlaying, "Movies"),
+        CategoryView(CategoryType.Popular, "Movies", emptyList()),
+        CategoryView(CategoryType.TopRated, "Movies", emptyList()),
+        CategoryView(CategoryType.Upcoming, "Movies", emptyList()),
+        CategoryView(CategoryType.NowPlaying, "Movies", emptyList()),
     )
 
-    override fun getMovieCategories(): Flow<List<Category>> {
+    override fun getMovieCategories(): Flow<List<CategoryView>> {
         return flow {
             delay(500)
             emit(categoryList)

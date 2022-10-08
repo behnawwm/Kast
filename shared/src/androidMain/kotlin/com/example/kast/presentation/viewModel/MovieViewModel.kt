@@ -1,4 +1,4 @@
-package com.example.kast.presentation
+package com.example.kast.presentation.viewModel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.kast.data.repository.FakeMovieCategoryRepositoryImpl
 import com.example.kast.data.repository.MovieRepositoryImpl
 import com.example.kast.domain.model.*
+import com.example.kast.domain.repository.MovieCategoryRepository
+import com.example.kast.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 actual class MovieViewModel actual constructor(
-    private val movieRepository: MovieRepositoryImpl,
-    private val fakeRepository: FakeMovieCategoryRepositoryImpl
+    private val movieRepository: MovieRepository,
+    private val fakeRepository: MovieCategoryRepository
 ) : ViewModel() {
 
     data class State(
@@ -80,14 +82,14 @@ actual class MovieViewModel actual constructor(
         viewModelScope.launch {
             fakeRepository.getMovieCategories().collect { categoryList ->
                 state.value = state.value.copy(
-                    categories = categoryList.map { it.toCategoryView() }
+                    categories = categoryList
                 )
                 getMoviesForCategories(categoryList)
             }
         }
     }
 
-    private fun getMoviesForCategories(categoryList: List<Category>) {
+    private fun getMoviesForCategories(categoryList: List<CategoryView>) {
         categoryList.forEach {
             getMovies(it.type)
         }

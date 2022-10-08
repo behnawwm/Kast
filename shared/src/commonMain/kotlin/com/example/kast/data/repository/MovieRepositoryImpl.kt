@@ -2,7 +2,7 @@ package com.example.kast.data.repository
 
 import com.example.kast.domain.model.CategoryType
 import com.example.kast.domain.model.MovieView
-import com.example.kast.data.source.local.MoviesDatabase
+import com.example.kast.data.source.local.movie.MoviesDatabase
 import com.example.kast.data.source.remote.movie.MovieService
 import com.example.kast.domain.repository.MovieRepository
 import com.example.kast.domain.mapper.toMovieEntity

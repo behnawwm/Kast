@@ -1,4 +1,4 @@
-package com.example.kast.presentation
+package com.example.kast.presentation.viewModel
 
 import com.example.kast.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
