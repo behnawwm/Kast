@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 actual class MovieViewModel actual constructor(
     private val movieRepository: MovieRepository,
-    private val fakeRepository: MovieCategoryRepository,
+    private val movieCategoryRepository: MovieCategoryRepository,
 ) : ViewModel() {
 
     data class State(
@@ -84,7 +84,7 @@ actual class MovieViewModel actual constructor(
 
     actual fun getMovieCategories() {
         viewModelScope.launch {
-            fakeRepository.getMovieCategories().collect { categoryList ->
+            movieCategoryRepository.getMovieCategories().collect { categoryList ->
                 state.value = state.value.copy(
                     categories = categoryList
                 )
@@ -125,6 +125,14 @@ actual class MovieViewModel actual constructor(
                             }
                         }
                         is Failure.NetworkFailure.ServerException -> {
+                            remoteMovies.update {
+                                CategoryUpdateData(type,
+                                    emptyList(),
+                                    false,
+                                    error.exception.localizedMessage)
+                            }
+                        }
+                        else -> {
                             remoteMovies.update {
                                 CategoryUpdateData(type,
                                     emptyList(),

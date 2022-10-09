@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 actual class MovieViewModel actual constructor(
     movieRepository: MovieRepository,
-    fakeRepository: MovieCategoryRepository
+    movieCategoryRepository: MovieCategoryRepository
 ) {
 
     actual fun getMoviesByType(type: CategoryType) {

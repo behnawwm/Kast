@@ -40,7 +40,7 @@ class ApiClient(
                     println(message)
                 }
             }
-            level = LogLevel.INFO
+            level = LogLevel.ALL
         }
         HttpResponseValidator {
             validateResponse { response: HttpResponse ->
@@ -52,16 +52,17 @@ class ApiClient(
                 throw cause
             }
         }
-        install(HttpTimeout) {
-            requestTimeoutMillis = 60_000
-            connectTimeoutMillis = 60_000
-            socketTimeoutMillis = 60_000
-        }
+        //todo timeout
+//        install(HttpTimeout) {
+//            requestTimeoutMillis = 60_000
+//            connectTimeoutMillis = 60_000
+//            socketTimeoutMillis = 60_000
+//        }
 
     }
 
 
-    suspend inline fun <reified T : Any> getResponse(endpoint: String): Either<Failure.NetworkFailure, T> {
+    suspend inline fun <reified T : Any> getResponseWithApiKey(endpoint: String): Either<Failure.NetworkFailure, T> {
         val url = baseUrl + endpoint
         return try {
             // please notice, Ktor Client is switching to a background thread under the hood
@@ -78,6 +79,8 @@ class ApiClient(
             Either.Left(Failure.NetworkFailure.ClientException(e))
         } catch (e: ServerResponseException) { // for 5xx
             Either.Left(Failure.NetworkFailure.ServerException(e))
+        } catch (e: Exception) {
+            Either.Left(Failure.NetworkFailure.UnknownException(e))
         }
     }
 

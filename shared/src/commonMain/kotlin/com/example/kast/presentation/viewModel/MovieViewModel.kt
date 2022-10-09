@@ -6,7 +6,7 @@ import com.example.kast.domain.repository.MovieRepository
 
 expect class MovieViewModel actual constructor(
     movieRepository: MovieRepository,
-    fakeRepository: MovieCategoryRepository
+    movieCategoryRepository: MovieCategoryRepository
 ) {
     fun getMoviesByType(type: CategoryType)
     fun getMovieCategories()
