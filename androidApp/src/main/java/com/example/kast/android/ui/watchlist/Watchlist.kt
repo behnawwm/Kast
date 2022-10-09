@@ -8,8 +8,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kast.presentation.viewModel.WatchlistViewModel
@@ -126,17 +128,25 @@ fun WatchlistScreen() {
                             state = watchlistPagerState,
                             modifier = Modifier
                         ) { currentPage ->
-                            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                                items(viewModel.state.value.bookmarkedMovies) {
-                                    MovieExtendedCard(
-                                        movie = it,
-                                        onMovieClick = {},
-                                        onOptionsClick = {},
-                                        modifier = Modifier.padding(8.dp)
-                                    )
-                                    Divider(color = bottomNavigationContainerColor)
+                            //todo change content by page
+                            if (viewModel.state.value.databaseError == null)
+                                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                    items(viewModel.state.value.bookmarkedMovies) {
+                                        MovieExtendedCard(
+                                            movie = it,
+                                            onMovieClick = {},
+                                            onOptionsClick = {},
+                                            modifier = Modifier.padding(8.dp)
+                                        )
+                                        Divider(color = bottomNavigationContainerColor)
+                                    }
                                 }
-                            }
+                            else
+                                Text(text = viewModel.state.value.databaseError!!,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                )
                         }
                     }
                 } else {

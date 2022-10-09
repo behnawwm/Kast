@@ -1,8 +1,10 @@
 package com.example.kast.data.source.remote.movie
 
-import com.example.kast.data.model.TmdbMovie
-import com.example.kast.data.model.TmdbPagingResult
+import arrow.core.Either
+import com.example.kast.data.source.remote.model.TmdbMovie
+import com.example.kast.data.source.remote.model.TmdbPagingResult
+import com.example.kast.utils.Failure
 
 interface MovieService {
-    suspend fun getMovies(url: String): TmdbPagingResult<TmdbMovie>?
+    suspend fun getMoviesByType(url: String): Either<Failure.NetworkFailure, TmdbPagingResult<TmdbMovie>>
 }

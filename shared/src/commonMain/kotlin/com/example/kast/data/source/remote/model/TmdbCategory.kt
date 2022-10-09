@@ -1,4 +1,4 @@
-package com.example.kast.data.model
+package com.example.kast.data.source.remote.model
 
 import com.example.kast.domain.model.MovieView
 import kotlinx.serialization.SerialName

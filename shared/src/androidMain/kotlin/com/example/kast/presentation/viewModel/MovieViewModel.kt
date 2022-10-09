@@ -3,17 +3,16 @@ package com.example.kast.presentation.viewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kast.data.repository.FakeMovieCategoryRepositoryImpl
-import com.example.kast.data.repository.MovieRepositoryImpl
 import com.example.kast.domain.model.*
 import com.example.kast.domain.repository.MovieCategoryRepository
 import com.example.kast.domain.repository.MovieRepository
+import com.example.kast.utils.Failure
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 actual class MovieViewModel actual constructor(
     private val movieRepository: MovieRepository,
-    private val fakeRepository: MovieCategoryRepository
+    private val fakeRepository: MovieCategoryRepository,
 ) : ViewModel() {
 
     data class State(
@@ -25,16 +24,12 @@ actual class MovieViewModel actual constructor(
 
     private val savedMovies = MutableStateFlow(emptyList<MovieView>())
     private val remoteMovies =
-        MutableStateFlow<Pair<CategoryType, List<MovieView>>>(
-            Pair(
-                CategoryType.Popular,
-                emptyList()
-            )
-        )
+        MutableStateFlow<CategoryUpdateData?>(null)
 
     init {
         remoteMovies.combine(savedMovies) { remote, saved ->
-            val (remoteCategory, remoteMovies) = remote
+            val remoteCategory = remote?.category
+            val remoteMovies = remote?.movies ?: emptyList()
 
             val prevCategories = state.value.categories
 
@@ -60,7 +55,9 @@ actual class MovieViewModel actual constructor(
                                 )
                             else
                                 movie
-                        }
+                        },
+                        isLoading = false,
+                        errorString = remote?.errorMessage
                     )
                 }
             )
@@ -72,8 +69,15 @@ actual class MovieViewModel actual constructor(
 
     private fun getBookmarkedMovies() {
         viewModelScope.launch {
-            movieRepository.selectAllMovies().collectLatest { movies ->
-                savedMovies.update { movies }
+            movieRepository.selectAllMovies().collectLatest {
+                it.fold(
+                    ifRight = { result ->
+                        savedMovies.update { result }
+                    },
+                    ifLeft = {
+                        //todo
+                    }
+                )
             }
         }
     }
@@ -91,15 +95,55 @@ actual class MovieViewModel actual constructor(
 
     private fun getMoviesForCategories(categoryList: List<CategoryView>) {
         categoryList.forEach {
-            getMovies(it.type)
+            getMoviesByType(it.type)
         }
     }
 
-    actual fun getMovies(type: CategoryType) {
-        movieRepository.getDynamicMovies(type).onEach { movies ->
-            remoteMovies.update { Pair(type, movies.orEmpty()) }
-        }.launchIn(viewModelScope)
+    actual fun getMoviesByType(type: CategoryType) {
+        viewModelScope.launch {
+            val result = movieRepository.getMoviesByType(type)
+            result.fold(
+                ifRight = { movies ->
+                    remoteMovies.update { CategoryUpdateData(type, movies, false, null) }
+                },
+                ifLeft = { error ->
+                    when (error) {
+                        is Failure.NetworkFailure.ClientException -> {
+                            remoteMovies.update {
+                                CategoryUpdateData(type,
+                                    emptyList(),
+                                    false,
+                                    error.exception.localizedMessage)
+                            }
+                        }
+                        is Failure.NetworkFailure.RedirectException -> {
+                            remoteMovies.update {
+                                CategoryUpdateData(type,
+                                    emptyList(),
+                                    false,
+                                    error.exception.localizedMessage)
+                            }
+                        }
+                        is Failure.NetworkFailure.ServerException -> {
+                            remoteMovies.update {
+                                CategoryUpdateData(type,
+                                    emptyList(),
+                                    false,
+                                    error.exception.localizedMessage)
+                            }
+                        }
+                    }
+                }
+            )
+        }
     }
+
+    data class CategoryUpdateData(
+        val category: CategoryType,
+        val movies: List<MovieView>,
+        val isLoading: Boolean = false,
+        val errorMessage: String? = null,
+    )
 
     fun addMovieToWatchlist(movie: MovieView) {
         viewModelScope.launch {
