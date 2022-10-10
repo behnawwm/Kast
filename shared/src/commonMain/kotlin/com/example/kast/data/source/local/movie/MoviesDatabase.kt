@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 
 class MoviesDatabase(
     databaseDriverFactory: DatabaseDriverFactory,
-    private val backgroundDispatcher: CoroutineDispatcher
+    private val backgroundDispatcher: CoroutineDispatcher,
 ) : MoviesDao {
     private val database = KastDb(databaseDriverFactory.createDriver())
     private val dbQuery = database.kastDbQueries
@@ -34,12 +34,10 @@ class MoviesDatabase(
         }
     }
 
-    override fun selectAllMovies(): Flow<List<MovieEntity>> {   //todo apply caching strategy
+    override suspend fun selectAllMovies(): List<MovieEntity> {   //todo apply caching strategy
         return dbQuery
             .selectAllMovies()
-            .asFlow()
-            .mapToList()
-            .flowOn(backgroundDispatcher)
+            .executeAsList()
     }
 
     override suspend fun getMovieById(movieId: Long): MovieEntity? {

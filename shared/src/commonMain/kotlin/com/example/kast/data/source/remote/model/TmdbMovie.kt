@@ -1,5 +1,6 @@
 package com.example.kast.data.source.remote.model
 
+import com.example.kast.domain.model.Movie
 import com.example.kast.domain.model.MovieView
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -44,8 +45,8 @@ data class TmdbMovie(
     val voteCount: Int?
 ) {
 
-    fun toMovieView(): MovieView {
-        return MovieView(
+    fun toMovie(): Movie {
+        return Movie(
             id, originalTitle ?: "", voteAverage, posterPath ?: ""
         )
     }

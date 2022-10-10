@@ -28,7 +28,7 @@ fun HomeScreen(
     onMovieClick: (movie: MovieView) -> Unit,
     onMovieLongClick: (movie: MovieView) -> Unit,
     onOptionsClick: (movie: MovieView) -> Unit,
-    viewModel: MovieViewModel = getViewModel()
+    viewModel: MovieViewModel = getViewModel(),
 ) {
     Scaffold(
         topBar = {
@@ -37,6 +37,7 @@ fun HomeScreen(
     ) { paddingValues ->
         val state by remember { viewModel.state }
         MovieCategoriesList(
+            viewModel = viewModel,
             categories = state.categories,
             onMovieClick = onMovieClick,
             onMovieLongClick = onMovieLongClick,
@@ -50,6 +51,7 @@ fun HomeScreen(
 
 @Composable
 fun MovieCategoriesList(
+    viewModel: MovieViewModel,
     categories: List<CategoryView>,
     onMovieClick: (MovieView) -> Unit,
     onMovieLongClick: (MovieView) -> Unit,
@@ -62,12 +64,15 @@ fun MovieCategoriesList(
         } else LazyColumn() {
             items(categories) { category ->
                 MovieListWithHeader(
-                    category,
+                    categoryView = category,
                     onMovieClick = onMovieClick,
                     onMovieLongClick = onMovieLongClick,
                     onOptionsClick = onOptionsClick,
                     modifier = Modifier.fillMaxSize(),
-                    onMoreClick = {}
+                    onMoreClick = {},
+                    onRetry = {
+                        viewModel.getMoviesByType(category.type)
+                    }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -86,6 +91,7 @@ fun HomeScreenPreview() {
 @Composable
 fun MovieCategoriesListPreview() {
     MovieCategoriesList(
+        getViewModel(),
         listOf(
             CategoryView(CategoryType.NowPlaying, "sdsa", emptyList()),
             CategoryView(CategoryType.NowPlaying, "sdsa", emptyList()),

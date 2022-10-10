@@ -1,13 +1,11 @@
 package com.example.kast.presentation.viewModel
 
-import com.example.kast.domain.model.CategoryType
-import com.example.kast.domain.repository.MovieCategoryRepository
-import com.example.kast.domain.repository.MovieRepository
+import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
+import com.example.kast.domain.usecase.InsertMovieUseCase
 
 expect class MovieViewModel actual constructor(
-    movieRepository: MovieRepository,
-    movieCategoryRepository: MovieCategoryRepository
+    insertMovieUseCase : InsertMovieUseCase,
+    getMovieCategoriesUseCase: GetRemoteMovieCategoriesUseCase
 ) {
-    fun getMoviesByType(type: CategoryType)
-    fun getMovieCategories()
+
 }

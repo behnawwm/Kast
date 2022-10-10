@@ -2,8 +2,10 @@ package com.example.kast.utils
 
 import arrow.core.Either
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-abstract class UseCase<out Type, in Params> where Type : Any {
+abstract class FlowUseCase<out Type, in Params> where Type : Any {
 
     abstract suspend fun run(params: Params): Either<Failure, Type>
 
@@ -11,13 +13,15 @@ abstract class UseCase<out Type, in Params> where Type : Any {
     operator fun invoke(
         params: Params,
         scope: CoroutineScope = GlobalScope,
-        onResult: (Either<Failure, Type>) -> Unit = {}
+        onResult: (Flow<Either<Failure, Type>>) -> Unit = {},
     ) {
         scope.launch(Dispatchers.Main) {
             val deferred = async(Dispatchers.Default) {
                 run(params)
             }
-            onResult(deferred.await())
+            onResult(
+                flow { emit(deferred.await()) }
+            )
         }
     }
 

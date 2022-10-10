@@ -4,15 +4,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kast.domain.model.*
-import com.example.kast.domain.repository.MovieCategoryRepository
-import com.example.kast.domain.repository.MovieRepository
+import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
+import com.example.kast.domain.usecase.InsertMovieUseCase
 import com.example.kast.utils.Failure
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 actual class MovieViewModel actual constructor(
-    private val movieRepository: MovieRepository,
-    private val movieCategoryRepository: MovieCategoryRepository,
+    private val insertMovieUseCase: InsertMovieUseCase,
+    private val getMovieCategoriesUseCase: GetRemoteMovieCategoriesUseCase,
 ) : ViewModel() {
 
     data class State(
@@ -100,6 +100,14 @@ actual class MovieViewModel actual constructor(
     }
 
     actual fun getMoviesByType(type: CategoryType) {
+        state.value = state.value.copy(
+            categories = state.value.categories.map {
+                if (it.type == type)
+                    it.copy(isLoading = true)
+                else
+                    it
+            }
+        )
         viewModelScope.launch {
             val result = movieRepository.getMoviesByType(type)
             result.fold(

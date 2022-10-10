@@ -1,7 +1,6 @@
 package com.example.kast.android.ui.shared_components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +36,7 @@ fun MovieListWithHeader(
     onMovieLongClick: (MovieView) -> Unit,
     onOptionsClick: (MovieView) -> Unit,
     onMoreClick: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(modifier = modifier) {
@@ -86,32 +85,7 @@ fun MovieListWithHeader(
                 }
             else
                 if (categoryView.errorString != null)
-                    Column(
-                        modifier = modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            categoryView.errorString!!,
-                            color = Color.White,
-                            modifier = Modifier
-                                .wrapContentWidth()
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        TextButton(
-                            onClick = {
-                                //todo retry
-                            },
-                            colors = ButtonDefaults.textButtonColors(
-                                containerColor = backgroundSurface
-                            ),
-                        ) {
-                            Text(
-                                text = "Retry",
-                                color = Color.White,
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                                style = TextStyle(textAlign = TextAlign.Center)
-                            )
-                        }
-                    }
+                    ErrorMessageContainer(categoryView, onRetry)
                 else
                     MovieList(
                         movies = categoryView.movies,
@@ -123,6 +97,36 @@ fun MovieListWithHeader(
                             .fillMaxSize()
                             .align(Alignment.CenterHorizontally)
                     )
+        }
+    }
+}
+
+@Composable
+fun ErrorMessageContainer(categoryView: CategoryView, onRetry: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            categoryView.errorString!!,
+            color = Color.White,
+            modifier = Modifier
+                .wrapContentWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextButton(
+            onClick = {
+                onRetry()
+            },
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = backgroundSurface
+            ),
+        ) {
+            Text(
+                text = "Retry",
+                color = Color.White,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                style = TextStyle(textAlign = TextAlign.Center)
+            )
         }
     }
 }
@@ -169,7 +173,9 @@ fun MovieListWithHeaderPreview() {
         onMovieClick = {},
         onMovieLongClick = {},
         onOptionsClick = {},
-        onMoreClick = {})
+        onMoreClick = {},
+        onRetry = {}
+    )
 }
 
 @Preview
@@ -186,5 +192,7 @@ fun MovieListWithHeaderPreview2() {
         onMovieClick = {},
         onMovieLongClick = {},
         onOptionsClick = {},
-        onMoreClick = {})
+        onMoreClick = {},
+        onRetry = {}
+    )
 }
