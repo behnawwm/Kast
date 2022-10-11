@@ -41,7 +41,7 @@ class MoviesDatabase(
             .executeAsList()
     }
 
-    override fun selectAllMoviesFlow(): Flow<List<MovieEntity>> {
+    override fun selectAllMoviesAsFlow(): Flow<List<MovieEntity>> {
         return dbQuery
             .selectAllMovies()
             .asFlow()

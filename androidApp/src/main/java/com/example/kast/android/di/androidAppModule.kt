@@ -16,7 +16,7 @@ fun appModule(app: Application) = module {
     }
 
     viewModel {
-        MovieViewModel(get(), get())
+        MovieViewModel(get())
     }
     viewModel {
         AddToListsViewModel(get())

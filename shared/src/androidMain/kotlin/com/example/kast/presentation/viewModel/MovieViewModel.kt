@@ -4,16 +4,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kast.domain.model.*
-import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
-import com.example.kast.domain.usecase.InsertMovieUseCase
 import com.example.kast.domain.usecase.home.GetMovieCategoriesUseCase
 import com.example.kast.presentation.mapper.toCategoryView
-import com.example.kast.utils.Failure
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 actual class MovieViewModel actual constructor(
-    private val insertMovieUseCase: InsertMovieUseCase,
     private val getMovieCategoriesUseCase: GetMovieCategoriesUseCase,
 ) : ViewModel() {
 
@@ -24,12 +19,8 @@ actual class MovieViewModel actual constructor(
 
     val state = mutableStateOf(State())
 
-//    private val savedMovies = MutableStateFlow(emptyList<MovieView>())
-//    private val remoteMovies =
-//        MutableStateFlow<CategoryUpdateData?>(null)
-
     init {
-        test()
+        getCategories()
 //        remoteMovies.combine(savedMovies) { remote, saved ->
 //            val remoteCategory = remote?.category
 //            val remoteMovies = remote?.movies ?: emptyList()
@@ -70,7 +61,7 @@ actual class MovieViewModel actual constructor(
 //        getMovieCategories()
     }
 
-    private fun test() {
+    private fun getCategories() {
         getMovieCategoriesUseCase(GetMovieCategoriesUseCase.Params(Unit)) {
             it.onEach {
                 it.fold(
@@ -177,24 +168,10 @@ actual class MovieViewModel actual constructor(
 //        }
 //    }
 
-    data class CategoryUpdateData(
-        val category: CategoryType,
-        val movies: List<MovieView>,
-        val isLoading: Boolean = false,
-        val errorMessage: String? = null,
-    )
-
-    fun addMovieToWatchlist(movie: MovieView) {
-        viewModelScope.launch {
-            insertMovieUseCase(InsertMovieUseCase.Params(movie), viewModelScope) {
-                it.fold(ifLeft = {
-                    //todo
-                }, ifRight = {
-
-                })
-            }
-        }
-    }
-
-
+//    data class CategoryUpdateData(
+//        val category: CategoryType,
+//        val movies: List<MovieView>,
+//        val isLoading: Boolean = false,
+//        val errorMessage: String? = null,
+//    )
 }
