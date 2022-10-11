@@ -25,9 +25,7 @@ import org.koin.dsl.module
 fun initKoin(appModule: Module): KoinApplication {
     val koinApplication = startKoin {
         modules(
-            appModule,
-            platformModule,
-            coreModule
+            appModule + platformModule + coreModule + dataSourceModule + repositoryModule + useCaseModule
         )
     }
 
@@ -43,54 +41,10 @@ fun initKoin(appModule: Module): KoinApplication {
 
 private val coreModule = module {
 
-    single<MoviesDao> {
-        MoviesDatabase(
-            get(),
-            Dispatchers.Default
-        )
-    }
-
-    single<MovieService> {
-        MovieServiceImpl(
-            get()
-        )
-    }
-
-    single<MovieCategoryService> {
-        MovieCategoryServiceImpl(
-            get()
-        )
-    }
-
-    single<ApiClient> {
+    single {
         ApiClient(
             get()
         )
-    }
-
-    single<MovieRepository> {
-        MovieRepositoryImpl(get(), get())
-    }
-
-    single<MovieCategoryRepository> {
-        FakeMovieCategoryRepositoryImpl()
-    }
-
-    //todo different module for use cases
-    single {
-        InsertMovieUseCase(get())
-    }
-    single {
-        GetMovieCategoriesUseCase(get(), get())
-    }
-    single {
-        GetLocalMoviesUseCase(get())
-    }
-    single {
-        GetRemoteMoviesByTypeUseCase(get())
-    }
-    single {
-        GetRemoteMovieCategoriesUseCase(get())
     }
 
 }

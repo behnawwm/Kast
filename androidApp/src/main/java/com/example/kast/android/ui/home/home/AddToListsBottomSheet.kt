@@ -113,7 +113,7 @@ fun AddToListsBottomSheet(movie: MovieView, navController: NavController) {
                 inactiveTitle = "Add to Collection",
                 activeTitle = "Collected"
             ) {
-                viewModel.addMovieToCollections()
+                viewModel.addMovieToCollected()
                 navController.popBackStack()
             }
             Spacer(modifier = Modifier.height(16.dp))

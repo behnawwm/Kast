@@ -9,11 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.kast.data.repository.MovieRepositoryImpl
 import com.example.kast.domain.model.MovieView
 import com.example.kast.domain.repository.MovieRepository
+import com.example.kast.domain.usecase.GetLocalMoviesUseCase
+import com.example.kast.presentation.mapper.toMovieView
 import com.example.kast.utils.Failure
 import kotlinx.coroutines.launch
 
 actual class WatchlistViewModel actual constructor(
-    private val movieRepository: MovieRepository,
+    private val getLocalMoviesUseCase: GetLocalMoviesUseCase,
 ) : ViewModel() {
 
     data class State(
@@ -28,23 +30,22 @@ actual class WatchlistViewModel actual constructor(
     }
 
     actual fun getBookmarkedMovies() {
-//        viewModelScope.launch {
-//            movieRepository.selectAllMovies().collect {
-//                it.fold(
-//                    ifRight = {
-//                        state.value = state.value.copy(bookmarkedMovies = it)
-//                    },
-//                    ifLeft = {
-//                        when (it) {
-//                            Failure.DatabaseFailure.ReadFailure.EmptyList -> {
-//                                state.value =
-//                                    state.value.copy(databaseError = "You have no bookmarked movies!")
-//                            }
-//                        }
-//                    }
-//                )
-//            }
-//        }
+        getLocalMoviesUseCase(GetLocalMoviesUseCase.Params(Unit), viewModelScope) {
+            it.fold(
+                ifRight = {
+                    state.value = state.value.copy(bookmarkedMovies = it.map { it.toMovieView() })
+                },
+                ifLeft = {
+                    when (it) {
+                        Failure.DatabaseFailure.ReadFailure.EmptyList -> {
+                            state.value =
+                                state.value.copy(databaseError = "You have no bookmarked movies!")
+                        }
+                        else -> {}
+                    }
+                }
+            )
+        }
     }
 
 }
