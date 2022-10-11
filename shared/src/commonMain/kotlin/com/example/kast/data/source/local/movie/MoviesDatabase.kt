@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flowOn
 
 class MoviesDatabase(
@@ -38,6 +39,13 @@ class MoviesDatabase(
         return dbQuery
             .selectAllMovies()
             .executeAsList()
+    }
+
+    override fun selectAllMoviesFlow(): Flow<List<MovieEntity>> {
+        return dbQuery
+            .selectAllMovies()
+            .asFlow()
+            .mapToList()
     }
 
     override suspend fun getMovieById(movieId: Long): MovieEntity? {

@@ -2,6 +2,7 @@ package com.example.kast.di
 
 import com.example.kast.data.repository.FakeMovieCategoryRepositoryImpl
 import com.example.kast.data.repository.MovieRepositoryImpl
+import com.example.kast.data.source.local.movie.MoviesDao
 import com.example.kast.data.source.local.movie.MoviesDatabase
 import com.example.kast.data.source.remote.ApiClient
 import com.example.kast.data.source.remote.movie.MovieService
@@ -42,7 +43,7 @@ fun initKoin(appModule: Module): KoinApplication {
 
 private val coreModule = module {
 
-    single {
+    single<MoviesDao> {
         MoviesDatabase(
             get(),
             Dispatchers.Default
@@ -80,7 +81,7 @@ private val coreModule = module {
         InsertMovieUseCase(get())
     }
     single {
-        GetMovieCategoriesUseCase(get(), get(), get())
+        GetMovieCategoriesUseCase(get(), get())
     }
     single {
         GetLocalMoviesUseCase(get())

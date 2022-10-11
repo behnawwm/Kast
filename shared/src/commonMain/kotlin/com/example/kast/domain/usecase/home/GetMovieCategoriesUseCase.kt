@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.flow
 class GetMovieCategoriesUseCase(
     private val getRemoteMovieCategoriesUseCase: GetRemoteMovieCategoriesUseCase,
     private val getRemoteMoviesByTypeUseCase: GetRemoteMoviesByTypeUseCase,
-    private val getLocalMoviesUseCase: GetLocalMoviesUseCase,
 ) :
     FlowUseCase<List<Category>, GetMovieCategoriesUseCase.Params>() {
 
@@ -23,13 +22,6 @@ class GetMovieCategoriesUseCase(
 
     override fun run(params: Params): Flow<Either<Failure.NetworkFailure, List<Category>>> {
         return flow {
-            val localMovies =
-                getLocalMoviesUseCase.run(GetLocalMoviesUseCase.Params(Unit)).getOrHandle {
-                    when (it) {
-                        Failure.DatabaseFailure.ReadFailure.EmptyList -> emptyList()
-                    }
-                }
-
             getRemoteMovieCategoriesUseCase.run(GetRemoteMovieCategoriesUseCase.Params(Unit)).fold(
                 ifLeft = {
                     emit(Either.Left(it))
@@ -64,23 +56,13 @@ class GetMovieCategoriesUseCase(
                                 )
                             },
                             ifRight = { remoteMovies ->
-                                val newCategory = category.toCategory(
-                                    remoteMovies.map { remoteMovie ->
-                                        remoteMovie.toMovie(
-                                            localMovies.find { it.id == remoteMovie.id }
-                                        )
-                                    }
-                                )
+                                val newCategory = category.toCategory(remoteMovies)
                                 savedCategory.add(newCategory)
                                 emit(
                                     Either.Right(
                                         savedCategory.map {
                                             if (it.id == category.id)
-                                                it.copy(movies = remoteMovies.map {
-                                                    it.toMovie(null //todo
-//                                                        localMovies.find { it.id == remoteMovie.id }
-                                                    )
-                                                })
+                                                it.copy(movies = remoteMovies)
                                             else
                                                 it
                                         }

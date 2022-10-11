@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
 
-    suspend fun getMoviesByType(categoryType: CategoryType): Either<Failure.NetworkFailure, List<TmdbMovie>>
+    suspend fun getMoviesByType(categoryType: CategoryType): Either<Failure.NetworkFailure, List<Movie>>
 
     suspend fun selectAllMovies(): Either<Failure.DatabaseFailure.ReadFailure, List<Movie>>
     suspend fun selectMovieById(movieId: Long): Either<Failure.DatabaseFailure.FindFailure, Movie>

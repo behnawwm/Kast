@@ -1,5 +1,6 @@
 package com.example.kast.data.source.remote.model
 
+import com.example.kast.MovieEntity
 import com.example.kast.domain.model.Movie
 import com.example.kast.domain.model.MovieView
 import kotlinx.serialization.SerialName
@@ -45,7 +46,7 @@ data class TmdbMovie(
     val voteCount: Int?,
 ) {
 
-    fun toMovie(localVersion: Movie?): Movie {
+    fun toMovie(localVersion: MovieEntity?): Movie {
         return Movie(
             id = id,
             title = originalTitle ?: "",
@@ -53,10 +54,10 @@ data class TmdbMovie(
             posterPath = posterPath ?: "",
             isBookmarked = localVersion?.isBookmarked ?: false,
             bookmarkDateTime = localVersion?.bookmarkDateTime,
-            isWatched = localVersion?.isBookmarked ?: false,
-            watchDateTime = localVersion?.bookmarkDateTime,
-            isCollected = localVersion?.isBookmarked ?: false,
-            collectDateTime = localVersion?.bookmarkDateTime,
+            isWatched = localVersion?.isWatched ?: false,
+            watchDateTime = localVersion?.watchDateTime,
+            isCollected = localVersion?.isCollected ?: false,
+            collectDateTime = localVersion?.collectDateTime,
         )
     }
 }
