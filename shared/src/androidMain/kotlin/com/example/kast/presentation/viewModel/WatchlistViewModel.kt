@@ -28,23 +28,23 @@ actual class WatchlistViewModel actual constructor(
     }
 
     actual fun getBookmarkedMovies() {
-        viewModelScope.launch {
-            movieRepository.selectAllMovies().collect {
-                it.fold(
-                    ifRight = {
-                        state.value = state.value.copy(bookmarkedMovies = it)
-                    },
-                    ifLeft = {
-                        when (it) {
-                            Failure.DatabaseFailure.ReadFailure.EmptyList -> {
-                                state.value =
-                                    state.value.copy(databaseError = "You have no bookmarked movies!")
-                            }
-                        }
-                    }
-                )
-            }
-        }
+//        viewModelScope.launch {
+//            movieRepository.selectAllMovies().collect {
+//                it.fold(
+//                    ifRight = {
+//                        state.value = state.value.copy(bookmarkedMovies = it)
+//                    },
+//                    ifLeft = {
+//                        when (it) {
+//                            Failure.DatabaseFailure.ReadFailure.EmptyList -> {
+//                                state.value =
+//                                    state.value.copy(databaseError = "You have no bookmarked movies!")
+//                            }
+//                        }
+//                    }
+//                )
+//            }
+//        }
     }
 
 }

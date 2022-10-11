@@ -8,13 +8,9 @@ import com.example.kast.domain.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 
 actual class MovieViewModel actual constructor(
-    movieRepository: MovieRepository,
-    movieCategoryRepository: MovieCategoryRepository
+    private val movieRepository: MovieRepository,
+    private val movieCategoryRepository: MovieCategoryRepository
 ) {
 
-    actual fun getMoviesByType(type: CategoryType) {
-    }
 
-    actual fun getMovieCategories() {
-    }
 }

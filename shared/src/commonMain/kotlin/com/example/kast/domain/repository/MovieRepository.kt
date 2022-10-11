@@ -14,6 +14,6 @@ interface MovieRepository {
 
     suspend fun selectAllMovies(): Either<Failure.DatabaseFailure.ReadFailure, List<Movie>>
     suspend fun selectMovieById(movieId: Long): Either<Failure.DatabaseFailure.FindFailure, Movie>
-    suspend fun insertMovie(movie: Movie): Either<Failure, Unit>
+    suspend fun insertMovie(movie: Movie): Either<Failure.DatabaseFailure.InsertFailure, Unit>
     suspend fun deleteAllMovies()
 }

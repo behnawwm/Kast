@@ -71,7 +71,7 @@ fun MovieCategoriesList(
                     modifier = Modifier.fillMaxSize(),
                     onMoreClick = {},
                     onRetry = {
-                        viewModel.getMoviesByType(category.type)
+//                        viewModel.getMoviesByType(category.type)
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

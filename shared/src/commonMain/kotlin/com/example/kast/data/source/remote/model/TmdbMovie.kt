@@ -42,12 +42,21 @@ data class TmdbMovie(
     val voteAverage: Double?,
 
     @SerialName("vote_count")
-    val voteCount: Int?
+    val voteCount: Int?,
 ) {
 
-    fun toMovie(): Movie {
+    fun toMovie(localVersion: Movie?): Movie {
         return Movie(
-            id, originalTitle ?: "", voteAverage, posterPath ?: ""
+            id = id,
+            title = originalTitle ?: "",
+            rating = voteAverage,
+            posterPath = posterPath ?: "",
+            isBookmarked = localVersion?.isBookmarked ?: false,
+            bookmarkDateTime = localVersion?.bookmarkDateTime,
+            isWatched = localVersion?.isBookmarked ?: false,
+            watchDateTime = localVersion?.bookmarkDateTime,
+            isCollected = localVersion?.isBookmarked ?: false,
+            collectDateTime = localVersion?.bookmarkDateTime,
         )
     }
 }

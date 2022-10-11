@@ -39,7 +39,7 @@ class MovieRepositoryImpl(
         )
     }
 
-    override suspend fun insertMovie(movie: Movie): Either<Failure, Unit> {
+    override suspend fun insertMovie(movie: Movie): Either<Failure.DatabaseFailure.InsertFailure, Unit> {
         return Either.Right(database.insertMovie(movie.toMovieEntity())) //todo handle errors
     }
 

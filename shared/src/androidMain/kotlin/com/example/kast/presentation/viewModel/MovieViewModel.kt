@@ -6,13 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.kast.domain.model.*
 import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
 import com.example.kast.domain.usecase.InsertMovieUseCase
+import com.example.kast.domain.usecase.home.GetMovieCategoriesUseCase
+import com.example.kast.presentation.mapper.toCategoryView
 import com.example.kast.utils.Failure
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 actual class MovieViewModel actual constructor(
     private val insertMovieUseCase: InsertMovieUseCase,
-    private val getMovieCategoriesUseCase: GetRemoteMovieCategoriesUseCase,
+    private val getMovieCategoriesUseCase: GetMovieCategoriesUseCase,
 ) : ViewModel() {
 
     data class State(
@@ -22,137 +24,158 @@ actual class MovieViewModel actual constructor(
 
     val state = mutableStateOf(State())
 
-    private val savedMovies = MutableStateFlow(emptyList<MovieView>())
-    private val remoteMovies =
-        MutableStateFlow<CategoryUpdateData?>(null)
+//    private val savedMovies = MutableStateFlow(emptyList<MovieView>())
+//    private val remoteMovies =
+//        MutableStateFlow<CategoryUpdateData?>(null)
 
     init {
-        remoteMovies.combine(savedMovies) { remote, saved ->
-            val remoteCategory = remote?.category
-            val remoteMovies = remote?.movies ?: emptyList()
+        test()
+//        remoteMovies.combine(savedMovies) { remote, saved ->
+//            val remoteCategory = remote?.category
+//            val remoteMovies = remote?.movies ?: emptyList()
+//
+//            val prevCategories = state.value.categories
+//
+//            //todo check for better solutions
+//            state.value = state.value.copy(
+//                categories = prevCategories.map {
+//                    val newMovies =
+//                        if (it.type == remoteCategory)
+//                            remoteMovies
+//                        else
+//                            it.movies
+//                    it.copy(
+//                        movies = newMovies.map { movie ->
+//                            val savedVersion = saved.firstOrNull { it.id == movie.id }
+//                            if (savedVersion != null)
+//                                movie.copy(
+//                                    isBookmarked = savedVersion.isBookmarked,
+//                                    bookmarkDateTime = savedVersion.bookmarkDateTime,
+//                                    isWatched = savedVersion.isWatched,
+//                                    watchDateTime = savedVersion.watchDateTime,
+//                                    isCollected = savedVersion.isCollected,
+//                                    collectDateTime = savedVersion.collectDateTime
+//                                )
+//                            else
+//                                movie
+//                        },
+//                        isLoading = false,
+//                        errorString = remote?.errorMessage
+//                    )
+//                }
+//            )
+//        }.launchIn(viewModelScope)
 
-            val prevCategories = state.value.categories
-
-            //todo check for better solutions
-            state.value = state.value.copy(
-                categories = prevCategories.map {
-                    val newMovies =
-                        if (it.type == remoteCategory)
-                            remoteMovies
-                        else
-                            it.movies
-                    it.copy(
-                        movies = newMovies.map { movie ->
-                            val savedVersion = saved.firstOrNull { it.id == movie.id }
-                            if (savedVersion != null)
-                                movie.copy(
-                                    isBookmarked = savedVersion.isBookmarked,
-                                    bookmarkDateTime = savedVersion.bookmarkDateTime,
-                                    isWatched = savedVersion.isWatched,
-                                    watchDateTime = savedVersion.watchDateTime,
-                                    isCollected = savedVersion.isCollected,
-                                    collectDateTime = savedVersion.collectDateTime
-                                )
-                            else
-                                movie
-                        },
-                        isLoading = false,
-                        errorString = remote?.errorMessage
-                    )
-                }
-            )
-        }.launchIn(viewModelScope)
-
-        getBookmarkedMovies()
-        getMovieCategories()
+//        getBookmarkedMovies()
+//        getMovieCategories()
     }
 
-    private fun getBookmarkedMovies() {
-        viewModelScope.launch {
-            movieRepository.selectAllMovies().collectLatest {
+    private fun test() {
+        getMovieCategoriesUseCase(GetMovieCategoriesUseCase.Params(Unit)) {
+            it.onEach {
                 it.fold(
-                    ifRight = { result ->
-                        savedMovies.update { result }
+                    ifLeft = { failure ->
+                        state.value = state.value.copy(
+                            error = failure.toString()
+                        )
                     },
-                    ifLeft = {
-                        //todo
+                    ifRight = {
+                        state.value = state.value.copy(
+                            categories = it.map { it.toCategoryView() }
+                        )
                     }
                 )
-            }
+            }.launchIn(viewModelScope)
         }
+
     }
 
-    actual fun getMovieCategories() {
-        viewModelScope.launch {
-            movieCategoryRepository.getMovieCategories().collect { categoryList ->
-                state.value = state.value.copy(
-                    categories = categoryList
-                )
-                getMoviesForCategories(categoryList)
-            }
-        }
-    }
+//    private fun getBookmarkedMovies() {
+//        viewModelScope.launch {
+//            movieRepository.selectAllMovies().collectLatest {
+//                it.fold(
+//                    ifRight = { result ->
+//                        savedMovies.update { result }
+//                    },
+//                    ifLeft = {
+//                        //todo
+//                    }
+//                )
+//            }
+//        }
+//    }
 
-    private fun getMoviesForCategories(categoryList: List<CategoryView>) {
-        categoryList.forEach {
-            getMoviesByType(it.type)
-        }
-    }
+//    actual fun getMovieCategories() {
+//        viewModelScope.launch {
+//            movieCategoryRepository.getMovieCategories().collect { categoryList ->
+//                state.value = state.value.copy(
+//                    categories = categoryList
+//                )
+//                getMoviesForCategories(categoryList)
+//            }
+//        }
+//    }
 
-    actual fun getMoviesByType(type: CategoryType) {
-        state.value = state.value.copy(
-            categories = state.value.categories.map {
-                if (it.type == type)
-                    it.copy(isLoading = true)
-                else
-                    it
-            }
-        )
-        viewModelScope.launch {
-            val result = movieRepository.getMoviesByType(type)
-            result.fold(
-                ifRight = { movies ->
-                    remoteMovies.update { CategoryUpdateData(type, movies, false, null) }
-                },
-                ifLeft = { error ->
-                    when (error) {
-                        is Failure.NetworkFailure.ClientException -> {
-                            remoteMovies.update {
-                                CategoryUpdateData(type,
-                                    emptyList(),
-                                    false,
-                                    error.exception.localizedMessage)
-                            }
-                        }
-                        is Failure.NetworkFailure.RedirectException -> {
-                            remoteMovies.update {
-                                CategoryUpdateData(type,
-                                    emptyList(),
-                                    false,
-                                    error.exception.localizedMessage)
-                            }
-                        }
-                        is Failure.NetworkFailure.ServerException -> {
-                            remoteMovies.update {
-                                CategoryUpdateData(type,
-                                    emptyList(),
-                                    false,
-                                    error.exception.localizedMessage)
-                            }
-                        }
-                        else -> {
-                            remoteMovies.update {
-                                CategoryUpdateData(type,
-                                    emptyList(),
-                                    false,
-                                    error.exception.localizedMessage)
-                            }
-                        }
-                    }
-                }
-            )
-        }
-    }
+//    private fun getMoviesForCategories(categoryList: List<CategoryView>) {
+//        categoryList.forEach {
+//            getMoviesByType(it.type)
+//        }
+//    }
+
+//    actual fun getMoviesByType(type: CategoryType) {
+//        state.value = state.value.copy(
+//            categories = state.value.categories.map {
+//                if (it.type == type)
+//                    it.copy(isLoading = true)
+//                else
+//                    it
+//            }
+//        )
+//        viewModelScope.launch {
+//            val result = movieRepository.getMoviesByType(type)
+//            result.fold(
+//                ifRight = { movies ->
+//                    remoteMovies.update { CategoryUpdateData(type, movies, false, null) }
+//                },
+//                ifLeft = { error ->
+//                    when (error) {
+//                        is Failure.NetworkFailure.ClientException -> {
+//                            remoteMovies.update {
+//                                CategoryUpdateData(type,
+//                                    emptyList(),
+//                                    false,
+//                                    error.exception.localizedMessage)
+//                            }
+//                        }
+//                        is Failure.NetworkFailure.RedirectException -> {
+//                            remoteMovies.update {
+//                                CategoryUpdateData(type,
+//                                    emptyList(),
+//                                    false,
+//                                    error.exception.localizedMessage)
+//                            }
+//                        }
+//                        is Failure.NetworkFailure.ServerException -> {
+//                            remoteMovies.update {
+//                                CategoryUpdateData(type,
+//                                    emptyList(),
+//                                    false,
+//                                    error.exception.localizedMessage)
+//                            }
+//                        }
+//                        else -> {
+//                            remoteMovies.update {
+//                                CategoryUpdateData(type,
+//                                    emptyList(),
+//                                    false,
+//                                    error.exception.localizedMessage)
+//                            }
+//                        }
+//                    }
+//                }
+//            )
+//        }
+//    }
 
     data class CategoryUpdateData(
         val category: CategoryType,
@@ -163,7 +186,13 @@ actual class MovieViewModel actual constructor(
 
     fun addMovieToWatchlist(movie: MovieView) {
         viewModelScope.launch {
-            movieRepository.insertMovie(movie)
+            insertMovieUseCase(InsertMovieUseCase.Params(movie), viewModelScope) {
+                it.fold(ifLeft = {
+                    //todo
+                }, ifRight = {
+
+                })
+            }
         }
     }
 

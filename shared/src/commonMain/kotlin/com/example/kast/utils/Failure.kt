@@ -24,6 +24,10 @@ sealed interface Failure {
             object ItemNotFoundInDb : FindFailure
         }
 
+        sealed interface InsertFailure : DatabaseFailure {
+
+        }
+
         sealed interface ReadFailure : DatabaseFailure {
             object EmptyList : ReadFailure
         }

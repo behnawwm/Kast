@@ -1,6 +1,7 @@
 package com.example.kast.domain.usecase
 
 import arrow.core.Either
+import com.example.kast.domain.mapper.toMovie
 import com.example.kast.domain.model.MovieView
 import com.example.kast.domain.repository.MovieRepository
 import com.example.kast.utils.Failure
@@ -11,7 +12,7 @@ class InsertMovieUseCase(private val movieRepository: MovieRepository) :
 
     data class Params(val movie: MovieView)
 
-    override suspend fun run(params: Params): Either<Failure, Unit> {
-        return movieRepository.insertMovie(params.movie)
+    override suspend fun run(params: Params): Either<Failure.DatabaseFailure.InsertFailure, Unit> {
+        return movieRepository.insertMovie(params.movie.toMovie())
     }
 }

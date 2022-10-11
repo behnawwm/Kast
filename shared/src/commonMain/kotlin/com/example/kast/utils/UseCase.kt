@@ -3,7 +3,7 @@ package com.example.kast.utils
 import arrow.core.Either
 import kotlinx.coroutines.*
 
-abstract class UseCase<out Type, in Params> where Type : Any {
+abstract class UseCase<out Type, in Params> where Type : Any {  //todo add failure sealed classes support
 
     abstract suspend fun run(params: Params): Either<Failure, Type>
 

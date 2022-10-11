@@ -10,6 +10,11 @@ import com.example.kast.data.source.remote.movie_category.MovieCategoryService
 import com.example.kast.data.source.remote.movie_category.MovieCategoryServiceImpl
 import com.example.kast.domain.repository.MovieCategoryRepository
 import com.example.kast.domain.repository.MovieRepository
+import com.example.kast.domain.usecase.GetLocalMoviesUseCase
+import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
+import com.example.kast.domain.usecase.GetRemoteMoviesByTypeUseCase
+import com.example.kast.domain.usecase.InsertMovieUseCase
+import com.example.kast.domain.usecase.home.GetMovieCategoriesUseCase
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -69,6 +74,24 @@ private val coreModule = module {
     single<MovieCategoryRepository> {
         FakeMovieCategoryRepositoryImpl()
     }
+
+    //todo different module for use cases
+    single {
+        InsertMovieUseCase(get())
+    }
+    single {
+        GetMovieCategoriesUseCase(get(), get(), get())
+    }
+    single {
+        GetLocalMoviesUseCase(get())
+    }
+    single {
+        GetRemoteMoviesByTypeUseCase(get())
+    }
+    single {
+        GetRemoteMovieCategoriesUseCase(get())
+    }
+
 }
 
 expect val platformModule: Module

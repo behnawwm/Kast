@@ -21,36 +21,36 @@ actual class AddToListsViewModel actual constructor(
     val state = mutableStateOf(State())
 
     fun addMovieToBookmarked() {
-        viewModelScope.launch {
-            movieRepository.insertMovie(
-                state.value.movie!!.copy(
-                    isBookmarked = true,
-                    bookmarkDateTime = Clock.System.now().toEpochMilliseconds()
-                )
-            )
-        }
+//        viewModelScope.launch {
+//            movieRepository.insertMovie(
+//                state.value.movie!!.copy(
+//                    isBookmarked = true,
+//                    bookmarkDateTime = Clock.System.now().toEpochMilliseconds()
+//                )
+//            )
+//        }
     }
 
     fun addMovieToWatched() {
-        viewModelScope.launch {
-            movieRepository.insertMovie(
-                state.value.movie!!.copy(
-                    isWatched = true,
-                    watchDateTime = Clock.System.now().toEpochMilliseconds()
-                )
-            )
-        }
+//        viewModelScope.launch {
+//            movieRepository.insertMovie(
+//                state.value.movie!!.copy(
+//                    isWatched = true,
+//                    watchDateTime = Clock.System.now().toEpochMilliseconds()
+//                )
+//            )
+//        }
     }
 
     fun addMovieToCollections() {
-        viewModelScope.launch {
-            movieRepository.insertMovie(
-                state.value.movie!!.copy(
-                    isCollected = true,
-                    collectDateTime = Clock.System.now().toEpochMilliseconds()
-                )
-            )
-        }
+//        viewModelScope.launch {
+//            movieRepository.insertMovie(
+//                state.value.movie!!.copy(
+//                    isCollected = true,
+//                    collectDateTime = Clock.System.now().toEpochMilliseconds()
+//                )
+//            )
+//        }
     }
 
     fun setMovie(movie: MovieView) {
