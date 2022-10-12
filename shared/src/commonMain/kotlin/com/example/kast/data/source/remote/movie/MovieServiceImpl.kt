@@ -5,6 +5,8 @@ import com.example.kast.data.source.remote.model.TmdbMovie
 import com.example.kast.data.source.remote.model.TmdbPagingResult
 import com.example.kast.data.source.remote.ApiClient
 import com.example.kast.utils.Failure
+import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 class MovieServiceImpl(
     private val apiClient: ApiClient,
