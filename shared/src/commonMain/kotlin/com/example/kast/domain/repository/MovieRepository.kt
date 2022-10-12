@@ -1,6 +1,7 @@
 package com.example.kast.domain.repository
 
 import arrow.core.Either
+import com.example.kast.MovieEntity
 import com.example.kast.domain.model.CategoryType
 import com.example.kast.domain.model.Movie
 import com.example.kast.utils.Failure
@@ -13,6 +14,6 @@ interface MovieRepository {
 
     suspend fun selectAllMovies(): Either<Failure.DatabaseFailure.ReadFailure, List<Movie>>
     suspend fun selectMovieById(movieId: Long): Either<Failure.DatabaseFailure.FindFailure, Movie>
-    suspend fun insertMovie(movie: Movie): Either<Failure.DatabaseFailure.InsertFailure, Unit>
+    suspend fun insertMovie(movie: Movie): Either<Failure.DatabaseFailure.InsertFailure, Movie>
     suspend fun deleteAllMovies()
 }

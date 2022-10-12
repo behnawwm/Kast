@@ -37,7 +37,6 @@ class GetMovieCategoriesUseCase(
                                 findCategoryTypeByString(category.type)  //todo check if findCategoryTypeByString should be called here or use a mapped model
                             )
                         ).onEach {
-                            println("Raana :    ${category.type}")
                             it.fold(
                                 ifLeft = {
                                     val newCategory = category.toCategory(emptyList())

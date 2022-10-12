@@ -1,7 +1,7 @@
 package com.example.kast.data.repository
 
 import arrow.core.Either
-import arrow.core.right
+import com.example.kast.MovieEntity
 import com.example.kast.data.source.local.movie.MoviesDao
 import com.example.kast.domain.model.CategoryType
 import com.example.kast.data.source.remote.movie.MovieService
@@ -41,17 +41,17 @@ class MovieRepositoryImpl(
 
     @OptIn(FlowPreview::class)
     override fun getMoviesWithStatusByTypeAsFlow(categoryType: CategoryType): Flow<Either<Failure.NetworkFailure, List<Movie>>> {
-        return databaseDao.selectAllMoviesAsFlow().flatMapConcat{ localMovies ->
+        return databaseDao.selectAllMoviesAsFlow().flatMapConcat { localMovies ->
             val result = apiService.getMoviesByType(categoryType.url)
             flowOf(
-                    result.map {
-                        it.results.orEmpty().map { remoteMovie ->
-                            remoteMovie.toMovie(
-                                localMovies.find { it.id == remoteMovie.id }
-                            )
-                        }
+                result.map {
+                    it.results.orEmpty().map { remoteMovie ->
+                        remoteMovie.toMovie(
+                            localMovies.find { it.id == remoteMovie.id }
+                        )
                     }
-                )
+                }
+            )
         }
     }
 
@@ -60,7 +60,7 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun selectMovieById(movieId: Long): Either<Failure.DatabaseFailure.FindFailure, Movie> {
-        val result = databaseDao.getMovieById(movieId)?.toMovie()
+        val result = databaseDao.selectMovieById(movieId)?.toMovie()
         return Either.conditionally(
             result != null,
             ifFalse = { Failure.DatabaseFailure.FindFailure.ItemNotFoundInDb },
@@ -68,8 +68,10 @@ class MovieRepositoryImpl(
         )
     }
 
-    override suspend fun insertMovie(movie: Movie): Either<Failure.DatabaseFailure.InsertFailure, Unit> {
-        return Either.Right(databaseDao.insertMovie(movie.toMovieEntity())) //todo handle errors
+    override suspend fun insertMovie(movie: Movie): Either<Failure.DatabaseFailure.InsertFailure, Movie> {
+        return Either.Right(
+            databaseDao.insertMovie(movie.toMovieEntity()).toMovie() //todo handle errors
+        )
     }
 
 

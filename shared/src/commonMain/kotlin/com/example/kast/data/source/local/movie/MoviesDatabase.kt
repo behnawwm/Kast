@@ -18,8 +18,8 @@ class MoviesDatabase(
     private val database = KastDb(databaseDriverFactory.createDriver())
     private val dbQuery = database.kastDbQueries
 
-    override suspend fun insertMovie(movie: MovieEntity) {
-        withContext(backgroundDispatcher) {
+    override suspend fun insertMovie(movie: MovieEntity): MovieEntity {
+        return withContext(backgroundDispatcher) {
             dbQuery.insertMovie(
                 movie.id,
                 movie.title,
@@ -32,6 +32,7 @@ class MoviesDatabase(
                 movie.isCollected,
                 movie.collectDateTime
             )
+            return@withContext movie
         }
     }
 
@@ -48,7 +49,7 @@ class MoviesDatabase(
             .mapToList()
     }
 
-    override suspend fun getMovieById(movieId: Long): MovieEntity? {
+    override suspend fun selectMovieById(movieId: Long): MovieEntity? {
         return withContext(backgroundDispatcher) {
             dbQuery.selectMovieById(movieId).executeAsOneOrNull()
         }
