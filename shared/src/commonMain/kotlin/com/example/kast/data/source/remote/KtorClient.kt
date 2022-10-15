@@ -1,6 +1,9 @@
 package com.example.kast.data.source.remote
 
+import arrow.core.Either
 import com.example.kast.data.source.remote.TmdbWebConfig.BASE_URL_TMDB
+import com.example.kast.data.source.remote.TmdbWebConfig.TMDB_API_KEY
+import com.example.kast.utils.Failure
 import io.ktor.client.HttpClient
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -15,7 +18,7 @@ import kotlinx.serialization.json.Json
 
 class ApiClient(
     private val engine: HttpClientEngine,
-    val baseUrl: String = BASE_URL_TMDB
+    val baseUrl: String = BASE_URL_TMDB,
 ) {
 
     val client = HttpClient(engine) {
@@ -37,7 +40,7 @@ class ApiClient(
                     println(message)
                 }
             }
-            level = LogLevel.INFO
+            level = LogLevel.ALL
         }
         HttpResponseValidator {
             validateResponse { response: HttpResponse ->
@@ -49,28 +52,36 @@ class ApiClient(
                 throw cause
             }
         }
-        install(HttpTimeout) {
-            requestTimeoutMillis = 60_000
-            connectTimeoutMillis = 60_000
-            socketTimeoutMillis = 60_000
-        }
+        //todo timeout
+//        install(HttpTimeout) {
+//            requestTimeoutMillis = 60_000
+//            connectTimeoutMillis = 60_000
+//            socketTimeoutMillis = 60_000
+//        }
 
     }
 
 
-    suspend inline fun <reified T : Any> getResponse(endpoint: String): T? {
+    suspend inline fun <reified T : Any> getResponseWithApiKey(endpoint: String): Either<Failure.NetworkFailure, T> {
         val url = baseUrl + endpoint
-        try {
+        return try {
             // please notice, Ktor Client is switching to a background thread under the hood
             // so the http call doesn't happen on the main thread, even if the coroutine has been launched on Dispatchers.Main
-            return client.get {
-                url(url)
-                parameter("api_key", "29227321b612ab6cd44435b4403a2f63")
-            }.body<T>()
+            Either.Right(
+                client.get {
+                    url(url)
+                    parameter("api_key", TMDB_API_KEY)
+                }.body()
+            )
+        } catch (e: RedirectResponseException) { // for 3xx
+            Either.Left(Failure.NetworkFailure.RedirectException(e))
+        } catch (e: ClientRequestException) { // for 4xx
+            Either.Left(Failure.NetworkFailure.ClientException(e))
+        } catch (e: ServerResponseException) { // for 5xx
+            Either.Left(Failure.NetworkFailure.ServerException(e))
         } catch (e: Exception) {
-            e.printStackTrace()
+            Either.Left(Failure.NetworkFailure.UnknownException(e))
         }
-        return null
     }
 
 }
