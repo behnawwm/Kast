@@ -1,13 +1,12 @@
 package com.example.kast.android.ui.watchlist
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.kast.android.theme.orange
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +22,12 @@ fun TabLayout(
 ) {
     TabRow(
         selectedTabIndex = tabIndex,
+        indicator = @Composable { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.tabIndicatorOffset(tabPositions[tabIndex]),
+                color = orange
+            )
+        },
         modifier = Modifier.padding(top = 20.dp),
     ) {
         tabData.forEachIndexed { index, text ->

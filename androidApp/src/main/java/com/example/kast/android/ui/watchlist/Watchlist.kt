@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -27,25 +25,11 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun WatchlistScreen() {
     val viewModel = getViewModel<WatchlistViewModel>()
+    val state by viewModel.state.collectAsState()
 
     Scaffold(topBar = { WatchListTopBar() }) { paddingValues ->
 
-        fun watchListTabItems() = listOf(
-            HorizontalPagerContent(title = "Movie"),
-            HorizontalPagerContent(title = "TvShow"),
-            HorizontalPagerContent(title = "Season"),
-            HorizontalPagerContent(title = "Episodes"),
-        )
 
-        fun historyListTabItems() = listOf(
-            HorizontalPagerContent(title = "Movie"),
-            HorizontalPagerContent(title = "TvShow"),
-            HorizontalPagerContent(title = "Season"),
-        )
-
-
-        val watchListTabItems = watchListTabItems()
-        val historyListTabItems = historyListTabItems()
         val pagerState = rememberPagerState()
 
         val watchlistPagerState = rememberPagerState()
@@ -55,12 +39,6 @@ fun WatchlistScreen() {
         val historyTabIndex = historyPagerState.currentPage
 
         val coroutineScope = rememberCoroutineScope()
-        val watchlistTabData = listOf(
-            "Movies", "TV Shows", "Seasons", "Episodes"
-        )
-        val historyTabData = listOf(
-            "Movies", "TV Shows", "Episodes"
-        )
 
         val watchListTabPosition = 0
         val historyTabPosition = 1
@@ -117,50 +95,95 @@ fun WatchlistScreen() {
                     Column {
 
                         TabLayout(
-                            tabData = watchlistTabData,
+                            tabData = state.watchlistTabData,
                             tabIndex = watchlistTabIndex,
                             pagerState = watchlistPagerState,
                             coroutineScope = coroutineScope
                         )
 
                         HorizontalPager(
-                            count = watchListTabItems.size,
+                            count = state.watchlistTabData.size,
                             state = watchlistPagerState,
                             modifier = Modifier
                         ) { currentPage ->
-                            //todo change content by page
-                            if (viewModel.state.value.databaseError == null)
-                                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                                    items(viewModel.state.value.bookmarkedMovies) {
-                                        MovieExtendedCard(
-                                            movie = it,
-                                            onMovieClick = {},
-                                            onOptionsClick = {},
-                                            modifier = Modifier.padding(8.dp)
+                            when (currentPage) {
+                                0 -> {
+                                    if (viewModel.state.value.databaseError == null)
+                                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                            items(viewModel.state.value.allMovies.filter { it.isBookmarked }) {
+                                                MovieExtendedCard(
+                                                    movie = it,
+                                                    onMovieClick = {},
+                                                    onOptionsClick = {},
+                                                    modifier = Modifier.padding(8.dp)
+                                                )
+                                                Divider(color = bottomNavigationContainerColor)
+                                            }
+                                        }
+                                    else
+                                        Text(text = viewModel.state.value.databaseError!!,
+                                            color = Color.White,
+                                            modifier = Modifier
+                                                .padding(16.dp)
                                         )
-                                        Divider(color = bottomNavigationContainerColor)
-                                    }
                                 }
-                            else
-                                Text(text = viewModel.state.value.databaseError!!,
-                                    color = Color.White,
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                )
+                                1 -> {
+                                    if (viewModel.state.value.databaseError == null)
+                                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                            items(viewModel.state.value.allMovies.filter { it.isWatched }) {
+                                                MovieExtendedCard(
+                                                    movie = it,
+                                                    onMovieClick = {},
+                                                    onOptionsClick = {},
+                                                    modifier = Modifier.padding(8.dp)
+                                                )
+                                                Divider(color = bottomNavigationContainerColor)
+                                            }
+                                        }
+                                    else
+                                        Text(text = viewModel.state.value.databaseError!!,
+                                            color = Color.White,
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                        )
+                                }
+                                2 -> {
+                                    if (viewModel.state.value.databaseError == null)
+                                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                            items(viewModel.state.value.allMovies.filter { it.isCollected }) {
+                                                MovieExtendedCard(
+                                                    movie = it,
+                                                    onMovieClick = {},
+                                                    onOptionsClick = {},
+                                                    modifier = Modifier.padding(8.dp)
+                                                )
+                                                Divider(color = bottomNavigationContainerColor)
+                                            }
+                                        }
+                                    else
+                                        Text(text = viewModel.state.value.databaseError!!,
+                                            color = Color.White,
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                        )
+                                }
+
+                            }
+
                         }
                     }
                 } else {
                     // History TAB
                     Column {
                         TabLayout(
-                            tabData = historyTabData,
+                            tabData = state.historyTabData,
                             tabIndex = historyTabIndex,
                             pagerState = historyPagerState,
                             coroutineScope = coroutineScope
                         )
 
                         HorizontalPager(
-                            count = historyListTabItems.size,
+                            count = state.historyTabData.size,
                             state = historyPagerState,
                             modifier = Modifier
                         ) { currentPage ->
@@ -168,7 +191,7 @@ fun WatchlistScreen() {
                                 modifier = Modifier.fillMaxSize()
                             ) {
                                 Text(
-                                    text = historyListTabItems[currentPage].title,
+                                    text = "Not Implemented",
                                     style = MaterialTheme.typography.bodySmall
                                 )
 

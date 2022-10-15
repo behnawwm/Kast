@@ -62,23 +62,23 @@ fun MovieExtendedCard(
                 Box(
                     contentAlignment = Alignment.TopEnd,
                 ) {
-                    SubcomposeAsyncImage(
-                        model = movie.imageUrl,
-                        loading = {
-                            androidx.compose.material.CircularProgressIndicator(
-                                color = orange,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            )
-                        },
-                        error = {
-                            Image(Icons.Default.BrokenImage, contentDescription = "")
-                        },
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        contentDescription = movie.title
-                    )
+//                    SubcomposeAsyncImage(
+//                        model = movie.imageUrl,
+//                        loading = {
+//                            androidx.compose.material.CircularProgressIndicator(
+//                                color = orange,
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .padding(16.dp)
+//                            )
+//                        },
+//                        error = {
+//                            Image(Icons.Default.BrokenImage, contentDescription = "")
+//                        },
+//                        modifier = Modifier
+//                            .fillMaxHeight(),
+//                        contentDescription = movie.title
+//                    )
                     Text(
                         text = movie.rating.toString(),
                         color = Color.White,

@@ -1,44 +1,60 @@
 package com.example.kast.presentation.viewModel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kast.data.repository.MovieRepositoryImpl
 import com.example.kast.domain.model.MovieView
-import com.example.kast.domain.repository.MovieRepository
 import com.example.kast.domain.usecase.GetLocalMoviesUseCase
 import com.example.kast.presentation.mapper.toMovieView
 import com.example.kast.utils.Failure
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 actual class WatchlistViewModel actual constructor(
     private val getLocalMoviesUseCase: GetLocalMoviesUseCase,
 ) : ViewModel() {
 
     data class State(
-        val bookmarkedMovies: List<MovieView> = emptyList(),
+        val watchlistTabData: List<String> = emptyList(),
+        val historyTabData: List<String> = emptyList(),
+        val allMovies: List<MovieView> = emptyList(),
         val databaseError: String? = null,
     )
 
-    val state = mutableStateOf(State())
+    private val _state = MutableStateFlow(State())
+    val state = _state.asStateFlow()
 
     init {
+        getCategorySectionsData()
         getBookmarkedMovies()
+    }
+
+    private fun getCategorySectionsData() {
+        getWatchlistSections()
+        getHistorySections()
+    }
+
+    private fun getHistorySections() {
+        _state.value = _state.value.copy(historyTabData = listOf(
+            "Movies", "TV Shows", "Episodes"
+        ))
+    }
+
+    private fun getWatchlistSections() {
+        _state.value = _state.value.copy(watchlistTabData = listOf(
+            "Bookmarked", "Watched", "Collection"
+        ))
     }
 
     actual fun getBookmarkedMovies() {
         getLocalMoviesUseCase(GetLocalMoviesUseCase.Params(Unit), viewModelScope) {
             it.fold(
                 ifRight = {
-                    state.value = state.value.copy(bookmarkedMovies = it.map { it.toMovieView() })
+                    _state.value = state.value.copy(allMovies = it.map { it.toMovieView() })
                 },
                 ifLeft = {
                     when (it) {
                         Failure.DatabaseFailure.ReadFailure.EmptyList -> {
-                            state.value =
+                            _state.value =
                                 state.value.copy(databaseError = "You have no bookmarked movies!")
                         }
                         else -> {}
