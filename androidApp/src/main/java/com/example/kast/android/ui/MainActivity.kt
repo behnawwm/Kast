@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.example.kast.MovieViewModel
+import com.example.kast.presentation.viewModel.MovieViewModel
 import com.example.kast.android.R
 import com.example.kast.android.theme.KastTheme
 import com.example.kast.android.theme.background

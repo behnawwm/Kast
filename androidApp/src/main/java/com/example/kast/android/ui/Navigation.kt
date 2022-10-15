@@ -14,7 +14,7 @@ import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
 import com.example.kast.android.ui.search.SearchScreen
 import com.example.kast.android.ui.watchlist.WatchlistScreen
-import com.example.kast.data.model.MovieView
+import com.example.kast.domain.model.MovieView
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
