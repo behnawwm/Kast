@@ -18,6 +18,7 @@ actual class WatchlistViewModel actual constructor(
         val historyTabData: List<String> = emptyList(),
         val allMovies: List<MovieView> = emptyList(),
         val databaseError: String? = null,
+        val isExpanded: Boolean = false,
     )
 
     private val _state = MutableStateFlow(State())
@@ -62,6 +63,10 @@ actual class WatchlistViewModel actual constructor(
                 }
             )
         }
+    }
+
+    fun onToggleExpandClick(isExpanded: Boolean) {
+        _state.value = _state.value.copy(isExpanded = isExpanded)
     }
 
 }
