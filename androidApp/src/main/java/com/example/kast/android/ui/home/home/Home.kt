@@ -20,6 +20,10 @@ import com.example.kast.android.ui.shared_components.MovieListWithHeader
 import com.example.kast.domain.model.CategoryType
 import com.example.kast.domain.model.CategoryView
 import com.example.kast.domain.model.MovieView
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.CollapsingToolbarScaffoldState
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,11 +34,15 @@ fun HomeScreen(
     onOptionsClick: (movie: MovieView) -> Unit,
     viewModel: MovieViewModel = getViewModel(),
 ) {
-    Scaffold(
-        topBar = {
+    CollapsingToolbarScaffold(
+        state = rememberCollapsingToolbarScaffoldState(),
+        toolbar = {
             HomeTopBar()
-        }
-    ) { paddingValues ->
+        },
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        modifier = Modifier.background(background),
+    ) {
+
         val state by remember { viewModel.state }
         MovieCategoriesList(
             viewModel = viewModel,
@@ -44,7 +52,7 @@ fun HomeScreen(
             onOptionsClick = onOptionsClick,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+//                .padding(paddingValues)
         )
     }
 }

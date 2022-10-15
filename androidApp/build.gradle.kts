@@ -52,6 +52,7 @@ dependencies {
     val koinAndroidComposeVersion = "3.2.1"
     val kotlinSerializationVersion = "1.4.0"
     val arrowVersion = "1.0.1"
+    val collapsingToolbarVersion = "2.3.4"
 
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:$composeUiVersion")
@@ -120,5 +121,8 @@ dependencies {
 
     // Arrow
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
+
+    // Collapsing Toolbar
+    implementation("me.onebone:toolbar-compose:$collapsingToolbarVersion")
 
 }
