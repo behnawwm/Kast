@@ -15,11 +15,11 @@ class GetMovieCategoriesUseCase(
     private val getRemoteMovieCategoriesUseCase: GetRemoteMovieCategoriesUseCase,
     private val getMoviesWithStatusByTypeUseCase: GetMoviesWithStatusByTypeUseCase,
 ) :
-    FlowUseCase<List<Category>, GetMovieCategoriesUseCase.Params>() {
+    FlowUseCase<Either<Pair<Failure, List<Category>>, List<Category>>, GetMovieCategoriesUseCase.Params>() {
 
     data class Params(val none: Unit)
 
-    override fun run(params: Params): Flow<Either<Failure.NetworkFailure, List<Category>>> {
+    override fun run(params: Params): Flow<Either<Failure.NetworkFailure, Either<Pair<Failure, List<Category>>, List<Category>>>> {
         return flow {
             getRemoteMovieCategoriesUseCase.run(GetRemoteMovieCategoriesUseCase.Params(Unit)).fold(
                 ifLeft = {
@@ -29,6 +29,7 @@ class GetMovieCategoriesUseCase(
                     val savedCategory = mutableListOf<Category>()
 
                     val flows = categories.map { category ->
+                        savedCategory.add(category.toCategory(null))
                         Pair(
                             category,
                             getMoviesWithStatusByTypeUseCase.run(
@@ -38,26 +39,30 @@ class GetMovieCategoriesUseCase(
                             )
                         )
                     }
+
                     flows.instantCombinePair().collect {
                         val (category, flow) = it
 
                         flow.fold(
                             ifLeft = {
-                                val newCategory = category.toCategory(emptyList())
-                                savedCategory.add(newCategory)
-                                emit(Either.Right(savedCategory))
+                                val newCategory = category.toCategory(null)
+                                val index =
+                                    savedCategory.indexOfFirst { it.id == newCategory.id }  // no checking for index == -1
+                                savedCategory[index] =
+                                    savedCategory[index].copy(movies = emptyList())
+                                emit(Either.Right(Either.Left(Pair(it,savedCategory))))
                             },
                             ifRight = { remoteMovies ->
                                 val newCategory = category.toCategory(remoteMovies)
-                                savedCategory.add(newCategory)
+                                val index =
+                                    savedCategory.indexOfFirst { it.id == newCategory.id }  // no checking for index == -1
+                                savedCategory[index] =
+                                    savedCategory[index].copy(movies = remoteMovies)
                                 emit(
                                     Either.Right(
-                                        savedCategory.map {
-                                            if (it.id == category.id)
-                                                it.copy(movies = remoteMovies)
-                                            else
-                                                it
-                                        }
+                                        Either.Right(
+                                            savedCategory
+                                        )
                                     )
                                 )
                             }
@@ -84,26 +89,6 @@ class GetMovieCategoriesUseCase(
             }
         }
     }
-
-//    private inline fun <reified T, K> List<Pair<K, Flow<T>>>.instantCombinePair() = channelFlow {
-//        val array = Array(this@instantCombinePair.size) {
-//            false to (null as T?) // first element stands for "present"
-//        }
-//
-//        this@instantCombinePair.forEachIndexed { index, flow ->
-//            launch {
-//                flow.second.collect { emittedElement ->
-//                    array[index] = true to emittedElement
-//                    send(
-//                        Pair(
-//                            flow.first,
-//                            array.filter { it.first }.map { it.second }
-//                        )
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     private inline fun <reified T, K> List<Pair<K, Flow<T>>>.instantCombinePair() =
         channelFlow {

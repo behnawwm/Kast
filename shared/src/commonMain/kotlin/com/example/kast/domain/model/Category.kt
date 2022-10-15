@@ -4,7 +4,7 @@ data class Category(
     val id: Long,
     val type: CategoryType,
     val subtitle: String,
-    val movies: List<Movie>,
+    val movies: List<Movie>?,
 )
 
 

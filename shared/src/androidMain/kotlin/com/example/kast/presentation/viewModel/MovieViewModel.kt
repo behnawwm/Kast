@@ -71,9 +71,21 @@ actual class MovieViewModel actual constructor(
                         )
                     },
                     ifRight = {
-                        state.value = state.value.copy(
-                            categories = it.map { it.toCategoryView() }
+                        it.fold(
+                            ifLeft = {
+                                val (failure, list) = it
+                                state.value = state.value.copy(
+                                    categories = list.map { it.toCategoryView(failure.toString()) }
+                                )
+                            }, ifRight = {
+                                state.value = state.value.copy(
+                                    categories = it.map {
+                                        it.toCategoryView(null)
+                                    }
+                                )
+                            }
                         )
+
                     }
                 )
             }.launchIn(viewModelScope)

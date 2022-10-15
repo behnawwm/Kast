@@ -5,7 +5,7 @@ import com.example.kast.domain.model.Category
 import com.example.kast.domain.model.CategoryType
 import com.example.kast.domain.model.Movie
 
-fun TmdbCategory.toCategory(movies: List<Movie>) = Category(
+fun TmdbCategory.toCategory(movies: List<Movie>?) = Category(
     id = id,
     findCategoryTypeByString(type),
     subtitle = subtitle,

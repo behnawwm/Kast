@@ -49,7 +49,7 @@ data class TmdbMovie(
     fun toMovie(localVersion: MovieEntity?): Movie {
         return Movie(
             id = id,
-            title = originalTitle ?: "",
+            title = title ?: "",
             rating = voteAverage,
             posterPath = posterPath ?: "",
             isBookmarked = localVersion?.isBookmarked ?: false,
