@@ -7,4 +7,5 @@ import com.example.kast.utils.Failure
 
 interface MovieService {
     suspend fun getMoviesByType(url: String): Either<Failure.NetworkFailure, TmdbPagingResult<TmdbMovie>>
+    suspend fun getMovieDetails(id: Long): Either<Failure.NetworkFailure, TmdbMovie>
 }

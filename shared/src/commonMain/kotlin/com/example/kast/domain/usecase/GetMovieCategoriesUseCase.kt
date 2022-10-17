@@ -1,11 +1,9 @@
-package com.example.kast.domain.usecase.home
+package com.example.kast.domain.usecase
 
 import arrow.core.*
 import com.example.kast.domain.mapper.findCategoryTypeByString
 import com.example.kast.domain.mapper.toCategory
 import com.example.kast.domain.model.Category
-import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
-import com.example.kast.domain.usecase.GetMoviesWithStatusByTypeUseCase
 import com.example.kast.utils.Failure
 import com.example.kast.utils.FlowUseCase
 import kotlinx.coroutines.*

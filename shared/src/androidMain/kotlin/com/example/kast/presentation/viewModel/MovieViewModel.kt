@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kast.domain.model.*
-import com.example.kast.domain.usecase.home.GetMovieCategoriesUseCase
+import com.example.kast.domain.usecase.GetMovieCategoriesUseCase
 import com.example.kast.presentation.mapper.toCategoryView
 import kotlinx.coroutines.flow.*
 

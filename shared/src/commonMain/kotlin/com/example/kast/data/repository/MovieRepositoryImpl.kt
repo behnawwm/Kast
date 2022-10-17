@@ -55,6 +55,16 @@ class MovieRepositoryImpl(
         }
     }
 
+    override suspend fun getMovieDetails(movieId: Long): Either<Failure.NetworkFailure, Movie> {
+        val localMovies =
+            databaseDao.selectAllMovies()
+        return apiService.getMovieDetails(movieId).map {remoteMovie ->
+            remoteMovie.toMovie(
+                localMovies.find { it.id == remoteMovie.id }
+            )
+        }
+    }
+
     override suspend fun selectAllMovies(): Either<Failure.DatabaseFailure.ReadFailure, List<Movie>> {
         return Either.Right(databaseDao.selectAllMovies().map { it.toMovie() }) //todo handle errors
     }

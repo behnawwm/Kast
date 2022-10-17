@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.kast.presentation.viewModel.AddToListsViewModel
+import com.example.kast.presentation.viewModel.MovieDetailsViewModel
 import com.example.kast.presentation.viewModel.MovieViewModel
 import com.example.kast.presentation.viewModel.WatchlistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -24,7 +25,9 @@ fun appModule(app: Application) = module {
     viewModel {
         WatchlistViewModel(get())
     }
-
+    viewModel { parameters ->
+        MovieDetailsViewModel(get(), movieId = parameters.get())
+    }
     single<SharedPreferences> {
         get<Context>().getSharedPreferences("KAST_SETTING", Context.MODE_PRIVATE)
     }

@@ -11,6 +11,7 @@ interface MovieRepository {
 
     suspend fun getMoviesWithStatusByType(categoryType: CategoryType): Either<Failure.NetworkFailure, List<Movie>>
     fun getMoviesWithStatusByTypeAsFlow(categoryType: CategoryType): Flow<Either<Failure.NetworkFailure, List<Movie>>>
+    suspend fun getMovieDetails(movieId: Long): Either<Failure.NetworkFailure, Movie>
 
     suspend fun selectAllMovies(): Either<Failure.DatabaseFailure.ReadFailure, List<Movie>>
     suspend fun selectMovieById(movieId: Long): Either<Failure.DatabaseFailure.FindFailure, Movie>

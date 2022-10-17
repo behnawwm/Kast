@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import com.example.kast.android.ui.home.home.HomeScreen
-import com.example.kast.android.ui.home.MovieDetailScreen
+import com.example.kast.android.ui.home.movie_details.MovieDetailScreen
 import com.example.kast.android.ui.home.home.AddToListsBottomSheet
 import com.example.kast.android.ui.home.home.MovieOptionsBottomSheet
 import com.example.kast.android.ui.profile.main_profile.MainProfileScreen
@@ -166,7 +166,8 @@ fun NavGraphBuilder.addAddToListsBottomSheet(navController: NavController, root:
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addMovieDetail(navController: NavController, root: Screen) {
     composable(route = LeafScreen.MovieDetail.createRoute(root)) {
-        MovieDetailScreen()
+        val movieId = it.arguments!!.getLong("movieId")
+        MovieDetailScreen(movieId, navController)
     }
 }
 

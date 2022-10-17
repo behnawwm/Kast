@@ -15,4 +15,8 @@ class MovieServiceImpl(
     override suspend fun getMoviesByType(url: String): Either<Failure.NetworkFailure, TmdbPagingResult<TmdbMovie>> {
         return apiClient.getResponseWithApiKey("3/movie/$url")
     }
+
+    override suspend fun getMovieDetails(id: Long): Either<Failure.NetworkFailure, TmdbMovie> {
+        return apiClient.getResponseWithApiKey("3/movie/$id")
+    }
 }
