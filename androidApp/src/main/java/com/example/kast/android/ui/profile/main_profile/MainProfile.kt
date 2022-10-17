@@ -1,4 +1,4 @@
-package com.example.kast.android.ui.profile
+package com.example.kast.android.ui.profile.main_profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,7 @@ import com.example.kast.android.theme.background
 import com.example.kast.android.theme.orange
 
 @Composable
-fun ProfileScreen(
+fun MainProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier
