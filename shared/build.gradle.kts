@@ -9,6 +9,8 @@ plugins {
 
     // Ksp
 //    id("com.google.devtools.ksp") version "1.6.21-1.0.6"
+
+    id("com.github.ben-manes.versions") version "0.42.0"
 }
 
 kotlin {

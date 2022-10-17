@@ -2,6 +2,7 @@ package com.example.kast.android.ui.watchlist
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Grid3x3
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -12,14 +13,17 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchListTopBar() {
+fun WatchListTopBar(isExpanded: Boolean, onToggleExpandClick: (isExpanded: Boolean) -> Unit) {
     CenterAlignedTopAppBar(
-        title ={},
-        actions ={
+        title = {},
+        actions = {
             IconButton(onClick = {
-
+                onToggleExpandClick(!isExpanded)
             }) {
-                Icon(Icons.Default.ViewList, "")
+                Icon(
+                    if (isExpanded) Icons.Default.Grid3x3 else Icons.Default.ViewList,
+                    ""
+                )
             }
             IconButton(onClick = {
 
@@ -31,5 +35,5 @@ fun WatchListTopBar() {
             }) {
                 Icon(Icons.Default.Sort, "")
             }
-    })
+        })
 }
