@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.example.kast.data.source.remote.model.TmdbMovie
 import com.example.kast.data.source.remote.model.TmdbPagingResult
 import com.example.kast.data.source.remote.ApiClient
+import com.example.kast.data.source.remote.model.TmdbMovieDetails
 import com.example.kast.utils.Failure
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -16,7 +17,7 @@ class MovieServiceImpl(
         return apiClient.getResponseWithApiKey("3/movie/$url")
     }
 
-    override suspend fun getMovieDetails(id: Long): Either<Failure.NetworkFailure, TmdbMovie> {
+    override suspend fun getMovieDetails(id: Long): Either<Failure.NetworkFailure, TmdbMovieDetails> {
         return apiClient.getResponseWithApiKey("3/movie/$id")
     }
 }

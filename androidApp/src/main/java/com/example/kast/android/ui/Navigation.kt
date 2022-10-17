@@ -166,7 +166,7 @@ fun NavGraphBuilder.addAddToListsBottomSheet(navController: NavController, root:
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addMovieDetail(navController: NavController, root: Screen) {
     composable(route = LeafScreen.MovieDetail.createRoute(root)) {
-        val movieId = it.arguments!!.getLong("movieId")
+        val movieId = it.arguments!!.getString("movieId")!!.toLong()
         MovieDetailScreen(movieId, navController)
     }
 }

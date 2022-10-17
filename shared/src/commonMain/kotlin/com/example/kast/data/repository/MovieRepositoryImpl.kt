@@ -6,9 +6,11 @@ import com.example.kast.data.source.local.movie.MoviesDao
 import com.example.kast.domain.model.CategoryType
 import com.example.kast.data.source.remote.movie.MovieService
 import com.example.kast.domain.mapper.toMovie
+import com.example.kast.domain.mapper.toMovieDetails
 import com.example.kast.domain.repository.MovieRepository
 import com.example.kast.domain.mapper.toMovieEntity
 import com.example.kast.domain.model.Movie
+import com.example.kast.domain.model.MovieDetails
 import com.example.kast.utils.Failure
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -55,11 +57,11 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getMovieDetails(movieId: Long): Either<Failure.NetworkFailure, Movie> {
+    override suspend fun getMovieDetails(movieId: Long): Either<Failure.NetworkFailure, MovieDetails> {
         val localMovies =
             databaseDao.selectAllMovies()
         return apiService.getMovieDetails(movieId).map {remoteMovie ->
-            remoteMovie.toMovie(
+            remoteMovie.toMovieDetails(
                 localMovies.find { it.id == remoteMovie.id }
             )
         }

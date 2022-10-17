@@ -1,10 +1,6 @@
 package com.example.kast.di
 
-import com.example.kast.domain.usecase.GetLocalMoviesUseCase
-import com.example.kast.domain.usecase.GetRemoteMovieCategoriesUseCase
-import com.example.kast.domain.usecase.GetMoviesWithStatusByTypeUseCase
-import com.example.kast.domain.usecase.InsertMovieUseCase
-import com.example.kast.domain.usecase.GetMovieCategoriesUseCase
+import com.example.kast.domain.usecase.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -22,5 +18,8 @@ val useCaseModule = module {
     }
     single {
         GetRemoteMovieCategoriesUseCase(get())
+    }
+    single {
+        GetMovieDetailsUseCase(get())
     }
 }
