@@ -6,6 +6,7 @@ buildscript {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.43.2")
         // Sqldelight
         classpath("com.squareup.sqldelight:gradle-plugin:$sqlDelightVersion")
+
     }
 }
 plugins {

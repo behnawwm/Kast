@@ -1,4 +1,4 @@
-package com.example.kast.android.ui.search
+package com.example.kast.android.ui.profile.main_profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,7 @@ import com.example.kast.android.theme.background
 import com.example.kast.android.theme.orange
 
 @Composable
-fun SearchScreen(
+fun MainProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier
@@ -23,7 +23,7 @@ fun SearchScreen(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Search", color = orange, style = MaterialTheme.typography.headlineLarge)
+            Text(text = "Profile",color = orange, style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "NOT IMPLEMENTED YET")
         }

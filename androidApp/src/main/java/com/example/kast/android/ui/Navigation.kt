@@ -9,6 +9,7 @@ import com.example.kast.android.ui.home.home.HomeScreen
 import com.example.kast.android.ui.home.MovieDetailScreen
 import com.example.kast.android.ui.home.home.AddToListsBottomSheet
 import com.example.kast.android.ui.home.home.MovieOptionsBottomSheet
+import com.example.kast.android.ui.profile.main_profile.MainProfileScreen
 import com.example.kast.android.ui.profile.SettingsScreen
 import com.example.kast.android.ui.search.CategorySearchScreen
 import com.example.kast.android.ui.search.QuerySearchScreen
@@ -32,7 +33,7 @@ sealed class Screen(val route: String) {
 }
 
 private sealed class LeafScreen(
-    private val route: String
+    private val route: String,
 ) {
     fun createRoute(root: Screen) = "${root.route}/$route"
 
@@ -119,7 +120,8 @@ fun NavGraphBuilder.addHome(navController: NavController, root: Screen) {
                         movie.title
                     )
                 )
-            })
+            }
+        )
     }
 }
 
@@ -239,7 +241,7 @@ private fun NavGraphBuilder.addProfileTopLevel(
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addProfile(navController: NavController, root: Screen) {
     composable(route = LeafScreen.Profile.createRoute(root)) {
-        ProfileScreen()
+        MainProfileScreen()
     }
 }
 

@@ -17,31 +17,34 @@ import com.example.kast.android.theme.background
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar() {
-    CenterAlignedTopAppBar(title = {
-        Icon(
-            painterResource(id = R.drawable.kast),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(56.dp)
-        )
-    }, navigationIcon = {
-        IconButton(onClick = {
+    CenterAlignedTopAppBar(
+        title = {
+            Icon(
+                painterResource(id = R.drawable.kast),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(56.dp)
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = {
 
-        }) {
-            Icon(Icons.Default.Person, "")
-        }
-    }, actions = {
-        IconButton(onClick = {
+            }) {
+                Icon(Icons.Default.Person, "")
+            }
+        },
+        actions = {
+            IconButton(onClick = {
 
-        }) {
-            Icon(Icons.Default.Search, "")
-        }
-        IconButton(onClick = {
+            }) {
+                Icon(Icons.Default.Search, "")
+            }
+            IconButton(onClick = {
 
-        }) {
-            Icon(Icons.Default.MoreVert, "")
-        }
-    },
+            }) {
+                Icon(Icons.Default.MoreVert, "")
+            }
+        },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = background,
         )
