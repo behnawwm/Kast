@@ -4,7 +4,7 @@ import arrow.core.Either
 import com.example.kast.MovieEntity
 import com.example.kast.data.source.local.movie.MoviesDao
 import com.example.kast.domain.model.CategoryType
-import com.example.kast.data.source.remote.movie.MovieService
+import com.example.kast.data.source.remote.service.movie.MovieService
 import com.example.kast.domain.mapper.toMovie
 import com.example.kast.domain.mapper.toMovieDetails
 import com.example.kast.domain.repository.MovieRepository

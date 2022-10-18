@@ -1,4 +1,4 @@
-package com.example.kast.data.source.remote.movie_category
+package com.example.kast.data.source.remote.service.movie_category
 
 import com.example.kast.data.source.remote.model.TmdbCategory
 import com.example.kast.data.source.remote.model.TmdbMovie

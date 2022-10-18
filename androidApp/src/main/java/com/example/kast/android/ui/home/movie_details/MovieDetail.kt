@@ -2,6 +2,7 @@ package com.example.kast.android.ui.home.movie_details
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,10 +21,13 @@ fun MovieDetailScreen(movieId: Long, navController: NavController) {
     val viewModel = getViewModel<MovieDetailsViewModel>(parameters = { parametersOf(movieId) })
     val state by viewModel.state.collectAsState()
 
-    Box(Modifier.background(background)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(background)
+    ) {
         state.movie?.let { movie ->
-            Text(text = movie.title, color = Color.White)
-            Text(text = movie.id.toString(), color = Color.White)
+            Text(text = movie.toString(), color = Color.White)
         }
     }
 }

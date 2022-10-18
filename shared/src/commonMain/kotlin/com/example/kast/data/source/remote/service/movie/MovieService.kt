@@ -1,4 +1,4 @@
-package com.example.kast.data.source.remote.movie
+package com.example.kast.data.source.remote.service.movie
 
 import arrow.core.Either
 import com.example.kast.data.source.remote.model.TmdbMovie
